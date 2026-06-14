@@ -64,7 +64,7 @@ function ProfilePage() {
       <p className="mt-1 text-sm text-muted-foreground">Тип: {isBroker ? "Брокер" : "Клиент"}</p>
 
       {isBroker && (
-        <Link to="/_app/dashboard" className="mt-4 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm font-medium text-foreground">
+        <Link to="/dashboard" className="mt-4 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm font-medium text-foreground">
           <span className="flex items-center gap-2"><Building2 className="h-4 w-4 text-primary" />Към моите обяви</span>
           <ExternalLink className="h-4 w-4 text-muted-foreground" />
         </Link>
