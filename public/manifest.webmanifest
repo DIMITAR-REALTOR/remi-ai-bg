@@ -1,0 +1,14 @@
+{
+  "name": "ИмотиПро",
+  "short_name": "ИмотиПро",
+  "description": "Платформа за брокери и клиенти на имоти в България",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6fafd",
+  "theme_color": "#1f8fb2",
+  "lang": "bg",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
