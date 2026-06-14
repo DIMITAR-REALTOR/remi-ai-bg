@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-export const Route = createFileRoute("/_app/dashboard")({
+export const Route = createFileRoute("/_app/dashboard/")({
   component: Dashboard,
 });
 
