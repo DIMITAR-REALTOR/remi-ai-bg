@@ -1,29 +1,54 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Search, Building2, Heart, LayoutDashboard } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "ИмотиПро — Имоти в България" },
+      { name: "description", content: "Намери своя имот или клиент в България. Апартаменти, къщи и парцели от лицензирани брокери." },
     ],
   }),
-  component: Index,
+  component: Landing,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Landing() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="mx-auto max-w-xl px-5">
+      <header className="pt-12 pb-8 text-center">
+        <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
+          <Building2 className="h-7 w-7" />
+        </div>
+        <h1 className="text-3xl font-black tracking-tight text-foreground">ИмотиПро</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Имоти и брокери, събрани на едно място.</p>
+      </header>
+
+      <Link to="/search" className="block overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary/70 p-6 text-primary-foreground shadow-xl shadow-primary/20">
+        <div className="flex items-center gap-3">
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/15 backdrop-blur"><Search className="h-6 w-6" /></div>
+          <div className="min-w-0">
+            <p className="text-lg font-bold">Търси имот</p>
+            <p className="text-sm text-primary-foreground/80">Прегледай активни обяви в цяла България</p>
+          </div>
+        </div>
+      </Link>
+
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <Link to="/auth" className="rounded-2xl border border-border bg-card p-4 text-card-foreground transition hover:border-primary/40">
+          <LayoutDashboard className="mb-2 h-5 w-5 text-primary" />
+          <p className="text-sm font-semibold">Аз съм брокер</p>
+          <p className="text-xs text-muted-foreground">Управлявай обяви</p>
+        </Link>
+        <Link to="/auth" className="rounded-2xl border border-border bg-card p-4 text-card-foreground transition hover:border-primary/40">
+          <Heart className="mb-2 h-5 w-5 text-primary" />
+          <p className="text-sm font-semibold">Аз съм клиент</p>
+          <p className="text-xs text-muted-foreground">Намери своя дом</p>
+        </Link>
+      </div>
+
+      <section className="mt-10 space-y-3 text-center">
+        <h2 className="text-base font-semibold text-foreground">Защо ИмотиПро?</h2>
+        <p className="text-sm text-muted-foreground">Всички обяви — от проверени брокери. Без излишен шум, само това, което търсиш.</p>
+      </section>
     </div>
   );
 }
