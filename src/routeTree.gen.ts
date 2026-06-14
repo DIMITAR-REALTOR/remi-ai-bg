@@ -15,7 +15,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
 import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
 
@@ -48,40 +48,40 @@ const AppProfileRoute = AppProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppRoute,
 } as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardNewRoute = AppDashboardNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AppDashboardRoute,
+  id: '/dashboard/new',
+  path: '/dashboard/new',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
-  id: '/edit/$id',
-  path: '/edit/$id',
-  getParentRoute: () => AppDashboardRoute,
+  id: '/dashboard/edit/$id',
+  path: '/dashboard/edit/$id',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
-  '/dashboard': typeof AppDashboardRouteWithChildren
   '/profile': typeof AppProfileRoute
   '/listing/$id': typeof ListingIdRoute
   '/dashboard/new': typeof AppDashboardNewRoute
+  '/dashboard/': typeof AppDashboardIndexRoute
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
-  '/dashboard': typeof AppDashboardRouteWithChildren
   '/profile': typeof AppProfileRoute
   '/listing/$id': typeof ListingIdRoute
   '/dashboard/new': typeof AppDashboardNewRoute
+  '/dashboard': typeof AppDashboardIndexRoute
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
 }
 export interface FileRoutesById {
@@ -90,10 +90,10 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/search': typeof SearchRoute
-  '/_app/dashboard': typeof AppDashboardRouteWithChildren
   '/_app/profile': typeof AppProfileRoute
   '/listing/$id': typeof ListingIdRoute
   '/_app/dashboard/new': typeof AppDashboardNewRoute
+  '/_app/dashboard/': typeof AppDashboardIndexRoute
   '/_app/dashboard/edit/$id': typeof AppDashboardEditIdRoute
 }
 export interface FileRouteTypes {
@@ -102,20 +102,20 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/search'
-    | '/dashboard'
     | '/profile'
     | '/listing/$id'
     | '/dashboard/new'
+    | '/dashboard/'
     | '/dashboard/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/search'
-    | '/dashboard'
     | '/profile'
     | '/listing/$id'
     | '/dashboard/new'
+    | '/dashboard'
     | '/dashboard/edit/$id'
   id:
     | '__root__'
@@ -123,10 +123,10 @@ export interface FileRouteTypes {
     | '/_app'
     | '/auth'
     | '/search'
-    | '/_app/dashboard'
     | '/_app/profile'
     | '/listing/$id'
     | '/_app/dashboard/new'
+    | '/_app/dashboard/'
     | '/_app/dashboard/edit/$id'
   fileRoutesById: FileRoutesById
 }
@@ -182,52 +182,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
+    '/_app/dashboard/': {
+      id: '/_app/dashboard/'
       path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AppDashboardIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard/new': {
       id: '/_app/dashboard/new'
-      path: '/new'
+      path: '/dashboard/new'
       fullPath: '/dashboard/new'
       preLoaderRoute: typeof AppDashboardNewRouteImport
-      parentRoute: typeof AppDashboardRoute
+      parentRoute: typeof AppRoute
     }
     '/_app/dashboard/edit/$id': {
       id: '/_app/dashboard/edit/$id'
-      path: '/edit/$id'
+      path: '/dashboard/edit/$id'
       fullPath: '/dashboard/edit/$id'
       preLoaderRoute: typeof AppDashboardEditIdRouteImport
-      parentRoute: typeof AppDashboardRoute
+      parentRoute: typeof AppRoute
     }
   }
 }
 
-interface AppDashboardRouteChildren {
+interface AppRouteChildren {
+  AppProfileRoute: typeof AppProfileRoute
   AppDashboardNewRoute: typeof AppDashboardNewRoute
+  AppDashboardIndexRoute: typeof AppDashboardIndexRoute
   AppDashboardEditIdRoute: typeof AppDashboardEditIdRoute
 }
 
-const AppDashboardRouteChildren: AppDashboardRouteChildren = {
-  AppDashboardNewRoute: AppDashboardNewRoute,
-  AppDashboardEditIdRoute: AppDashboardEditIdRoute,
-}
-
-const AppDashboardRouteWithChildren = AppDashboardRoute._addFileChildren(
-  AppDashboardRouteChildren,
-)
-
-interface AppRouteChildren {
-  AppDashboardRoute: typeof AppDashboardRouteWithChildren
-  AppProfileRoute: typeof AppProfileRoute
-}
-
 const AppRouteChildren: AppRouteChildren = {
-  AppDashboardRoute: AppDashboardRouteWithChildren,
   AppProfileRoute: AppProfileRoute,
+  AppDashboardNewRoute: AppDashboardNewRoute,
+  AppDashboardIndexRoute: AppDashboardIndexRoute,
+  AppDashboardEditIdRoute: AppDashboardEditIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
