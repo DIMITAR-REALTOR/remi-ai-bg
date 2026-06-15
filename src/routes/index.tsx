@@ -4,7 +4,7 @@ import { Search, Building2, Heart, LayoutDashboard } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ИмотиПро — Имоти в България" },
+      { title: "AI Estate Pro — Имоти в България" },
       { name: "description", content: "Намери своя имот или клиент в България. Апартаменти, къщи и парцели от лицензирани брокери." },
     ],
   }),
@@ -18,7 +18,7 @@ function Landing() {
         <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
           <Building2 className="h-7 w-7" />
         </div>
-        <h1 className="text-3xl font-black tracking-tight text-foreground">ИмотиПро</h1>
+        <h1 className="text-3xl font-black tracking-tight text-foreground">AI Estate Pro</h1>
         <p className="mt-2 text-sm text-muted-foreground">Имоти и брокери, събрани на едно място.</p>
       </header>
 
@@ -46,7 +46,7 @@ function Landing() {
       </div>
 
       <section className="mt-10 space-y-3 text-center">
-        <h2 className="text-base font-semibold text-foreground">Защо ИмотиПро?</h2>
+        <h2 className="text-base font-semibold text-foreground">Защо AI Estate Pro?</h2>
         <p className="text-sm text-muted-foreground">Всички обяви — от проверени брокери. Без излишен шум, само това, което търсиш.</p>
       </section>
     </div>
