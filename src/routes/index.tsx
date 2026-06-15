@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Search, Building2, Heart, LayoutDashboard } from "lucide-react";
+import { Search, Building2, Heart, LayoutDashboard, Users } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -44,6 +44,14 @@ function Landing() {
           <p className="text-xs text-muted-foreground">Намери своя дом</p>
         </Link>
       </div>
+
+      <Link to="/brokers" className="mt-3 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition hover:border-primary/40">
+        <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><Users className="h-5 w-5" /></div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-foreground">Брокери</p>
+          <p className="text-xs text-muted-foreground">Разгледай всички брокери в платформата</p>
+        </div>
+      </Link>
 
       <section className="mt-10 space-y-3 text-center">
         <h2 className="text-base font-semibold text-foreground">Защо AI Estate Pro?</h2>

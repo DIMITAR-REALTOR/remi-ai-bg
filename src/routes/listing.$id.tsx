@@ -6,6 +6,7 @@ import { ChevronLeft, MapPin, Maximize2, BedDouble, Building2, Phone, ArrowUpDow
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
 export const Route = createFileRoute("/listing/$id")({
   component: ListingDetail,
@@ -126,6 +127,8 @@ function ListingDetail() {
             )}
           </div>
         )}
+
+        <FavoriteButton listingId={data.id} />
       </div>
     </div>
   );

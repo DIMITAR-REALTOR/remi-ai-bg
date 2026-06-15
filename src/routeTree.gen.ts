@@ -10,19 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
+import { Route as BrokersIdRouteImport } from './routes/brokers.$id'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as AppFavoritesRouteImport } from './routes/_app.favorites'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
+import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
+import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
 import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
+import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboard.clients.$id'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrokersRoute = BrokersRouteImport.update({
+  id: '/brokers',
+  path: '/brokers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -44,9 +55,19 @@ const ListingIdRoute = ListingIdRouteImport.update({
   path: '/listing/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrokersIdRoute = BrokersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BrokersRoute,
+} as any)
 const AppProfileRoute = AppProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFavoritesRoute = AppFavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -59,9 +80,19 @@ const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const AppDashboardTasksRoute = AppDashboardTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
 const AppDashboardNewRoute = AppDashboardNewRouteImport.update({
   id: '/new',
   path: '/new',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
+const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
   getParentRoute: () => AppDashboardRoute,
 } as any)
 const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
@@ -69,26 +100,43 @@ const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
   path: '/edit/$id',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const AppDashboardClientsIdRoute = AppDashboardClientsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppDashboardClientsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/brokers': typeof BrokersRouteWithChildren
   '/search': typeof SearchRoute
   '/dashboard': typeof AppDashboardRouteWithChildren
+  '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
+  '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/new': typeof AppDashboardNewRoute
+  '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard/': typeof AppDashboardIndexRoute
+  '/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/brokers': typeof BrokersRouteWithChildren
   '/search': typeof SearchRoute
+  '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
+  '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/new': typeof AppDashboardNewRoute
+  '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard': typeof AppDashboardIndexRoute
+  '/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
 }
 export interface FileRoutesById {
@@ -96,12 +144,18 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
+  '/brokers': typeof BrokersRouteWithChildren
   '/search': typeof SearchRoute
   '/_app/dashboard': typeof AppDashboardRouteWithChildren
+  '/_app/favorites': typeof AppFavoritesRoute
   '/_app/profile': typeof AppProfileRoute
+  '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/_app/dashboard/new': typeof AppDashboardNewRoute
+  '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
+  '/_app/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
   '/_app/dashboard/edit/$id': typeof AppDashboardEditIdRoute
 }
 export interface FileRouteTypes {
@@ -109,34 +163,52 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/brokers'
     | '/search'
     | '/dashboard'
+    | '/favorites'
     | '/profile'
+    | '/brokers/$id'
     | '/listing/$id'
+    | '/dashboard/clients'
     | '/dashboard/new'
+    | '/dashboard/tasks'
     | '/dashboard/'
+    | '/dashboard/clients/$id'
     | '/dashboard/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/brokers'
     | '/search'
+    | '/favorites'
     | '/profile'
+    | '/brokers/$id'
     | '/listing/$id'
+    | '/dashboard/clients'
     | '/dashboard/new'
+    | '/dashboard/tasks'
     | '/dashboard'
+    | '/dashboard/clients/$id'
     | '/dashboard/edit/$id'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/auth'
+    | '/brokers'
     | '/search'
     | '/_app/dashboard'
+    | '/_app/favorites'
     | '/_app/profile'
+    | '/brokers/$id'
     | '/listing/$id'
+    | '/_app/dashboard/clients'
     | '/_app/dashboard/new'
+    | '/_app/dashboard/tasks'
     | '/_app/dashboard/'
+    | '/_app/dashboard/clients/$id'
     | '/_app/dashboard/edit/$id'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +216,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
+  BrokersRoute: typeof BrokersRouteWithChildren
   SearchRoute: typeof SearchRoute
   ListingIdRoute: typeof ListingIdRoute
 }
@@ -155,6 +228,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brokers': {
+      id: '/brokers'
+      path: '/brokers'
+      fullPath: '/brokers'
+      preLoaderRoute: typeof BrokersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -185,11 +265,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ListingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brokers/$id': {
+      id: '/brokers/$id'
+      path: '/$id'
+      fullPath: '/brokers/$id'
+      preLoaderRoute: typeof BrokersIdRouteImport
+      parentRoute: typeof BrokersRoute
+    }
     '/_app/profile': {
       id: '/_app/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/favorites': {
+      id: '/_app/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof AppFavoritesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
@@ -206,11 +300,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardIndexRouteImport
       parentRoute: typeof AppDashboardRoute
     }
+    '/_app/dashboard/tasks': {
+      id: '/_app/dashboard/tasks'
+      path: '/tasks'
+      fullPath: '/dashboard/tasks'
+      preLoaderRoute: typeof AppDashboardTasksRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
     '/_app/dashboard/new': {
       id: '/_app/dashboard/new'
       path: '/new'
       fullPath: '/dashboard/new'
       preLoaderRoute: typeof AppDashboardNewRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/clients': {
+      id: '/_app/dashboard/clients'
+      path: '/clients'
+      fullPath: '/dashboard/clients'
+      preLoaderRoute: typeof AppDashboardClientsRouteImport
       parentRoute: typeof AppDashboardRoute
     }
     '/_app/dashboard/edit/$id': {
@@ -220,17 +328,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardEditIdRouteImport
       parentRoute: typeof AppDashboardRoute
     }
+    '/_app/dashboard/clients/$id': {
+      id: '/_app/dashboard/clients/$id'
+      path: '/$id'
+      fullPath: '/dashboard/clients/$id'
+      preLoaderRoute: typeof AppDashboardClientsIdRouteImport
+      parentRoute: typeof AppDashboardClientsRoute
+    }
   }
 }
 
+interface AppDashboardClientsRouteChildren {
+  AppDashboardClientsIdRoute: typeof AppDashboardClientsIdRoute
+}
+
+const AppDashboardClientsRouteChildren: AppDashboardClientsRouteChildren = {
+  AppDashboardClientsIdRoute: AppDashboardClientsIdRoute,
+}
+
+const AppDashboardClientsRouteWithChildren =
+  AppDashboardClientsRoute._addFileChildren(AppDashboardClientsRouteChildren)
+
 interface AppDashboardRouteChildren {
+  AppDashboardClientsRoute: typeof AppDashboardClientsRouteWithChildren
   AppDashboardNewRoute: typeof AppDashboardNewRoute
+  AppDashboardTasksRoute: typeof AppDashboardTasksRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
   AppDashboardEditIdRoute: typeof AppDashboardEditIdRoute
 }
 
 const AppDashboardRouteChildren: AppDashboardRouteChildren = {
+  AppDashboardClientsRoute: AppDashboardClientsRouteWithChildren,
   AppDashboardNewRoute: AppDashboardNewRoute,
+  AppDashboardTasksRoute: AppDashboardTasksRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
   AppDashboardEditIdRoute: AppDashboardEditIdRoute,
 }
@@ -241,20 +371,34 @@ const AppDashboardRouteWithChildren = AppDashboardRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRouteWithChildren
+  AppFavoritesRoute: typeof AppFavoritesRoute
   AppProfileRoute: typeof AppProfileRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRouteWithChildren,
+  AppFavoritesRoute: AppFavoritesRoute,
   AppProfileRoute: AppProfileRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface BrokersRouteChildren {
+  BrokersIdRoute: typeof BrokersIdRoute
+}
+
+const BrokersRouteChildren: BrokersRouteChildren = {
+  BrokersIdRoute: BrokersIdRoute,
+}
+
+const BrokersRouteWithChildren =
+  BrokersRoute._addFileChildren(BrokersRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
+  BrokersRoute: BrokersRouteWithChildren,
   SearchRoute: SearchRoute,
   ListingIdRoute: ListingIdRoute,
 }
