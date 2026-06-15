@@ -10,7 +10,9 @@ import { PROPERTY_TYPES, STATUSES } from "@/lib/listings-meta";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { uploadListingPhoto } from "@/lib/storage";
-import { Upload, X } from "lucide-react";
+import { Upload, X, Sparkles } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { generateListingDescription } from "@/lib/ai.functions";
 
 export interface ListingFormData {
   id?: string;
@@ -39,7 +41,33 @@ export function ListingForm({ initial, onSaved }: { initial?: Partial<ListingFor
   const [f, setF] = useState<ListingFormData>({ ...empty, ...initial } as ListingFormData);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
+  const generateDesc = useServerFn(generateListingDescription);
   const isEdit = !!initial?.id;
+
+  const aiGenerate = async () => {
+    setAiBusy(true);
+    try {
+      const { description } = await generateDesc({
+        data: {
+          title: f.title,
+          property_type: f.property_type,
+          price_eur: f.price_eur === "" ? undefined : Number(f.price_eur),
+          area_sqm: f.area_sqm === "" ? undefined : Number(f.area_sqm),
+          rooms: f.rooms === "" ? undefined : Number(f.rooms),
+          floor: f.floor === "" ? undefined : Number(f.floor),
+          city: f.city,
+          neighborhood: f.neighborhood,
+        },
+      });
+      set("description", description);
+      toast.success("Описанието е генерирано");
+    } catch (err: any) {
+      toast.error(err?.message ?? "Грешка при генериране");
+    } finally {
+      setAiBusy(false);
+    }
+  };
 
   const set = <K extends keyof ListingFormData>(k: K, v: ListingFormData[K]) => setF((p) => ({ ...p, [k]: v }));
 
@@ -95,7 +123,16 @@ export function ListingForm({ initial, onSaved }: { initial?: Partial<ListingFor
   return (
     <form onSubmit={submit} className="mt-5 space-y-4">
       <div><Label htmlFor="t">Заглавие</Label><Input id="t" required value={f.title} onChange={(e) => set("title", e.target.value)} /></div>
-      <div><Label htmlFor="d">Описание</Label><Textarea id="d" rows={4} value={f.description} onChange={(e) => set("description", e.target.value)} /></div>
+      <div>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="d">Описание</Label>
+          <Button type="button" variant="ghost" size="sm" onClick={aiGenerate} disabled={aiBusy || !f.title} className="h-7 gap-1.5 px-2 text-xs text-primary hover:text-primary">
+            <Sparkles className="h-3.5 w-3.5" />
+            {aiBusy ? "Генериране..." : "Генерирай с AI"}
+          </Button>
+        </div>
+        <Textarea id="d" rows={5} value={f.description} onChange={(e) => set("description", e.target.value)} />
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
