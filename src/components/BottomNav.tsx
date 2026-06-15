@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Search, User, LayoutDashboard } from "lucide-react";
+import { Home, Search, User, LayoutDashboard, Heart, Users } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,11 @@ export function BottomNav() {
   const items = [
     { to: "/", label: "Начало", icon: Home, exact: true },
     { to: "/search", label: "Търси", icon: Search },
-    ...(isBroker ? [{ to: "/dashboard", label: "Кабинет", icon: LayoutDashboard }] : []),
+    ...(isBroker
+      ? [{ to: "/dashboard", label: "Кабинет", icon: LayoutDashboard }]
+      : user
+        ? [{ to: "/favorites", label: "Любими", icon: Heart }]
+        : [{ to: "/brokers", label: "Брокери", icon: Users }]),
     { to: user ? "/profile" : "/auth", label: user ? "Профил" : "Вход", icon: User },
   ];
 
