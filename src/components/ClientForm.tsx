@@ -1,0 +1,93 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { CLIENT_TYPES, CLIENT_STATUSES } from "@/lib/crm-meta";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+export interface ClientFormData {
+  id?: string;
+  name: string;
+  phone: string;
+  client_type: string;
+  looking_for: string;
+  status: string;
+  notes: string;
+  last_contact_at: string; // YYYY-MM-DD
+}
+
+const empty: ClientFormData = {
+  name: "", phone: "", client_type: "buyer", looking_for: "",
+  status: "new", notes: "", last_contact_at: "",
+};
+
+export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormData>; onSaved: () => void }) {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  const [f, setF] = useState<ClientFormData>({ ...empty, ...initial } as ClientFormData);
+  const [busy, setBusy] = useState(false);
+  const isEdit = !!initial?.id;
+  const set = <K extends keyof ClientFormData>(k: K, v: ClientFormData[K]) => setF((p) => ({ ...p, [k]: v }));
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    if (!f.name) { toast.error("Попълни име"); return; }
+    setBusy(true);
+    const payload: any = {
+      broker_id: user.id,
+      name: f.name,
+      phone: f.phone || null,
+      client_type: f.client_type,
+      looking_for: f.looking_for || null,
+      status: f.status,
+      notes: f.notes || null,
+      last_contact_at: f.last_contact_at ? new Date(f.last_contact_at).toISOString() : null,
+    };
+    const q = isEdit
+      ? (supabase as any).from("clients").update(payload).eq("id", initial!.id!)
+      : (supabase as any).from("clients").insert(payload);
+    const { error } = await q;
+    setBusy(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success(isEdit ? "Обновено" : "Запазено");
+    qc.invalidateQueries({ queryKey: ["my-clients", user.id] });
+    qc.invalidateQueries({ queryKey: ["client", initial?.id] });
+    onSaved();
+  };
+
+  return (
+    <form onSubmit={submit} className="mt-5 space-y-4">
+      <div><Label htmlFor="n">Име</Label><Input id="n" required value={f.name} onChange={(e) => set("name", e.target.value)} /></div>
+      <div><Label htmlFor="ph">Телефон</Label><Input id="ph" value={f.phone} onChange={(e) => set("phone", e.target.value)} /></div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>Тип</Label>
+          <Select value={f.client_type} onValueChange={(v) => set("client_type", v)}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>{CLIENT_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Label>Статус</Label>
+          <Select value={f.status} onValueChange={(v) => set("status", v)}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>{CLIENT_STATUSES.map((s) => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div><Label htmlFor="lf">Търси</Label><Textarea id="lf" rows={2} placeholder="Двустаен в Чайка до 100 000 €..." value={f.looking_for} onChange={(e) => set("looking_for", e.target.value)} /></div>
+      <div><Label htmlFor="nt">Бележки</Label><Textarea id="nt" rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} /></div>
+      <div><Label htmlFor="lc">Последен контакт</Label><Input id="lc" type="date" value={f.last_contact_at} onChange={(e) => set("last_contact_at", e.target.value)} /></div>
+
+      <Button type="submit" className="w-full" disabled={busy}>{busy ? "Запазване..." : "Запази"}</Button>
+    </form>
+  );
+}
