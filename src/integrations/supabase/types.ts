@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      clients: {
+        Row: {
+          broker_id: string
+          client_type: string
+          created_at: string
+          id: string
+          last_contact_at: string | null
+          looking_for: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          broker_id: string
+          client_type?: string
+          created_at?: string
+          id?: string
+          last_contact_at?: string | null
+          looking_for?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          broker_id?: string
+          client_type?: string
+          created_at?: string
+          id?: string
+          last_contact_at?: string | null
+          looking_for?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          listing_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          listing_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          listing_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listings: {
         Row: {
           area_sqm: number | null
@@ -103,6 +171,60 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      tasks: {
+        Row: {
+          broker_id: string
+          client_id: string | null
+          completed: boolean
+          created_at: string
+          due_at: string
+          id: string
+          listing_id: string | null
+          notes: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          broker_id: string
+          client_id?: string | null
+          completed?: boolean
+          created_at?: string
+          due_at: string
+          id?: string
+          listing_id?: string | null
+          notes?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          broker_id?: string
+          client_id?: string | null
+          completed?: boolean
+          created_at?: string
+          due_at?: string
+          id?: string
+          listing_id?: string | null
+          notes?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
