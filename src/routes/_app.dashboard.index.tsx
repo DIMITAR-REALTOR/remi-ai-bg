@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, Trash2, Sparkles } from "lucide-react";
+import { Plus, Pencil, Trash2, Sparkles, ShieldAlert } from "lucide-react";
 import { fmtPrice, statusLabel, statusTone, propertyTypeLabel } from "@/lib/listings-meta";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
