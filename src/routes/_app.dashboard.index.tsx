@@ -82,6 +82,14 @@ function Dashboard() {
         <Button asChild size="sm" className="gap-1.5"><Link to="/dashboard/new"><Plus className="h-4 w-4" />Добави обява</Link></Button>
       </div>
 
+      <Link to="/risk" className="mt-3 flex items-center gap-3 rounded-2xl border border-border bg-card p-3 transition hover:border-primary/40">
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><ShieldAlert className="h-4 w-4" /></div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-foreground">Анализ на сделка</p>
+          <p className="text-xs text-muted-foreground">AI оценка на риска при сделка с имот</p>
+        </div>
+      </Link>
+
       {isLoading ? (
         <p className="mt-6 text-center text-sm text-muted-foreground">Зареждане...</p>
       ) : listings.length === 0 ? (
