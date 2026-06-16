@@ -72,13 +72,15 @@ export function getHistoryItem(id: string): HistoryItem | undefined {
   return read().find((i) => i.id === id);
 }
 
-export function addHistory(item: Omit<HistoryItem, "id" | "createdAt"> & { id?: string; createdAt?: number }): HistoryItem {
+type NewRisk = Omit<RiskHistoryItem, "id" | "createdAt">;
+type NewCalc = Omit<CalcHistoryItem, "id" | "createdAt">;
+export function addHistory(item: NewRisk | NewCalc): HistoryItem {
   const all = read();
-  const full: HistoryItem = {
-    ...(item as HistoryItem),
-    id: item.id ?? (typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : Math.random().toString(36).slice(2)),
-    createdAt: item.createdAt ?? Date.now(),
-  };
+  const id =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : Math.random().toString(36).slice(2);
+  const full = { ...item, id, createdAt: Date.now() } as HistoryItem;
   all.push(full);
   write(all);
   return full;

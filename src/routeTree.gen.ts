@@ -9,8 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as RiskRouteImport } from './routes/risk'
+import { Route as NegotiationRouteImport } from './routes/negotiation'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as ChecklistRouteImport } from './routes/checklist'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
@@ -27,6 +32,11 @@ import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard
 import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
 import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboard.clients.$id'
 
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -35,6 +45,26 @@ const SearchRoute = SearchRouteImport.update({
 const RiskRoute = RiskRouteImport.update({
   id: '/risk',
   path: '/risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NegotiationRoute = NegotiationRouteImport.update({
+  id: '/negotiation',
+  path: '/negotiation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChecklistRoute = ChecklistRouteImport.update({
+  id: '/checklist',
+  path: '/checklist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrokersRoute = BrokersRouteImport.update({
@@ -116,8 +146,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
+  '/calculator': typeof CalculatorRoute
+  '/checklist': typeof ChecklistRoute
+  '/history': typeof HistoryRoute
+  '/negotiation': typeof NegotiationRoute
   '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
+  '/tools': typeof ToolsRoute
   '/dashboard': typeof AppDashboardRouteWithChildren
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
@@ -134,8 +169,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
+  '/calculator': typeof CalculatorRoute
+  '/checklist': typeof ChecklistRoute
+  '/history': typeof HistoryRoute
+  '/negotiation': typeof NegotiationRoute
   '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
+  '/tools': typeof ToolsRoute
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
@@ -153,8 +193,13 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
+  '/calculator': typeof CalculatorRoute
+  '/checklist': typeof ChecklistRoute
+  '/history': typeof HistoryRoute
+  '/negotiation': typeof NegotiationRoute
   '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
+  '/tools': typeof ToolsRoute
   '/_app/dashboard': typeof AppDashboardRouteWithChildren
   '/_app/favorites': typeof AppFavoritesRoute
   '/_app/profile': typeof AppProfileRoute
@@ -173,8 +218,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/brokers'
+    | '/calculator'
+    | '/checklist'
+    | '/history'
+    | '/negotiation'
     | '/risk'
     | '/search'
+    | '/tools'
     | '/dashboard'
     | '/favorites'
     | '/profile'
@@ -191,8 +241,13 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/brokers'
+    | '/calculator'
+    | '/checklist'
+    | '/history'
+    | '/negotiation'
     | '/risk'
     | '/search'
+    | '/tools'
     | '/favorites'
     | '/profile'
     | '/brokers/$id'
@@ -209,8 +264,13 @@ export interface FileRouteTypes {
     | '/_app'
     | '/auth'
     | '/brokers'
+    | '/calculator'
+    | '/checklist'
+    | '/history'
+    | '/negotiation'
     | '/risk'
     | '/search'
+    | '/tools'
     | '/_app/dashboard'
     | '/_app/favorites'
     | '/_app/profile'
@@ -229,13 +289,25 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
+  CalculatorRoute: typeof CalculatorRoute
+  ChecklistRoute: typeof ChecklistRoute
+  HistoryRoute: typeof HistoryRoute
+  NegotiationRoute: typeof NegotiationRoute
   RiskRoute: typeof RiskRoute
   SearchRoute: typeof SearchRoute
+  ToolsRoute: typeof ToolsRoute
   ListingIdRoute: typeof ListingIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -248,6 +320,34 @@ declare module '@tanstack/react-router' {
       path: '/risk'
       fullPath: '/risk'
       preLoaderRoute: typeof RiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/negotiation': {
+      id: '/negotiation'
+      path: '/negotiation'
+      fullPath: '/negotiation'
+      preLoaderRoute: typeof NegotiationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checklist': {
+      id: '/checklist'
+      path: '/checklist'
+      fullPath: '/checklist'
+      preLoaderRoute: typeof ChecklistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brokers': {
@@ -419,8 +519,13 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
+  CalculatorRoute: CalculatorRoute,
+  ChecklistRoute: ChecklistRoute,
+  HistoryRoute: HistoryRoute,
+  NegotiationRoute: NegotiationRoute,
   RiskRoute: RiskRoute,
   SearchRoute: SearchRoute,
+  ToolsRoute: ToolsRoute,
   ListingIdRoute: ListingIdRoute,
 }
 export const routeTree = rootRouteImport
