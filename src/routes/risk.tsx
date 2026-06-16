@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ShieldAlert, Sparkles, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { addHistory } from "@/lib/history-storage";
 
 export const Route = createFileRoute("/risk")({
   head: () => ({
@@ -73,6 +74,17 @@ function RiskPage() {
         },
       });
       setResult(r);
+      try {
+        addHistory({
+          kind: "risk",
+          location: f.location.trim(),
+          price_eur: Number(f.price_eur),
+          construction_type: f.construction_type,
+          document_status: f.document_status,
+          notes: f.notes.trim(),
+          result: r,
+        });
+      } catch {}
     } catch (err: any) {
       toast.error(err?.message ?? "Грешка при анализ");
     } finally {
