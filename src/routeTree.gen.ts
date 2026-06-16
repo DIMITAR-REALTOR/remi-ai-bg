@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as RiskRouteImport } from './routes/risk'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
@@ -29,6 +30,11 @@ import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboa
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiskRoute = RiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrokersRoute = BrokersRouteImport.update({
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
+  '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
   '/dashboard': typeof AppDashboardRouteWithChildren
   '/favorites': typeof AppFavoritesRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
+  '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
+  '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
   '/_app/dashboard': typeof AppDashboardRouteWithChildren
   '/_app/favorites': typeof AppFavoritesRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/brokers'
+    | '/risk'
     | '/search'
     | '/dashboard'
     | '/favorites'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/brokers'
+    | '/risk'
     | '/search'
     | '/favorites'
     | '/profile'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/auth'
     | '/brokers'
+    | '/risk'
     | '/search'
     | '/_app/dashboard'
     | '/_app/favorites'
@@ -217,6 +229,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
+  RiskRoute: typeof RiskRoute
   SearchRoute: typeof SearchRoute
   ListingIdRoute: typeof ListingIdRoute
 }
@@ -228,6 +241,13 @@ declare module '@tanstack/react-router' {
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risk': {
+      id: '/risk'
+      path: '/risk'
+      fullPath: '/risk'
+      preLoaderRoute: typeof RiskRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brokers': {
@@ -399,6 +419,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
+  RiskRoute: RiskRoute,
   SearchRoute: SearchRoute,
   ListingIdRoute: ListingIdRoute,
 }

@@ -61,3 +61,68 @@ export const generateListingDescription = createServerFn({ method: "POST" })
     if (!text) throw new Error("Празен отговор от AI");
     return { description: text.trim() };
   });
+
+const RiskInput = z.object({
+  price_eur: z.number().min(0).max(100_000_000),
+  location: z.string().min(1).max(200),
+  construction_type: z.string().min(1).max(100),
+  document_status: z.string().min(1).max(200),
+  notes: z.string().max(1000).optional().default(""),
+});
+
+const RiskItem = z.object({ title: z.string(), explanation: z.string() });
+const RiskOutput = z.object({
+  score: z.number().min(1).max(10),
+  risks: z.array(RiskItem).length(3),
+  recommendation: z.string(),
+});
+export type DealRiskResult = z.infer<typeof RiskOutput>;
+
+export const analyzeDealRisk = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => RiskInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const details = [
+      `Цена: €${data.price_eur}`,
+      `Локация: ${data.location}`,
+      `Тип строителство: ${data.construction_type}`,
+      `Състояние на документите: ${data.document_status}`,
+      data.notes && `Допълнителни бележки: ${data.notes}`,
+    ].filter(Boolean).join("\n");
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "Ти си експерт по оценка на риска при сделки с недвижими имоти в България. Анализираш дадени параметри на имот и връщаш САМО валиден JSON (без markdown, без обяснения извън JSON) със следната структура:\n{\n  \"score\": число от 1 до 10 (1 = нисък риск, 10 = висок риск),\n  \"risks\": масив с ТОЧНО 3 обекта, всеки с полета \"title\" (кратко заглавие до 6 думи) и \"explanation\" (1-2 изречения на български),\n  \"recommendation\": кратка препоръка на български (2-3 изречения)\n}\nВсички текстове са на български език (кирилица). Без емоджи.",
+          },
+          { role: "user", content: `Оцени риска на тази сделка:\n${details}` },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+
+    let parsed: unknown;
+    try {
+      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      throw new Error("Невалиден отговор от AI");
+    }
+    return RiskOutput.parse(parsed);
+  });
