@@ -5,8 +5,8 @@ import heroCoast from "@/assets/hero-coast.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AI Estate Pro — Имоти в България" },
-      { name: "description", content: "Намери своя имот или клиент в България. Апартаменти, къщи и парцели от лицензирани брокери." },
+      { title: "REMI AI — Real Estate Market Intelligence" },
+      { name: "description", content: "Намери своя имот или клиент в България с REMI AI. Апартаменти, къщи и парцели от лицензирани брокери." },
     ],
   }),
   component: Landing,
