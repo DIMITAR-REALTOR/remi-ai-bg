@@ -122,8 +122,13 @@ function SearchPage() {
 
       {!isLoading && filtered.length === 0 && (
         <div className="mt-12 rounded-2xl border border-dashed border-border p-8 text-center">
-          <p className="text-sm font-medium text-foreground">Няма намерени обяви</p>
-          <p className="mt-1 text-xs text-muted-foreground">Опитай с други филтри.</p>
+          <div className="mx-auto mb-3 text-4xl">🔍</div>
+          <p className="text-sm font-medium text-foreground">Не намерихме имоти по твоите критерии.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Опитай други филтри или се свържи с брокер.</p>
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <Button variant="outline" onClick={() => setFilters(initial)}>Изчисти филтрите</Button>
+            <Button asChild><Link to="/brokers">Свържи се с брокер →</Link></Button>
+          </div>
         </div>
       )}
     </div>
