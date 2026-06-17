@@ -8,6 +8,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/hooks/use-auth";
 import { BottomNav } from "@/components/BottomNav";
+import { AppHeader } from "@/components/AppHeader";
+import { AppFooter } from "@/components/AppFooter";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -88,8 +90,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div className="min-h-screen pb-20">
+        <AppHeader />
+        <div className="min-h-screen pt-14 pb-20">
           <Outlet />
+          <AppFooter />
         </div>
         <BottomNav />
         <Toaster position="top-center" />
