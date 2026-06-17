@@ -1,7 +1,7 @@
 {
-  "name": "AI Estate Pro",
-  "short_name": "AI Estate Pro",
-  "description": "Платформа за брокери и клиенти на имоти в България",
+  "name": "REMI AI - Real Estate Market Intelligence",
+  "short_name": "REMI AI",
+  "description": "REMI AI — Real Estate Market Intelligence за брокери и клиенти в България",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

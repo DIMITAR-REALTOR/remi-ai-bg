@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { ListingCard } from "@/components/ListingCard";
-import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_app/favorites")({
@@ -42,10 +41,10 @@ function FavoritesPage() {
         <p className="mt-6 text-center text-sm text-muted-foreground">Зареждане...</p>
       ) : data.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-dashed border-border p-8 text-center">
-          <Heart className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
-          <p className="text-sm font-medium text-foreground">Нямаш любими имоти.</p>
-          <p className="mt-1 text-xs text-muted-foreground">Запази обяви, които харесваш.</p>
-          <Button asChild className="mt-4"><Link to="/search">Към търсене</Link></Button>
+          <div className="mx-auto mb-3 text-4xl">❤️</div>
+          <p className="text-sm font-medium text-foreground">Още нямаш любими имоти.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Запазвай обяви, които харесваш, за да ги намериш бързо.</p>
+          <Button asChild className="mt-4"><Link to="/search">Започни търсенето →</Link></Button>
         </div>
       ) : (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">

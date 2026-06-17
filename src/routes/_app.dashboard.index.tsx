@@ -93,11 +93,12 @@ function Dashboard() {
       {isLoading ? (
         <p className="mt-6 text-center text-sm text-muted-foreground">Зареждане...</p>
       ) : listings.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-border p-6 text-center">
-          <p className="text-sm font-medium text-foreground">Нямаш обяви още.</p>
+        <div className="mt-8 rounded-2xl border border-dashed border-border p-8 text-center">
+          <div className="mx-auto mb-3 text-4xl">🏠</div>
+          <p className="text-sm font-medium text-foreground">Все още нямаш обяви.</p>
           <p className="mt-1 text-xs text-muted-foreground">Добави своята първа обява или зареди примерни данни.</p>
           <div className="mt-4 flex flex-col gap-2">
-            <Button asChild><Link to="/dashboard/new"><Plus className="mr-1 h-4 w-4" />Добави обява</Link></Button>
+            <Button asChild><Link to="/dashboard/new"><Plus className="mr-1 h-4 w-4" />Добави първата си обява →</Link></Button>
             <Button variant="outline" onClick={seed} className="gap-2"><Sparkles className="h-4 w-4" />Зареди примерни обяви</Button>
           </div>
         </div>
