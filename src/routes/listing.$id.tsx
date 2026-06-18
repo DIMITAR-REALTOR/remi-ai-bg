@@ -7,8 +7,43 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { ShareButtons } from "@/components/ShareButtons";
 
 export const Route = createFileRoute("/listing/$id")({
+  loader: async ({ params }) => {
+    const { data } = await supabase
+      .from("listings")
+      .select("title,price_eur,city,neighborhood,photos,description")
+      .eq("id", params.id)
+      .maybeSingle();
+    return { meta: data };
+  },
+  head: ({ params, loaderData }) => {
+    const m = loaderData?.meta;
+    const url = `https://remi-ai-bg.lovable.app/listing/${params.id}`;
+    const title = m
+      ? `${m.title} — ${new Intl.NumberFormat("bg-BG").format(m.price_eur)} € — REMI AI`
+      : "Имот — REMI AI";
+    const desc = m
+      ? `${[m.neighborhood, m.city].filter(Boolean).join(", ")} · ${m.description?.slice(0, 140) ?? ""}`
+      : "Имот в платформата REMI AI.";
+    const img = m?.photos?.[0];
+    return {
+      meta: [
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: url },
+        ...(img ? [{ property: "og:image", content: img }, { name: "twitter:image", content: img }] : []),
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: desc },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: ListingDetail,
 });
 
@@ -129,6 +164,12 @@ function ListingDetail() {
         )}
 
         <FavoriteButton listingId={data.id} />
+
+        <ShareButtons
+          title={data.title}
+          text={`${data.title} — ${fmtPrice(data.price_eur)}${data.neighborhood ? `, ${data.neighborhood}` : ""}`}
+          url={typeof window !== "undefined" ? window.location.href : `https://remi-ai-bg.lovable.app/listing/${data.id}`}
+        />
       </div>
     </div>
   );
