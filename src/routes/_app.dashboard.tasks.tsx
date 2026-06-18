@@ -4,10 +4,11 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { Plus, Check, Trash2, Calendar } from "lucide-react";
+import { Plus, Check, Trash2, Calendar, CalendarPlus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { TaskForm } from "@/components/TaskForm";
 import { fmtDateTime } from "@/lib/crm-meta";
+import { googleCalendarUrl } from "@/lib/share";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -95,6 +96,22 @@ function TasksPage() {
                     </p>
                   )}
                   {t.notes && <p className="mt-1 text-xs text-muted-foreground whitespace-pre-line">{t.notes}</p>}
+                  {t.due_at && !t.completed && (
+                    <a
+                      href={googleCalendarUrl({
+                        title: t.title,
+                        start: t.due_at,
+                        durationMinutes: 60,
+                        details: [t.clients?.name && `Клиент: ${t.clients.name}`, t.listings?.title && `Имот: ${t.listings.title}`, t.notes]
+                          .filter(Boolean).join("\n"),
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                    >
+                      <CalendarPlus className="h-3.5 w-3.5" />Добави в Google Календар
+                    </a>
+                  )}
                 </div>
                 <button onClick={() => del(t.id)} className="text-muted-foreground hover:text-destructive" aria-label="Изтрий">
                   <Trash2 className="h-4 w-4" />
