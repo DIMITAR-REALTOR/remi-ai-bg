@@ -126,3 +126,68 @@ export const analyzeDealRisk = createServerFn({ method: "POST" })
     }
     return RiskOutput.parse(parsed);
   });
+
+const MarketInput = z.object({
+  location: z.string().min(1).max(200),
+  property_type: z.string().min(1).max(100),
+  price_eur: z.number().min(0).max(100_000_000),
+  area_sqm: z.number().min(1).max(100_000),
+});
+
+const MarketOutput = z.object({
+  score: z.number().min(1).max(10),
+  summary: z.string(),
+  pros: z.array(z.string()).min(2).max(4),
+  cons: z.array(z.string()).min(2).max(4),
+});
+export type MarketScoreResult = z.infer<typeof MarketOutput>;
+
+export const analyzeMarketScore = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => MarketInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const pricePerSqm = Math.round(data.price_eur / data.area_sqm);
+    const details = [
+      `Локация: ${data.location}`,
+      `Тип имот: ${data.property_type}`,
+      `Цена: €${data.price_eur}`,
+      `Площ: ${data.area_sqm} кв.м`,
+      `Цена на кв.м: €${pricePerSqm}`,
+    ].join("\n");
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "Ти си експерт по пазара на недвижими имоти в България. Оценяваш как е позициониран даден имот спрямо пазара. Връщаш САМО валиден JSON със структура:\n{\n  \"score\": число 1-10 (1 = много добра пазарна оферта, 10 = надценен/слаба оферта),\n  \"summary\": кратко обобщение 2-3 изречения на български,\n  \"pros\": масив с 2-4 кратки предимства на български,\n  \"cons\": масив с 2-4 кратки недостатъци на български\n}\nБез емоджи, само на български (кирилица).",
+          },
+          { role: "user", content: `Оцени пазарната позиция:\n${details}` },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+    let parsed: unknown;
+    try {
+      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      throw new Error("Невалиден отговор от AI");
+    }
+    return MarketOutput.parse(parsed);
+  });
+
