@@ -14,6 +14,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NegotiationRouteImport } from './routes/negotiation'
+import { Route as MarketRouteImport } from './routes/market'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as ChecklistRouteImport } from './routes/checklist'
@@ -57,6 +58,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const NegotiationRoute = NegotiationRouteImport.update({
   id: '/negotiation',
   path: '/negotiation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -162,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
   '/risk': typeof RiskRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
   '/risk': typeof RiskRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
   '/risk': typeof RiskRoute
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/checklist'
     | '/help'
     | '/history'
+    | '/market'
     | '/negotiation'
     | '/privacy'
     | '/risk'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/checklist'
     | '/help'
     | '/history'
+    | '/market'
     | '/negotiation'
     | '/privacy'
     | '/risk'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/checklist'
     | '/help'
     | '/history'
+    | '/market'
     | '/negotiation'
     | '/privacy'
     | '/risk'
@@ -317,6 +329,7 @@ export interface RootRouteChildren {
   ChecklistRoute: typeof ChecklistRoute
   HelpRoute: typeof HelpRoute
   HistoryRoute: typeof HistoryRoute
+  MarketRoute: typeof MarketRoute
   NegotiationRoute: typeof NegotiationRoute
   PrivacyRoute: typeof PrivacyRoute
   RiskRoute: typeof RiskRoute
@@ -360,6 +373,13 @@ declare module '@tanstack/react-router' {
       path: '/negotiation'
       fullPath: '/negotiation'
       preLoaderRoute: typeof NegotiationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/history': {
@@ -563,6 +583,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChecklistRoute: ChecklistRoute,
   HelpRoute: HelpRoute,
   HistoryRoute: HistoryRoute,
+  MarketRoute: MarketRoute,
   NegotiationRoute: NegotiationRoute,
   PrivacyRoute: PrivacyRoute,
   RiskRoute: RiskRoute,

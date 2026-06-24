@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, History, Wrench } from "lucide-react";
+import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, History, Wrench, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
     meta: [
-      { title: "Инструменти — AI Estate Pro" },
+      { title: "Инструменти — REMI AI" },
       { name: "description", content: "Полезни инструменти за брокери и купувачи на имоти." },
     ],
   }),
@@ -13,11 +13,13 @@ export const Route = createFileRoute("/tools")({
 
 const TOOLS = [
   { to: "/risk", icon: ShieldAlert, title: "Анализ на сделка", desc: "AI оценка на риска при покупка" },
+  { to: "/market", icon: TrendingUp, title: "Пазарна анализа", desc: "Оценка, тренди и аналитика на район" },
   { to: "/checklist", icon: CheckCircle2, title: "Чеклист", desc: "Стъпки за оглед и покупка" },
   { to: "/negotiation", icon: MessageSquare, title: "Преговори", desc: "Готови аргументи и тактики" },
   { to: "/calculator", icon: Calculator, title: "Инвестиционен калкулатор", desc: "Доходност, вноска и паричен поток" },
   { to: "/history", icon: History, title: "История", desc: "Запазени анализи и калкулации" },
 ] as const;
+
 
 function ToolsPage() {
   return (
