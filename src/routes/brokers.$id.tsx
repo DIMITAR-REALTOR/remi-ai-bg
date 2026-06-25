@@ -17,7 +17,7 @@ function BrokerProfilePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id,full_name,agency_name,photo_url,bio,phone,email")
+        .select("id,full_name,agency_name,photo_url,bio,phone,email,city,broker_status")
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
@@ -59,6 +59,7 @@ function BrokerProfilePage() {
         </div>
         <h1 className="mt-3 text-xl font-bold text-foreground">{broker.full_name ?? "Брокер"}</h1>
         <p className="mt-0.5 text-sm text-muted-foreground">{broker.agency_name ?? "Compass Real Estate"}</p>
+        {broker.city && <p className="mt-0.5 text-xs text-muted-foreground">📍 {broker.city}</p>}
         <a
           href="https://compassrealestate.bg"
           target="_blank"

@@ -140,6 +140,8 @@ export type Database = {
         Row: {
           agency_name: string | null
           bio: string | null
+          broker_status: string
+          city: string | null
           created_at: string
           email: string | null
           full_name: string | null
@@ -151,6 +153,8 @@ export type Database = {
         Insert: {
           agency_name?: string | null
           bio?: string | null
+          broker_status?: string
+          city?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
@@ -162,6 +166,8 @@ export type Database = {
         Update: {
           agency_name?: string | null
           bio?: string | null
+          broker_status?: string
+          city?: string | null
           created_at?: string
           email?: string | null
           full_name?: string | null
