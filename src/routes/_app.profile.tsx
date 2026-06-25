@@ -42,7 +42,8 @@ function ProfilePage() {
   const save = async () => {
     if (!user) return;
     setBusy(true);
-    const { error } = await supabase.from("profiles").upsert({ id: user.id, ...profile }).select().single();
+    const { broker_status: _bs, ...editable } = profile;
+    const { error } = await supabase.from("profiles").upsert({ id: user.id, ...editable }).select().single();
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Запазено");
