@@ -20,12 +20,14 @@ interface Profile {
   agency_name: string | null;
   photo_url: string | null;
   bio: string | null;
+  city: string | null;
+  broker_status: string | null;
 }
 
 function ProfilePage() {
   const { user, isBroker, role } = useAuth();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<Profile>({ full_name: "", phone: "", email: "", agency_name: "", photo_url: "", bio: "" });
+  const [profile, setProfile] = useState<Profile>({ full_name: "", phone: "", email: "", agency_name: "", photo_url: "", bio: "", city: "Варна", broker_status: "pending" });
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -76,6 +78,7 @@ function ProfilePage() {
         <div><Label htmlFor="em">Имейл</Label><Input id="em" type="email" value={profile.email ?? user?.email ?? ""} disabled /></div>
         {isBroker && (
           <>
+            <div><Label htmlFor="ci">Град</Label><Input id="ci" value={profile.city ?? ""} onChange={(e) => setProfile({ ...profile, city: e.target.value })} placeholder="Варна" /></div>
             <div><Label htmlFor="ag">Агенция</Label><Input id="ag" value={profile.agency_name ?? ""} onChange={(e) => setProfile({ ...profile, agency_name: e.target.value })} /></div>
             <div><Label htmlFor="pu">URL на снимка</Label><Input id="pu" value={profile.photo_url ?? ""} onChange={(e) => setProfile({ ...profile, photo_url: e.target.value })} placeholder="https://..." /></div>
             <div><Label htmlFor="bi">Описание</Label><Textarea id="bi" rows={4} value={profile.bio ?? ""} onChange={(e) => setProfile({ ...profile, bio: e.target.value })} /></div>
