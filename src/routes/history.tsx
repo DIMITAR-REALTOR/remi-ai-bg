@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/history")({
   head: () => ({
     meta: [
-      { title: "История — AI Estate Pro" },
+      { title: "История — REMI AI" },
       { name: "description", content: "Запазени анализи на риск и инвестиционни калкулации." },
     ],
   }),
