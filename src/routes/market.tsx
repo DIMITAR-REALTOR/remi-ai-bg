@@ -22,7 +22,7 @@ import { PROPERTY_TYPES, fmtPrice, propertyTypeLabel } from "@/lib/listings-meta
 export const Route = createFileRoute("/market")({
   head: () => ({
     meta: [
-      { title: "Пазарна анализа — REMI AI" },
+      { title: "REMI Пазарна интелигентност" },
       { name: "description", content: "AI пазарна оценка 1-100, ценови тренди и подобни имоти във Варна." },
     ],
   }),
