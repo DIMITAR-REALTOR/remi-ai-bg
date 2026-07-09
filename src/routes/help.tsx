@@ -59,8 +59,8 @@ function HelpPage() {
       <div className="mt-8 rounded-2xl border border-border bg-card p-4 text-sm">
         <p className="font-semibold text-foreground">Не намери отговор?</p>
         <p className="mt-1 text-muted-foreground">
-          Свържи се с нас на <a href="tel:0893366051" className="text-primary hover:underline">0893 366 051</a> или посети{" "}
-          <a href="https://compassrealestate.bg" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">compassrealestate.bg</a>.
+          Свържи се с нас на <a href="tel:0893366051" className="text-primary hover:underline">0893 366 051</a> или пиши на{" "}
+          <a href="mailto:remi.ai.bg@gmail.com" className="text-primary hover:underline">remi.ai.bg@gmail.com</a>.
         </p>
       </div>
     </div>
