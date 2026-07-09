@@ -58,9 +58,9 @@ function ChecklistPage() {
           <CheckCircle2 className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Чеклист</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Интелигентен чеклист</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Стъпки за оглед и покупка на имот. Прогресът се запазва локално.
+            Автоматично генериран чеклист по сделка. Прогресът се запазва локално.
           </p>
         </div>
       </header>
