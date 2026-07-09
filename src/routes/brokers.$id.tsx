@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronLeft, Phone, Building2, Mail, Globe } from "lucide-react";
+import { ChevronLeft, Phone, Building2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ListingCard } from "@/components/ListingCard";
 
@@ -58,16 +58,8 @@ function BrokerProfilePage() {
           {broker.photo_url ? <img src={broker.photo_url} alt={broker.full_name ?? ""} className="h-full w-full object-cover" /> : <Building2 className="h-9 w-9" />}
         </div>
         <h1 className="mt-3 text-xl font-bold text-foreground">{broker.full_name ?? "Брокер"}</h1>
-        <p className="mt-0.5 text-sm text-muted-foreground">{broker.agency_name ?? "Compass Real Estate"}</p>
+        {broker.agency_name && <p className="mt-0.5 text-sm text-muted-foreground">{broker.agency_name}</p>}
         {broker.city && <p className="mt-0.5 text-xs text-muted-foreground">📍 {broker.city}</p>}
-        <a
-          href="https://compassrealestate.bg"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
-        >
-          <Globe className="h-3 w-3" />compassrealestate.bg
-        </a>
         {broker.bio && <p className="mt-3 text-sm text-muted-foreground whitespace-pre-line">{broker.bio}</p>}
 
         <div className="mt-4 flex flex-col gap-2">

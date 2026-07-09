@@ -15,12 +15,13 @@ import { Route as RiskRouteImport } from './routes/risk'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NegotiationRouteImport } from './routes/negotiation'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as ChecklistRouteImport } from './routes/checklist'
-import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdsRouteImport } from './routes/ads'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
@@ -65,6 +66,11 @@ const MarketRoute = MarketRouteImport.update({
   path: '/market',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvestRoute = InvestRouteImport.update({
+  id: '/invest',
+  path: '/invest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -80,11 +86,6 @@ const ChecklistRoute = ChecklistRouteImport.update({
   path: '/checklist',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CalculatorRoute = CalculatorRouteImport.update({
-  id: '/calculator',
-  path: '/calculator',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BrokersRoute = BrokersRouteImport.update({
   id: '/brokers',
   path: '/brokers',
@@ -93,6 +94,11 @@ const BrokersRoute = BrokersRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdsRoute = AdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -162,12 +168,13 @@ const AppDashboardClientsIdRoute = AppDashboardClientsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ads': typeof AdsRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
-  '/calculator': typeof CalculatorRoute
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
@@ -188,12 +195,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ads': typeof AdsRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
-  '/calculator': typeof CalculatorRoute
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
@@ -215,12 +223,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/ads': typeof AdsRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
-  '/calculator': typeof CalculatorRoute
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
@@ -243,12 +252,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ads'
     | '/auth'
     | '/brokers'
-    | '/calculator'
     | '/checklist'
     | '/help'
     | '/history'
+    | '/invest'
     | '/market'
     | '/negotiation'
     | '/privacy'
@@ -269,12 +279,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ads'
     | '/auth'
     | '/brokers'
-    | '/calculator'
     | '/checklist'
     | '/help'
     | '/history'
+    | '/invest'
     | '/market'
     | '/negotiation'
     | '/privacy'
@@ -295,12 +306,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/ads'
     | '/auth'
     | '/brokers'
-    | '/calculator'
     | '/checklist'
     | '/help'
     | '/history'
+    | '/invest'
     | '/market'
     | '/negotiation'
     | '/privacy'
@@ -323,12 +335,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  AdsRoute: typeof AdsRoute
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
-  CalculatorRoute: typeof CalculatorRoute
   ChecklistRoute: typeof ChecklistRoute
   HelpRoute: typeof HelpRoute
   HistoryRoute: typeof HistoryRoute
+  InvestRoute: typeof InvestRoute
   MarketRoute: typeof MarketRoute
   NegotiationRoute: typeof NegotiationRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -382,6 +395,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invest': {
+      id: '/invest'
+      path: '/invest'
+      fullPath: '/invest'
+      preLoaderRoute: typeof InvestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -403,13 +423,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChecklistRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/calculator': {
-      id: '/calculator'
-      path: '/calculator'
-      fullPath: '/calculator'
-      preLoaderRoute: typeof CalculatorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/brokers': {
       id: '/brokers'
       path: '/brokers'
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ads': {
+      id: '/ads'
+      path: '/ads'
+      fullPath: '/ads'
+      preLoaderRoute: typeof AdsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -577,12 +597,13 @@ const BrokersRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  AdsRoute: AdsRoute,
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
-  CalculatorRoute: CalculatorRoute,
   ChecklistRoute: ChecklistRoute,
   HelpRoute: HelpRoute,
   HistoryRoute: HistoryRoute,
+  InvestRoute: InvestRoute,
   MarketRoute: MarketRoute,
   NegotiationRoute: NegotiationRoute,
   PrivacyRoute: PrivacyRoute,

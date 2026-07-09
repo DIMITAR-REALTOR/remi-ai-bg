@@ -8,8 +8,8 @@ import { MessageSquare, ArrowLeft, Lightbulb } from "lucide-react";
 export const Route = createFileRoute("/negotiation")({
   head: () => ({
     meta: [
-      { title: "Преговори — AI Estate Pro" },
-      { name: "description", content: "Готови аргументи и тактики за преговори по сделки с имоти." },
+      { title: "REMI Преговори и продажби" },
+      { name: "description", content: "AI подкрепа при преговори и затваряне на сделки." },
     ],
   }),
   component: NegotiationPage,
@@ -30,9 +30,9 @@ function NegotiationPage() {
           <MessageSquare className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Преговори</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Преговори и продажби</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Избери ситуация и получи готови аргументи за преговори.
+            AI подкрепа при преговори и затваряне на сделки.
           </p>
         </div>
       </header>

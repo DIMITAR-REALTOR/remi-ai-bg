@@ -7,11 +7,11 @@ import { Calculator, ArrowLeft, Save } from "lucide-react";
 import { addHistory, type CalcInputs, type CalcResults } from "@/lib/history-storage";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/calculator")({
+export const Route = createFileRoute("/invest")({
   head: () => ({
     meta: [
-      { title: "Инвестиционен калкулатор — AI Estate Pro" },
-      { name: "description", content: "Изчисли месечна вноска, паричен поток и доходност на инвестиционен имот." },
+      { title: "REMI Инвеститорски анализ" },
+      { name: "description", content: "Анализ на инвестиционен потенциал и ROI." },
     ],
   }),
   component: CalculatorPage,
@@ -123,9 +123,9 @@ function CalculatorPage() {
           <Calculator className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Инвестиционен калкулатор</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Инвеститорски анализ</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Оцени дали имотът е добра инвестиция за отдаване под наем.
+            Анализ на инвестиционен потенциал и ROI.
           </p>
         </div>
       </header>

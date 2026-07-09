@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
-      { title: "Търси имоти — AI Estate Pro" },
+      { title: "Търси имоти — REMI AI" },
       { name: "description", content: "Прегледай активни обяви от брокери в България." },
     ],
   }),
