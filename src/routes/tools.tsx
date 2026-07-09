@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, History, Wrench, TrendingUp } from "lucide-react";
+import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, Wrench, TrendingUp, Megaphone } from "lucide-react";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
@@ -12,12 +12,12 @@ export const Route = createFileRoute("/tools")({
 });
 
 const TOOLS = [
-  { to: "/risk", icon: ShieldAlert, title: "Анализ на сделка", desc: "AI оценка на риска при покупка" },
-  { to: "/market", icon: TrendingUp, title: "Пазарна анализа", desc: "Оценка, тренди и аналитика на район" },
-  { to: "/checklist", icon: CheckCircle2, title: "Чеклист", desc: "Стъпки за оглед и покупка" },
-  { to: "/negotiation", icon: MessageSquare, title: "Преговори", desc: "Готови аргументи и тактики" },
-  { to: "/calculator", icon: Calculator, title: "Инвестиционен калкулатор", desc: "Доходност, вноска и паричен поток" },
-  { to: "/history", icon: History, title: "История", desc: "Запазени анализи и калкулации" },
+  { to: "/risk", icon: ShieldAlert, title: "REMI Правен анализ", desc: "Идентификуване на рискове, анализ на собственост и правни проблеми" },
+  { to: "/checklist", icon: CheckCircle2, title: "REMI Интелигентен чеклист", desc: "Автоматично генериран чеклист по сделка" },
+  { to: "/negotiation", icon: MessageSquare, title: "REMI Преговори и продажби", desc: "AI подкрепа при преговори и затваряне на сделки" },
+  { to: "/ads", icon: Megaphone, title: "REMI Маркетинг асистент", desc: "Генериране на атрактивни обяви и маркетингови текстове" },
+  { to: "/invest", icon: Calculator, title: "REMI Инвеститорски анализ", desc: "Анализ на инвестиционен потенциал и ROI" },
+  { to: "/market", icon: TrendingUp, title: "REMI Пазарна интелигентност", desc: "Анализ на пазара, цени и локация" },
 ] as const;
 
 
