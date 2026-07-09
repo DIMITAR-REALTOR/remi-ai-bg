@@ -76,7 +76,7 @@ function HistoryPage() {
             <Link to="/risk" className="text-sm font-semibold text-primary hover:underline">
               Стартирай анализ на сделка →
             </Link>
-            <Link to="/calculator" className="text-sm font-semibold text-primary hover:underline">
+            <Link to="/invest" className="text-sm font-semibold text-primary hover:underline">
               Изчисли инвестиция →
             </Link>
           </div>
