@@ -15,8 +15,8 @@ import { addHistory } from "@/lib/history-storage";
 export const Route = createFileRoute("/risk")({
   head: () => ({
     meta: [
-      { title: "Анализ на сделка — AI Estate Pro" },
-      { name: "description", content: "AI оценка на риска при сделки с недвижими имоти в България." },
+      { title: "REMI Правен анализ" },
+      { name: "description", content: "Идентификуване на рискове, анализ на собственост и правни проблеми." },
     ],
   }),
   component: RiskPage,
