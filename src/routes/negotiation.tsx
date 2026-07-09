@@ -8,8 +8,8 @@ import { MessageSquare, ArrowLeft, Lightbulb } from "lucide-react";
 export const Route = createFileRoute("/negotiation")({
   head: () => ({
     meta: [
-      { title: "Преговори — AI Estate Pro" },
-      { name: "description", content: "Готови аргументи и тактики за преговори по сделки с имоти." },
+      { title: "REMI Преговори и продажби" },
+      { name: "description", content: "AI подкрепа при преговори и затваряне на сделки." },
     ],
   }),
   component: NegotiationPage,
