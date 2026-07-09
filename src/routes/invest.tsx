@@ -7,7 +7,7 @@ import { Calculator, ArrowLeft, Save } from "lucide-react";
 import { addHistory, type CalcInputs, type CalcResults } from "@/lib/history-storage";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/calculator")({
+export const Route = createFileRoute("/invest")({
   head: () => ({
     meta: [
       { title: "Инвестиционен калкулатор — AI Estate Pro" },

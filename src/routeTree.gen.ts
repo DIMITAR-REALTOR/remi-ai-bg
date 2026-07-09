@@ -15,10 +15,10 @@ import { Route as RiskRouteImport } from './routes/risk'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NegotiationRouteImport } from './routes/negotiation'
 import { Route as MarketRouteImport } from './routes/market'
+import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as ChecklistRouteImport } from './routes/checklist'
-import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
@@ -65,6 +65,11 @@ const MarketRoute = MarketRouteImport.update({
   path: '/market',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvestRoute = InvestRouteImport.update({
+  id: '/invest',
+  path: '/invest',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -78,11 +83,6 @@ const HelpRoute = HelpRouteImport.update({
 const ChecklistRoute = ChecklistRouteImport.update({
   id: '/checklist',
   path: '/checklist',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalculatorRoute = CalculatorRouteImport.update({
-  id: '/calculator',
-  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrokersRoute = BrokersRouteImport.update({
@@ -164,10 +164,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
-  '/calculator': typeof CalculatorRoute
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
@@ -190,10 +190,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
-  '/calculator': typeof CalculatorRoute
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
@@ -217,10 +217,10 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
-  '/calculator': typeof CalculatorRoute
   '/checklist': typeof ChecklistRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
+  '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
@@ -245,10 +245,10 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/brokers'
-    | '/calculator'
     | '/checklist'
     | '/help'
     | '/history'
+    | '/invest'
     | '/market'
     | '/negotiation'
     | '/privacy'
@@ -271,10 +271,10 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/brokers'
-    | '/calculator'
     | '/checklist'
     | '/help'
     | '/history'
+    | '/invest'
     | '/market'
     | '/negotiation'
     | '/privacy'
@@ -297,10 +297,10 @@ export interface FileRouteTypes {
     | '/_app'
     | '/auth'
     | '/brokers'
-    | '/calculator'
     | '/checklist'
     | '/help'
     | '/history'
+    | '/invest'
     | '/market'
     | '/negotiation'
     | '/privacy'
@@ -325,10 +325,10 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
-  CalculatorRoute: typeof CalculatorRoute
   ChecklistRoute: typeof ChecklistRoute
   HelpRoute: typeof HelpRoute
   HistoryRoute: typeof HistoryRoute
+  InvestRoute: typeof InvestRoute
   MarketRoute: typeof MarketRoute
   NegotiationRoute: typeof NegotiationRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -382,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invest': {
+      id: '/invest'
+      path: '/invest'
+      fullPath: '/invest'
+      preLoaderRoute: typeof InvestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -401,13 +408,6 @@ declare module '@tanstack/react-router' {
       path: '/checklist'
       fullPath: '/checklist'
       preLoaderRoute: typeof ChecklistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calculator': {
-      id: '/calculator'
-      path: '/calculator'
-      fullPath: '/calculator'
-      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brokers': {
@@ -579,10 +579,10 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
-  CalculatorRoute: CalculatorRoute,
   ChecklistRoute: ChecklistRoute,
   HelpRoute: HelpRoute,
   HistoryRoute: HistoryRoute,
+  InvestRoute: InvestRoute,
   MarketRoute: MarketRoute,
   NegotiationRoute: NegotiationRoute,
   PrivacyRoute: PrivacyRoute,
@@ -594,13 +594,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
