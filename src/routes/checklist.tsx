@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/checklist")({
   head: () => ({
     meta: [
-      { title: "Чеклист — AI Estate Pro" },
-      { name: "description", content: "Чеклист за оглед и покупка на имот в България." },
+      { title: "REMI Интелигентен чеклист" },
+      { name: "description", content: "Автоматично генериран чеклист по сделка." },
     ],
   }),
   component: ChecklistPage,
