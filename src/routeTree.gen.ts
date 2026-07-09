@@ -21,6 +21,7 @@ import { Route as HelpRouteImport } from './routes/help'
 import { Route as ChecklistRouteImport } from './routes/checklist'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdsRouteImport } from './routes/ads'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ListingIdRouteImport } from './routes/listing.$id'
@@ -95,6 +96,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdsRoute = AdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -162,6 +168,7 @@ const AppDashboardClientsIdRoute = AppDashboardClientsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ads': typeof AdsRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ads': typeof AdsRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/ads': typeof AdsRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ads'
     | '/auth'
     | '/brokers'
     | '/checklist'
@@ -269,6 +279,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ads'
     | '/auth'
     | '/brokers'
     | '/checklist'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_app'
+    | '/ads'
     | '/auth'
     | '/brokers'
     | '/checklist'
@@ -323,6 +335,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  AdsRoute: typeof AdsRoute
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
   ChecklistRoute: typeof ChecklistRoute
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ads': {
+      id: '/ads'
+      path: '/ads'
+      fullPath: '/ads'
+      preLoaderRoute: typeof AdsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -577,6 +597,7 @@ const BrokersRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  AdsRoute: AdsRoute,
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
   ChecklistRoute: ChecklistRoute,
