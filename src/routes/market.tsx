@@ -163,8 +163,8 @@ function MarketPage() {
           <TrendingUp className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Пазарна анализа</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Market Score, тренди и подобни имоти.</p>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Пазарна интелигентност</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Анализ на пазара, цени и локация.</p>
         </div>
       </header>
 
