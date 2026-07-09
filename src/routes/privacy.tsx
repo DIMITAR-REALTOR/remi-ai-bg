@@ -60,7 +60,7 @@ function PrivacyPage() {
           <h2 className="mb-1 text-base font-semibold text-foreground">Контакт</h2>
           <p>
             За въпроси относно поверителността: <a href="tel:0893366051" className="text-primary hover:underline">0893 366 051</a>{" "}
-            или <a href="https://compassrealestate.bg" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">compassrealestate.bg</a>.
+            или <a href="mailto:remi.ai.bg@gmail.com" className="text-primary hover:underline">remi.ai.bg@gmail.com</a>.
           </p>
         </section>
       </div>
