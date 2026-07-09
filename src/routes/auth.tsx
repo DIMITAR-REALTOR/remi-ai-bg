@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Вход / Регистрация — AI Estate Pro" }] }),
+  head: () => ({ meta: [{ title: "Вход / Регистрация — REMI AI" }] }),
   component: AuthPage,
 });
 
