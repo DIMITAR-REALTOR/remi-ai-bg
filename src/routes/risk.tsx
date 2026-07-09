@@ -103,9 +103,9 @@ function RiskPage() {
           <ShieldAlert className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Анализ на сделка</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Правен анализ</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Въведете параметрите на имота. AI ще генерира оценка на риска и ще идентифицира 3 ключови риска.
+            Идентификуване на рискове, анализ на собственост и правни проблеми.
           </p>
         </div>
       </header>
