@@ -10,8 +10,8 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/invest")({
   head: () => ({
     meta: [
-      { title: "Инвестиционен калкулатор — AI Estate Pro" },
-      { name: "description", content: "Изчисли месечна вноска, паричен поток и доходност на инвестиционен имот." },
+      { title: "REMI Инвеститорски анализ" },
+      { name: "description", content: "Анализ на инвестиционен потенциал и ROI." },
     ],
   }),
   component: CalculatorPage,
