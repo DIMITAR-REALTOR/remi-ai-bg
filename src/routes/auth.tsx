@@ -29,7 +29,7 @@ function AuthPage() {
         <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-2xl bg-primary text-primary-foreground">
           <Building2 className="h-6 w-6" />
         </div>
-        <h1 className="text-2xl font-black text-foreground">AI Estate Pro</h1>
+        <h1 className="text-2xl font-black text-foreground">REMI AI</h1>
         <p className="mt-1 text-sm text-muted-foreground">Влез или създай профил</p>
       </div>
 
