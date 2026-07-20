@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, Wrench, TrendingUp, Megaphone } from "lucide-react";
+import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, Wrench, TrendingUp, Megaphone, ArrowUpDown } from "lucide-react";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
@@ -18,6 +18,7 @@ const TOOLS = [
   { to: "/ads", icon: Megaphone, title: "REMI Маркетинг асистент", desc: "Генериране на атрактивни обяви и маркетингови текстове" },
   { to: "/invest", icon: Calculator, title: "REMI Инвеститорски анализ", desc: "Анализ на инвестиционен потенциал и ROI" },
   { to: "/market", icon: TrendingUp, title: "REMI Пазарна интелигентност", desc: "Анализ на пазара, цени и локация" },
+  { to: "/compare", icon: ArrowUpDown, title: "Сравнение на имоти", desc: "Сравни 2–3 имота с AI — цена, локация, площ, €/кв.м" },
 ] as const;
 
 
