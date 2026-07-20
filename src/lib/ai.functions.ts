@@ -191,3 +191,80 @@ export const analyzeMarketScore = createServerFn({ method: "POST" })
     return MarketOutput.parse(parsed);
   });
 
+const MarketingInput = z.object({
+  property_type: z.string().min(1).max(100),
+  location: z.string().min(1).max(200),
+  notes: z.string().max(1000).optional().default(""),
+  channel: z.enum(["site", "facebook", "instagram", "flyer"]),
+});
+
+const CONTACT_BLOCK = `0893366051 – Димитър Ценов – Компас Недвижими Имоти
+compassrealestate.bg
+Когато посоката е вярна...!`;
+
+const CHANNEL_GUIDE: Record<string, string> = {
+  site: "Канал: Сайт за имоти. Професионален и стегнат тон, 80-130 думи. Без емотикони. Без хаштагове.",
+  facebook: "Канал: Facebook пост. По-разговорен тон с подходящи емотикони. Ясен призив за действие. Завърши с 6-8 релевантни хаштага на нов ред.",
+  instagram: "Канал: Instagram пост. Кратък, енергичен тон с емотикони. Завърши с 10-12 релевантни хаштага на нов ред.",
+  flyer: "Канал: Печатен флаер. Кратък, стегнат, продаващ текст. Без емотикони. Без хаштагове.",
+};
+
+export const generateMarketingCopy = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => MarketingInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const details = [
+      `Тип имот: ${data.property_type}`,
+      `Локация: ${data.location}`,
+      data.notes && `Бележки: ${data.notes}`,
+    ].filter(Boolean).join("\n");
+
+    const system = `Ти си опитен копирайтър и брокер на недвижими имоти в България, комбинирано с юридическа коректност (не измисляй правни твърдения). Пиши ясно, убедително, човешки, с фокус върху реални ползи и доверие. Не измисляй факти, които не са дадени. Всички текстове са на български език (кирилица).
+
+${CHANNEL_GUIDE[data.channel]}
+
+ЗАДЪЛЖИТЕЛНО: Завърши текста ТОЧНО с този контактен блок на отделни редове, без промени, без добавени емотикони или форматиране:
+${CONTACT_BLOCK}
+
+Върни САМО валиден JSON без markdown със структура: { "body": "целият генериран текст, включително контактния блок в края" }`;
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: `Напиши маркетингов текст за този имот:\n${details}` },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+
+    let body = "";
+    try {
+      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      const parsed = JSON.parse(clean);
+      body = String(parsed?.body ?? "").trim();
+    } catch {
+      body = text.trim();
+    }
+    if (!body) throw new Error("Празен отговор от AI");
+
+    // Ensure the contact block is present verbatim at the end.
+    if (!body.includes(CONTACT_BLOCK)) {
+      body = `${body}\n\n${CONTACT_BLOCK}`;
+    }
+    return { body };
+  });
+
