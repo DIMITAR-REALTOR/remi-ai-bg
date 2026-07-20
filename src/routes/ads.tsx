@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Megaphone, ArrowLeft, Sparkles, Copy } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { Megaphone, ArrowLeft, Sparkles, Copy, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { generateMarketingCopy } from "@/lib/ai.functions";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/ads")({
   head: () => ({
@@ -17,32 +20,41 @@ export const Route = createFileRoute("/ads")({
   component: AdsPage,
 });
 
+type Channel = "site" | "facebook" | "instagram" | "flyer";
+
+const CHANNELS: { id: Channel; label: string }[] = [
+  { id: "site", label: "Сайт" },
+  { id: "facebook", label: "Facebook" },
+  { id: "instagram", label: "Instagram" },
+  { id: "flyer", label: "Флаер" },
+];
+
 function AdsPage() {
+  const [channel, setChannel] = useState<Channel>("site");
   const [type, setType] = useState("");
   const [location, setLocation] = useState("");
-  const [features, setFeatures] = useState("");
+  const [notes, setNotes] = useState("");
   const [output, setOutput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const generate = useServerFn(generateMarketingCopy);
 
-  const generate = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!type.trim() || !location.trim()) {
       toast.error("Попълни тип имот и локация");
       return;
     }
-    const text = `🏠 ${type} в ${location}
-
-${features.trim() || "Модерен имот с отлични характеристики"}.
-
-Разположен в предпочитан район с бърз достъп до всички удобства — училища, магазини, транспорт.
-
-✨ Предимства:
-• Отлична локация
-• Готов за нанасяне
-• Инвестиционен потенциал
-
-📞 За оглед и повече информация: 0893 366 051
-📧 remi.ai.bg@gmail.com`;
-    setOutput(text);
+    setBusy(true);
+    try {
+      const { body } = await generate({
+        data: { property_type: type.trim(), location: location.trim(), notes: notes.trim(), channel },
+      });
+      setOutput(body);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Грешка при генериране");
+    } finally {
+      setBusy(false);
+    }
   };
 
   const copyText = async () => {
@@ -67,12 +79,33 @@ ${features.trim() || "Модерен имот с отлични характер
         <div>
           <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Маркетинг асистент</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Генериране на атрактивни обяви и маркетингови текстове.
+            AI-генерирани обяви и маркетингови текстове по канал.
           </p>
         </div>
       </header>
 
-      <form onSubmit={generate} className="mt-6 space-y-4 rounded-2xl border border-border bg-card p-4">
+      <div className="mt-6">
+        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Канал</Label>
+        <div className="mt-2 grid grid-cols-4 gap-1 rounded-2xl border border-border bg-card p-1">
+          {CHANNELS.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setChannel(c.id)}
+              className={cn(
+                "rounded-xl px-2 py-2 text-xs font-semibold transition",
+                channel === c.id
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <form onSubmit={onSubmit} className="mt-4 space-y-4 rounded-2xl border border-border bg-card p-4">
         <div>
           <Label htmlFor="t">Тип имот</Label>
           <Input id="t" value={type} onChange={(e) => setType(e.target.value)} placeholder="напр. 2-стаен апартамент" />
@@ -82,12 +115,12 @@ ${features.trim() || "Модерен имот с отлични характер
           <Input id="l" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="напр. Варна, Чайка" />
         </div>
         <div>
-          <Label htmlFor="f">Ключови характеристики</Label>
-          <Textarea id="f" rows={3} value={features} onChange={(e) => setFeatures(e.target.value)}
+          <Label htmlFor="f">Бележки (по желание)</Label>
+          <Textarea id="f" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)}
             placeholder="напр. панорамна гледка, ново обзавеждане, гараж..." />
         </div>
-        <Button type="submit" className="w-full gap-2">
-          <Sparkles className="h-4 w-4" /> Генерирай текст
+        <Button type="submit" disabled={busy} className="w-full gap-2">
+          {busy ? <><Loader2 className="h-4 w-4 animate-spin" /> Генерирам...</> : <><Sparkles className="h-4 w-4" /> Генерирай текст</>}
         </Button>
       </form>
 
