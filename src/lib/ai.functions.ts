@@ -268,3 +268,88 @@ ${CONTACT_BLOCK}
     return { body };
   });
 
+const CompareItem = z.object({
+  label: z.string().min(1).max(100),
+  property_type: z.string().min(1).max(100),
+  location: z.string().min(1).max(200),
+  price_eur: z.number().min(0).max(100_000_000),
+  area_sqm: z.number().min(1).max(100_000),
+  rooms: z.number().optional(),
+  floor: z.number().optional(),
+  source: z.string().min(1).max(100),
+});
+
+const CompareInput = z.object({
+  items: z.array(CompareItem).min(2).max(3),
+});
+
+const ComparePropertyOut = z.object({
+  label: z.string(),
+  pros: z.array(z.string()).min(2).max(3),
+  cons: z.array(z.string()).min(2).max(3),
+});
+const CompareOutput = z.object({
+  summary: z.string(),
+  properties: z.array(ComparePropertyOut).min(2).max(3),
+});
+export type CompareResult = z.infer<typeof CompareOutput>;
+
+export const compareProperties = createServerFn({ method: "POST" })
+  .inputValidator((d: unknown) => CompareInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const details = data.items
+      .map((it, i) => {
+        const ppsqm = Math.round(it.price_eur / it.area_sqm);
+        return [
+          `Имот ${i + 1} — ${it.label}`,
+          `  Тип: ${it.property_type}`,
+          `  Локация: ${it.location}`,
+          `  Цена: €${it.price_eur}`,
+          `  Площ: ${it.area_sqm} кв.м`,
+          `  €/кв.м: €${ppsqm}`,
+          it.rooms != null ? `  Стаи: ${it.rooms}` : "",
+          it.floor != null ? `  Етаж: ${it.floor}` : "",
+          `  Източник: ${it.source}`,
+        ].filter(Boolean).join("\n");
+      })
+      .join("\n\n");
+
+    const labels = data.items.map((i) => i.label).join(", ");
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              `Ти си експерт по недвижими имоти в България, който обективно сравнява имоти по цена, локация, площ и съотношение цена/пазар. Не измисляй факти извън предоставените данни. Връщаш САМО валиден JSON без markdown със структура:\n{\n  "summary": кратко обобщение 2-4 изречения на български кой имот е по-добра оферта и защо,\n  "properties": масив с обект за всеки имот в СЪЩИЯ ред и със СЪЩИТЕ label стойности (${labels}), всеки обект: { "label": string, "pros": 2-3 кратки предимства, "cons": 2-3 кратки недостатъци }\n}\nБез емоджи, само на български (кирилица).`,
+          },
+          { role: "user", content: `Сравни следните имоти:\n\n${details}` },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+    let parsed: unknown;
+    try {
+      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      throw new Error("Невалиден отговор от AI");
+    }
+    return CompareOutput.parse(parsed);
+  });
+

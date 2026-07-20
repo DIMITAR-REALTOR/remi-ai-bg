@@ -18,6 +18,7 @@ import { Route as MarketRouteImport } from './routes/market'
 import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as HelpRouteImport } from './routes/help'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ChecklistRouteImport } from './routes/checklist'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -79,6 +80,11 @@ const HistoryRoute = HistoryRouteImport.update({
 const HelpRoute = HelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChecklistRoute = ChecklistRouteImport.update({
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
+  '/compare': typeof CompareRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
   '/invest': typeof InvestRoute
@@ -199,6 +206,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
+  '/compare': typeof CompareRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
   '/invest': typeof InvestRoute
@@ -227,6 +235,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
+  '/compare': typeof CompareRoute
   '/help': typeof HelpRoute
   '/history': typeof HistoryRoute
   '/invest': typeof InvestRoute
@@ -256,6 +265,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/brokers'
     | '/checklist'
+    | '/compare'
     | '/help'
     | '/history'
     | '/invest'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/brokers'
     | '/checklist'
+    | '/compare'
     | '/help'
     | '/history'
     | '/invest'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/brokers'
     | '/checklist'
+    | '/compare'
     | '/help'
     | '/history'
     | '/invest'
@@ -339,6 +351,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
   ChecklistRoute: typeof ChecklistRoute
+  CompareRoute: typeof CompareRoute
   HelpRoute: typeof HelpRoute
   HistoryRoute: typeof HistoryRoute
   InvestRoute: typeof InvestRoute
@@ -414,6 +427,13 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checklist': {
@@ -601,6 +621,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
   ChecklistRoute: ChecklistRoute,
+  CompareRoute: CompareRoute,
   HelpRoute: HelpRoute,
   HistoryRoute: HistoryRoute,
   InvestRoute: InvestRoute,
