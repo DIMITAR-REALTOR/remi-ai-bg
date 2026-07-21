@@ -14,6 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
+      agencies: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agencies_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agency_members: {
+        Row: {
+          agency_id: string
+          created_at: string
+          id: string
+          invited_by: string | null
+          profile_id: string
+          status: string
+        }
+        Insert: {
+          agency_id: string
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          profile_id: string
+          status?: string
+        }
+        Update: {
+          agency_id?: string
+          created_at?: string
+          id?: string
+          invited_by?: string | null
+          profile_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agency_members_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agency_members_invited_by_fkey"
+            columns: ["invited_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agency_members_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           broker_id: string
@@ -263,6 +341,14 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_agency_creator: {
+        Args: { _agency: string; _user: string }
+        Returns: boolean
+      }
+      is_confirmed_agency_member: {
+        Args: { _agency: string; _user: string }
         Returns: boolean
       }
     }
