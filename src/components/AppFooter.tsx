@@ -18,6 +18,7 @@ export function AppFooter() {
           </a>
         </div>
         <div className="flex flex-wrap gap-x-4 gap-y-1 pt-2 text-xs">
+          <Link to="/for-brokers" className="hover:text-foreground">За брокери</Link>
           <Link to="/privacy" className="hover:text-foreground">Политика на поверителност</Link>
           <Link to="/help" className="hover:text-foreground">Помощ</Link>
         </div>
