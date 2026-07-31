@@ -14,6 +14,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NegotiationRouteImport } from './routes/negotiation'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as InvestRouteImport } from './routes/invest'
 import { Route as HistoryRouteImport } from './routes/history'
@@ -31,10 +32,13 @@ import { Route as BrokersIdRouteImport } from './routes/brokers.$id'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppFavoritesRouteImport } from './routes/_app.favorites'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
 import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
 import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
 import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboard.clients.$id'
@@ -62,6 +66,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const NegotiationRoute = NegotiationRouteImport.update({
   id: '/negotiation',
   path: '/negotiation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketRoute = MarketRouteImport.update({
@@ -148,6 +157,18 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -168,6 +189,12 @@ const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
   path: '/.lovable/oauth/consent',
@@ -196,17 +223,21 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryRoute
   '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
+  '/mcp': typeof McpRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
   '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
   '/tools': typeof ToolsRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AppDashboardRouteWithChildren
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
@@ -226,16 +257,20 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryRoute
   '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
+  '/mcp': typeof McpRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
   '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
   '/tools': typeof ToolsRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
@@ -257,17 +292,21 @@ export interface FileRoutesById {
   '/history': typeof HistoryRoute
   '/invest': typeof InvestRoute
   '/market': typeof MarketRoute
+  '/mcp': typeof McpRoute
   '/negotiation': typeof NegotiationRoute
   '/privacy': typeof PrivacyRoute
   '/risk': typeof RiskRoute
   '/search': typeof SearchRoute
   '/tools': typeof ToolsRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_app/dashboard': typeof AppDashboardRouteWithChildren
   '/_app/favorites': typeof AppFavoritesRoute
   '/_app/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/_app/dashboard/new': typeof AppDashboardNewRoute
   '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
@@ -289,17 +328,21 @@ export interface FileRouteTypes {
     | '/history'
     | '/invest'
     | '/market'
+    | '/mcp'
     | '/negotiation'
     | '/privacy'
     | '/risk'
     | '/search'
     | '/tools'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/dashboard'
     | '/favorites'
     | '/profile'
     | '/brokers/$id'
     | '/listing/$id'
     | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
     | '/dashboard/new'
     | '/dashboard/tasks'
@@ -319,16 +362,20 @@ export interface FileRouteTypes {
     | '/history'
     | '/invest'
     | '/market'
+    | '/mcp'
     | '/negotiation'
     | '/privacy'
     | '/risk'
     | '/search'
     | '/tools'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/favorites'
     | '/profile'
     | '/brokers/$id'
     | '/listing/$id'
     | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
     | '/dashboard/new'
     | '/dashboard/tasks'
@@ -349,17 +396,21 @@ export interface FileRouteTypes {
     | '/history'
     | '/invest'
     | '/market'
+    | '/mcp'
     | '/negotiation'
     | '/privacy'
     | '/risk'
     | '/search'
     | '/tools'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/_app/dashboard'
     | '/_app/favorites'
     | '/_app/profile'
     | '/brokers/$id'
     | '/listing/$id'
     | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/_app/dashboard/clients'
     | '/_app/dashboard/new'
     | '/_app/dashboard/tasks'
@@ -381,13 +432,17 @@ export interface RootRouteChildren {
   HistoryRoute: typeof HistoryRoute
   InvestRoute: typeof InvestRoute
   MarketRoute: typeof MarketRoute
+  McpRoute: typeof McpRoute
   NegotiationRoute: typeof NegotiationRoute
   PrivacyRoute: typeof PrivacyRoute
   RiskRoute: typeof RiskRoute
   SearchRoute: typeof SearchRoute
   ToolsRoute: typeof ToolsRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   ListingIdRoute: typeof ListingIdRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -425,6 +480,13 @@ declare module '@tanstack/react-router' {
       path: '/negotiation'
       fullPath: '/negotiation'
       preLoaderRoute: typeof NegotiationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/market': {
@@ -546,6 +608,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/dashboard/': {
       id: '/_app/dashboard/'
       path: '/'
@@ -573,6 +649,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/clients'
       preLoaderRoute: typeof AppDashboardClientsRouteImport
       parentRoute: typeof AppDashboardRoute
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
@@ -667,13 +750,18 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryRoute: HistoryRoute,
   InvestRoute: InvestRoute,
   MarketRoute: MarketRoute,
+  McpRoute: McpRoute,
   NegotiationRoute: NegotiationRoute,
   PrivacyRoute: PrivacyRoute,
   RiskRoute: RiskRoute,
   SearchRoute: SearchRoute,
   ToolsRoute: ToolsRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   ListingIdRoute: ListingIdRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

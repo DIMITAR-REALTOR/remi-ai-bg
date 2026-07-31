@@ -12,16 +12,27 @@ import { Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Вход / Регистрация — REMI AI" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
+  }),
   component: AuthPage,
 });
+
+/** Same-origin relative return path preserved across sign-in (e.g. OAuth consent). */
+function useNextPath() {
+  return Route.useSearch().next;
+}
 
 function AuthPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const next = useNextPath();
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/profile" });
-  }, [loading, user, navigate]);
+    if (loading || !user) return;
+    if (next) window.location.href = next;
+    else navigate({ to: "/profile" });
+  }, [loading, user, navigate, next]);
 
   return (
     <div className="mx-auto max-w-md px-5 pt-10">
