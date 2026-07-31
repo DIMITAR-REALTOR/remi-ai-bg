@@ -1,0 +1,241 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://spfnzddqpvbuubqkqgow.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "remi-ai",
+      "version": "0.1.0",
+      "title": "REMI AI"
+    },
+    "tools": [
+      {
+        "name": "search_listings",
+        "title": "Search property listings",
+        "description": "Search active property listings on REMI AI by city, property type and price range. Returns id, title, price in EUR, area, rooms and location.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "city": {
+              "description": "City name, e.g. Варна.",
+              "type": "string"
+            },
+            "property_type": {
+              "description": "Property type as stored, e.g. апартамент, къща.",
+              "type": "string"
+            },
+            "min_price_eur": {
+              "description": "Minimum price in EUR.",
+              "type": "number"
+            },
+            "max_price_eur": {
+              "description": "Maximum price in EUR.",
+              "type": "number"
+            },
+            "limit": {
+              "description": "Max results, default 20, capped at 50.",
+              "type": "number"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_listing",
+        "title": "Get listing details",
+        "description": "Get the full details of one property listing by its id, including description, photos and the broker profile.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Listing id (uuid)."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_listings",
+        "title": "List my listings",
+        "description": "List all property listings owned by the signed-in broker, including drafts and inactive ones.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_favorites",
+        "title": "List my favorite properties",
+        "description": "List the properties the signed-in user saved as favorites on REMI AI.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_clients",
+        "title": "List my CRM clients",
+        "description": "List the CRM clients of the signed-in broker, optionally filtered by status or client type.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Client status as stored, e.g. new, active, closed.",
+              "type": "string"
+            },
+            "client_type": {
+              "description": "Client type as stored, e.g. buyer, seller.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_client",
+        "title": "Create a CRM client",
+        "description": "Add a new client to the signed-in broker's CRM on REMI AI.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Client full name."
+            },
+            "phone": {
+              "description": "Phone number.",
+              "type": "string"
+            },
+            "client_type": {
+              "description": "buyer or seller. Defaults to buyer.",
+              "type": "string"
+            },
+            "looking_for": {
+              "description": "What the client is looking for, free text in Bulgarian.",
+              "type": "string"
+            },
+            "notes": {
+              "description": "Free-text notes.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_tasks",
+        "title": "List my tasks and viewings",
+        "description": "List the tasks and scheduled viewings of the signed-in broker, ordered by due date.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "include_completed": {
+              "description": "Include completed tasks. Defaults to false.",
+              "type": "boolean"
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_task",
+        "title": "Create a task or viewing",
+        "description": "Create a task or scheduled viewing for the signed-in broker on REMI AI.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "Task title, in Bulgarian when possible."
+            },
+            "due_at": {
+              "type": "string",
+              "description": "Due date and time as an ISO 8601 timestamp."
+            },
+            "notes": {
+              "description": "Free-text notes.",
+              "type": "string"
+            },
+            "client_id": {
+              "description": "Related CRM client id (uuid).",
+              "type": "string"
+            },
+            "listing_id": {
+              "description": "Related listing id (uuid).",
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "due_at"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

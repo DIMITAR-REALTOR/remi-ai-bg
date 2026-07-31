@@ -35,6 +35,7 @@ import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.i
 import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
 import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
 import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboard.clients.$id'
 
@@ -167,6 +168,11 @@ const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
   id: '/edit/$id',
   path: '/edit/$id',
@@ -200,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/_app/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
   '/listing/$id': typeof ListingIdRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/_app/dashboard/new': typeof AppDashboardNewRoute
   '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/brokers/$id'
     | '/listing/$id'
+    | '/.lovable/oauth/consent'
     | '/dashboard/clients'
     | '/dashboard/new'
     | '/dashboard/tasks'
@@ -318,6 +328,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/brokers/$id'
     | '/listing/$id'
+    | '/.lovable/oauth/consent'
     | '/dashboard/clients'
     | '/dashboard/new'
     | '/dashboard/tasks'
@@ -348,6 +359,7 @@ export interface FileRouteTypes {
     | '/_app/profile'
     | '/brokers/$id'
     | '/listing/$id'
+    | '/.lovable/oauth/consent'
     | '/_app/dashboard/clients'
     | '/_app/dashboard/new'
     | '/_app/dashboard/tasks'
@@ -375,6 +387,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   ToolsRoute: typeof ToolsRoute
   ListingIdRoute: typeof ListingIdRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -561,6 +574,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardClientsRouteImport
       parentRoute: typeof AppDashboardRoute
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/dashboard/edit/$id': {
       id: '/_app/dashboard/edit/$id'
       path: '/edit/$id'
@@ -653,6 +673,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   ToolsRoute: ToolsRoute,
   ListingIdRoute: ListingIdRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
