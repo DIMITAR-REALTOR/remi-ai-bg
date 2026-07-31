@@ -92,6 +92,7 @@ function SignupForm() {
   const [form, setForm] = useState({ email: "", password: "", full_name: "", phone: "", agency_name: "", bio: "" });
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
+  const next = useNextPath();
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm({ ...form, [k]: e.target.value });
 
@@ -103,7 +104,7 @@ function SignupForm() {
       email: form.email,
       password: form.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}${next ?? "/"}`,
         data: {
           role,
           full_name: form.full_name,
@@ -116,6 +117,7 @@ function SignupForm() {
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Профилът е създаден");
+    if (next) { window.location.href = next; return; }
     navigate({ to: "/profile" });
   };
 
