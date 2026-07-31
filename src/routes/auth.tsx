@@ -12,16 +12,27 @@ import { Building2 } from "lucide-react";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Вход / Регистрация — REMI AI" }] }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    next: typeof s.next === "string" && s.next.startsWith("/") && !s.next.startsWith("//") ? s.next : undefined,
+  }),
   component: AuthPage,
 });
+
+/** Same-origin relative return path preserved across sign-in (e.g. OAuth consent). */
+function useNextPath() {
+  return Route.useSearch().next;
+}
 
 function AuthPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const next = useNextPath();
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/profile" });
-  }, [loading, user, navigate]);
+    if (loading || !user) return;
+    if (next) window.location.href = next;
+    else navigate({ to: "/profile" });
+  }, [loading, user, navigate, next]);
 
   return (
     <div className="mx-auto max-w-md px-5 pt-10">
@@ -54,6 +65,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
+  const next = useNextPath();
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +74,7 @@ function LoginForm() {
     setBusy(false);
     if (error) { toast.error("Грешен имейл или парола"); return; }
     toast.success("Добре дошъл!");
+    if (next) { window.location.href = next; return; }
     navigate({ to: "/profile" });
   };
 
@@ -79,6 +92,7 @@ function SignupForm() {
   const [form, setForm] = useState({ email: "", password: "", full_name: "", phone: "", agency_name: "", bio: "" });
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
+  const next = useNextPath();
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setForm({ ...form, [k]: e.target.value });
 
@@ -90,7 +104,7 @@ function SignupForm() {
       email: form.email,
       password: form.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}${next ?? "/"}`,
         data: {
           role,
           full_name: form.full_name,
@@ -103,6 +117,7 @@ function SignupForm() {
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Профилът е създаден");
+    if (next) { window.location.href = next; return; }
     navigate({ to: "/profile" });
   };
 
