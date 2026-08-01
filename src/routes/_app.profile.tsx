@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { LogOut, Building2, ExternalLink, Users, UserPlus, Check, X, Search, Camera, Loader2 } from "lucide-react";
+import { LogOut, Building2, ExternalLink, Users, UserPlus, Check, X, Search, Camera, Loader2, Handshake } from "lucide-react";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
