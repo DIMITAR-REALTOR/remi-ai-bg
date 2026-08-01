@@ -37,6 +37,7 @@ import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]
 import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
 import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
+import { Route as AppDashboardDealsRouteImport } from './routes/_app.dashboard.deals'
 import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -184,6 +185,11 @@ const AppDashboardNewRoute = AppDashboardNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const AppDashboardDealsRoute = AppDashboardDealsRouteImport.update({
+  id: '/deals',
+  path: '/deals',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
 const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
@@ -239,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/dashboard/deals': typeof AppDashboardDealsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard/': typeof AppDashboardIndexRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/dashboard/deals': typeof AppDashboardDealsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard': typeof AppDashboardIndexRoute
@@ -308,6 +316,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/_app/dashboard/deals': typeof AppDashboardDealsRoute
   '/_app/dashboard/new': typeof AppDashboardNewRoute
   '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
@@ -344,6 +353,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
+    | '/dashboard/deals'
     | '/dashboard/new'
     | '/dashboard/tasks'
     | '/dashboard/'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
+    | '/dashboard/deals'
     | '/dashboard/new'
     | '/dashboard/tasks'
     | '/dashboard'
@@ -412,6 +423,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_app/dashboard/clients'
+    | '/_app/dashboard/deals'
     | '/_app/dashboard/new'
     | '/_app/dashboard/tasks'
     | '/_app/dashboard/'
@@ -643,6 +655,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardNewRouteImport
       parentRoute: typeof AppDashboardRoute
     }
+    '/_app/dashboard/deals': {
+      id: '/_app/dashboard/deals'
+      path: '/deals'
+      fullPath: '/dashboard/deals'
+      preLoaderRoute: typeof AppDashboardDealsRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
     '/_app/dashboard/clients': {
       id: '/_app/dashboard/clients'
       path: '/clients'
@@ -694,6 +713,7 @@ const AppDashboardClientsRouteWithChildren =
 
 interface AppDashboardRouteChildren {
   AppDashboardClientsRoute: typeof AppDashboardClientsRouteWithChildren
+  AppDashboardDealsRoute: typeof AppDashboardDealsRoute
   AppDashboardNewRoute: typeof AppDashboardNewRoute
   AppDashboardTasksRoute: typeof AppDashboardTasksRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
@@ -702,6 +722,7 @@ interface AppDashboardRouteChildren {
 
 const AppDashboardRouteChildren: AppDashboardRouteChildren = {
   AppDashboardClientsRoute: AppDashboardClientsRouteWithChildren,
+  AppDashboardDealsRoute: AppDashboardDealsRoute,
   AppDashboardNewRoute: AppDashboardNewRoute,
   AppDashboardTasksRoute: AppDashboardTasksRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
