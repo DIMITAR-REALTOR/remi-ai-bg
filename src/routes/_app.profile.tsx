@@ -85,8 +85,18 @@ function ProfilePage() {
         </Link>
       )}
 
+      {isBroker && user && (
+        <PhotoUpload
+          userId={user.id}
+          photoUrl={profile.photo_url}
+          name={profile.full_name}
+          onUploaded={(url) => setProfile((p) => ({ ...p, photo_url: url }))}
+        />
+      )}
+
       <div className="mt-6 space-y-3">
         <div><Label htmlFor="fn">Име</Label><Input id="fn" value={profile.full_name ?? ""} onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} /></div>
+
         <div><Label htmlFor="ph">Телефон</Label><Input id="ph" value={profile.phone ?? ""} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} /></div>
         <div><Label htmlFor="em">Имейл</Label><Input id="em" type="email" value={profile.email ?? user?.email ?? ""} disabled /></div>
         {isBroker && (
