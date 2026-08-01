@@ -92,6 +92,58 @@ export type Database = {
           },
         ]
       }
+      broker_reviews: {
+        Row: {
+          broker_id: string
+          client_id: string
+          comment: string | null
+          created_at: string
+          deal_id: string
+          id: string
+          rating: number
+        }
+        Insert: {
+          broker_id: string
+          client_id: string
+          comment?: string | null
+          created_at?: string
+          deal_id: string
+          id?: string
+          rating: number
+        }
+        Update: {
+          broker_id?: string
+          client_id?: string
+          comment?: string | null
+          created_at?: string
+          deal_id?: string
+          id?: string
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broker_reviews_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "broker_reviews_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "broker_reviews_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: true
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           broker_id: string
@@ -133,6 +185,58 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      deals: {
+        Row: {
+          broker_id: string
+          client_id: string
+          closed_at: string | null
+          created_at: string
+          id: string
+          listing_id: string | null
+          status: string
+        }
+        Insert: {
+          broker_id: string
+          client_id: string
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          status?: string
+        }
+        Update: {
+          broker_id?: string
+          client_id?: string
+          closed_at?: string | null
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       favorites: {
         Row: {
