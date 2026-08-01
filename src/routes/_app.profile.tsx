@@ -1,13 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
+import { uploadBrokerPhoto, validateImageFile } from "@/lib/storage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { LogOut, Building2, ExternalLink, Users, UserPlus, Check, X, Search } from "lucide-react";
+import { LogOut, Building2, ExternalLink, Users, UserPlus, Check, X, Search, Camera, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
@@ -84,8 +85,18 @@ function ProfilePage() {
         </Link>
       )}
 
+      {isBroker && user && (
+        <PhotoUpload
+          userId={user.id}
+          photoUrl={profile.photo_url}
+          name={profile.full_name}
+          onUploaded={(url) => setProfile((p) => ({ ...p, photo_url: url }))}
+        />
+      )}
+
       <div className="mt-6 space-y-3">
         <div><Label htmlFor="fn">Име</Label><Input id="fn" value={profile.full_name ?? ""} onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} /></div>
+
         <div><Label htmlFor="ph">Телефон</Label><Input id="ph" value={profile.phone ?? ""} onChange={(e) => setProfile({ ...profile, phone: e.target.value })} /></div>
         <div><Label htmlFor="em">Имейл</Label><Input id="em" type="email" value={profile.email ?? user?.email ?? ""} disabled /></div>
         {isBroker && (
@@ -103,6 +114,71 @@ function ProfilePage() {
     </div>
   );
 }
+
+function initialsOf(name: string | null) {
+  const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "Б";
+  return parts.slice(0, 2).map((p) => p[0]!.toUpperCase()).join("");
+}
+
+function PhotoUpload({
+  userId, photoUrl, name, onUploaded,
+}: {
+  userId: string;
+  photoUrl: string | null;
+  name: string | null;
+  onUploaded: (url: string) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    const err = validateImageFile(file);
+    if (err) { toast.error(err); return; }
+    setUploading(true);
+    try {
+      const url = await uploadBrokerPhoto(userId, file);
+      const { error } = await supabase.from("profiles").update({ photo_url: url }).eq("id", userId);
+      if (error) throw error;
+      onUploaded(url);
+      toast.success("Снимката е качена");
+    } catch (e2) {
+      toast.error(e2 instanceof Error ? e2.message : "Грешка при качване на снимката");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="mt-6 flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        disabled={uploading}
+        aria-label="Качи профилна снимка"
+        className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-primary/40 bg-primary/10 transition hover:border-primary"
+      >
+        {photoUrl ? (
+          <img src={photoUrl} alt={name ?? "Профилна снимка"} className="h-full w-full object-cover" />
+        ) : (
+          <span className="grid h-full w-full place-items-center text-xl font-black text-primary">{initialsOf(name)}</span>
+        )}
+        <span className="absolute inset-x-0 bottom-0 grid h-7 place-items-center bg-foreground/60 text-background">
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+        </span>
+      </button>
+      <p className="text-xs text-muted-foreground">
+        {uploading ? "Качване..." : "Натисни за смяна на снимката (до 5 MB)"}
+      </p>
+      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+    </div>
+  );
+}
+
+
 
 function AgencySection({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
