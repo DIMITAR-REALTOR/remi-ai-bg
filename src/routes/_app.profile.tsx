@@ -115,6 +115,71 @@ function ProfilePage() {
   );
 }
 
+function initialsOf(name: string | null) {
+  const parts = (name ?? "").trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "Б";
+  return parts.slice(0, 2).map((p) => p[0]!.toUpperCase()).join("");
+}
+
+function PhotoUpload({
+  userId, photoUrl, name, onUploaded,
+}: {
+  userId: string;
+  photoUrl: string | null;
+  name: string | null;
+  onUploaded: (url: string) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    const err = validateImageFile(file);
+    if (err) { toast.error(err); return; }
+    setUploading(true);
+    try {
+      const url = await uploadBrokerPhoto(userId, file);
+      const { error } = await supabase.from("profiles").update({ photo_url: url }).eq("id", userId);
+      if (error) throw error;
+      onUploaded(url);
+      toast.success("Снимката е качена");
+    } catch (e2) {
+      toast.error(e2 instanceof Error ? e2.message : "Грешка при качване на снимката");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="mt-6 flex flex-col items-center gap-2">
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        disabled={uploading}
+        aria-label="Качи профилна снимка"
+        className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-primary/40 bg-primary/10 transition hover:border-primary"
+      >
+        {photoUrl ? (
+          <img src={photoUrl} alt={name ?? "Профилна снимка"} className="h-full w-full object-cover" />
+        ) : (
+          <span className="grid h-full w-full place-items-center text-xl font-black text-primary">{initialsOf(name)}</span>
+        )}
+        <span className="absolute inset-x-0 bottom-0 grid h-7 place-items-center bg-foreground/60 text-background">
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+        </span>
+      </button>
+      <p className="text-xs text-muted-foreground">
+        {uploading ? "Качване..." : "Натисни за смяна на снимката (до 5 MB)"}
+      </p>
+      <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+    </div>
+  );
+}
+
+
+
 function AgencySection({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true);
   const [confirmed, setConfirmed] = useState<Membership | null>(null);
