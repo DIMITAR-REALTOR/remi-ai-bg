@@ -85,6 +85,12 @@ function ProfilePage() {
         </Link>
       )}
 
+      <Link to="/deals" className="mt-3 flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3 text-sm font-medium text-foreground">
+        <span className="flex items-center gap-2"><Handshake className="h-4 w-4 text-primary" />Моите сделки</span>
+        <ExternalLink className="h-4 w-4 text-muted-foreground" />
+      </Link>
+
+
       {isBroker && user && (
         <PhotoUpload
           userId={user.id}
