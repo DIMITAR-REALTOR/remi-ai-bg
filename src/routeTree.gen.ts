@@ -31,6 +31,7 @@ import { Route as ListingIdRouteImport } from './routes/listing.$id'
 import { Route as BrokersIdRouteImport } from './routes/brokers.$id'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppFavoritesRouteImport } from './routes/_app.favorites'
+import { Route as AppDealsRouteImport } from './routes/_app.deals'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -153,6 +154,11 @@ const AppFavoritesRoute = AppFavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDealsRoute = AppDealsRouteImport.update({
+  id: '/deals',
+  path: '/deals',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AppDashboardRouteWithChildren
+  '/deals': typeof AppDealsRoute
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/tools': typeof ToolsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/deals': typeof AppDealsRoute
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
@@ -309,6 +317,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_app/dashboard': typeof AppDashboardRouteWithChildren
+  '/_app/deals': typeof AppDealsRoute
   '/_app/favorites': typeof AppFavoritesRoute
   '/_app/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
@@ -346,6 +355,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/dashboard'
+    | '/deals'
     | '/favorites'
     | '/profile'
     | '/brokers/$id'
@@ -380,6 +390,7 @@ export interface FileRouteTypes {
     | '/tools'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/deals'
     | '/favorites'
     | '/profile'
     | '/brokers/$id'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_app/dashboard'
+    | '/_app/deals'
     | '/_app/favorites'
     | '/_app/profile'
     | '/brokers/$id'
@@ -613,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFavoritesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/deals': {
+      id: '/_app/deals'
+      path: '/deals'
+      fullPath: '/deals'
+      preLoaderRoute: typeof AppDealsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -735,12 +754,14 @@ const AppDashboardRouteWithChildren = AppDashboardRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRouteWithChildren
+  AppDealsRoute: typeof AppDealsRoute
   AppFavoritesRoute: typeof AppFavoritesRoute
   AppProfileRoute: typeof AppProfileRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRouteWithChildren,
+  AppDealsRoute: AppDealsRoute,
   AppFavoritesRoute: AppFavoritesRoute,
   AppProfileRoute: AppProfileRoute,
 }
