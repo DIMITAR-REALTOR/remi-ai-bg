@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Building2, Phone, Mail, MapPin, ChevronRight, Pencil, UserPlus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { RatingBadge, useBrokerRatings, type BrokerRating } from "@/components/RatingBadge";
 
 export const Route = createFileRoute("/brokers")({
   component: BrokersPage,
@@ -65,6 +66,7 @@ function BrokersPage() {
   });
 
   const brokers = data?.all ?? [];
+  const { data: ratings } = useBrokerRatings(brokers.map((b) => b.id));
   const myProfileInList = user ? brokers.find((b) => b.id === user.id) : null;
   const showCompleteCTA = !!user && isBroker && !myProfileInList;
 
@@ -99,7 +101,7 @@ function BrokersPage() {
                 <Users className="h-4 w-4" />{g.name}
               </h2>
               <ul className="mt-2 space-y-2">
-                {g.brokers.map((b) => <BrokerCard key={b.id} b={b} userId={user?.id} />)}
+                {g.brokers.map((b) => <BrokerCard key={b.id} b={b} userId={user?.id} rating={ratings?.[b.id]} />)}
               </ul>
             </section>
           ))}
@@ -110,7 +112,7 @@ function BrokersPage() {
                 <Building2 className="h-4 w-4" />Независими брокери
               </h2>
               <ul className="mt-2 space-y-2">
-                {data.independents.map((b) => <BrokerCard key={b.id} b={b} userId={user?.id} />)}
+                {data.independents.map((b) => <BrokerCard key={b.id} b={b} userId={user?.id} rating={ratings?.[b.id]} />)}
               </ul>
             </section>
           )}
@@ -120,7 +122,7 @@ function BrokersPage() {
   );
 }
 
-function BrokerCard({ b, userId }: { b: BrokerRow; userId?: string }) {
+function BrokerCard({ b, userId, rating }: { b: BrokerRow; userId?: string; rating?: BrokerRating }) {
   const isMe = userId === b.id;
   return (
     <li className="rounded-2xl border border-border bg-card p-3">
@@ -134,6 +136,7 @@ function BrokerCard({ b, userId }: { b: BrokerRow; userId?: string }) {
             {isMe && <span className="ml-2 rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary">Ти</span>}
           </p>
           {b.agency_name && <p className="truncate text-xs text-muted-foreground">{b.agency_name}</p>}
+          <RatingBadge rating={rating} />
         </div>
         <ChevronRight className="h-4 w-4 text-muted-foreground" />
       </Link>

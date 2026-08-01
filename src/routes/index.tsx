@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import heroCoast from "@/assets/hero-coast.jpg";
 import { supabase } from "@/integrations/supabase/client";
+import { RatingBadge, useBrokerRatings } from "@/components/RatingBadge";
 import { getHomeStats } from "@/lib/home-stats.functions";
 import { getBrokerCount } from "@/lib/broker-count.functions";
 
@@ -79,6 +80,8 @@ function Landing() {
       return data ?? [];
     },
   });
+
+  const { data: brokerRatings } = useBrokerRatings((brokers ?? []).map((b) => b.id));
 
   const remaining = Math.max(0, 50 - (brokerCount?.count ?? 0));
 
@@ -216,6 +219,7 @@ function Landing() {
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-semibold text-foreground">{b.full_name ?? "Брокер"}</p>
                       {b.agency_name && <p className="truncate text-xs text-muted-foreground">{b.agency_name}</p>}
+                      <RatingBadge rating={brokerRatings?.[b.id]} />
                     </div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground" />
                   </Link>
