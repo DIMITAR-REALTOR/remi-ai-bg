@@ -31,12 +31,14 @@ import { Route as ListingIdRouteImport } from './routes/listing.$id'
 import { Route as BrokersIdRouteImport } from './routes/brokers.$id'
 import { Route as AppProfileRouteImport } from './routes/_app.profile'
 import { Route as AppFavoritesRouteImport } from './routes/_app.favorites'
+import { Route as AppDealsRouteImport } from './routes/_app.deals'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
 import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
+import { Route as AppDashboardDealsRouteImport } from './routes/_app.dashboard.deals'
 import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -152,6 +154,11 @@ const AppFavoritesRoute = AppFavoritesRouteImport.update({
   path: '/favorites',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDealsRoute = AppDealsRouteImport.update({
+  id: '/deals',
+  path: '/deals',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -182,6 +189,11 @@ const AppDashboardTasksRoute = AppDashboardTasksRouteImport.update({
 const AppDashboardNewRoute = AppDashboardNewRouteImport.update({
   id: '/new',
   path: '/new',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
+const AppDashboardDealsRoute = AppDashboardDealsRouteImport.update({
+  id: '/deals',
+  path: '/deals',
   getParentRoute: () => AppDashboardRoute,
 } as any)
 const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
@@ -232,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/dashboard': typeof AppDashboardRouteWithChildren
+  '/deals': typeof AppDealsRoute
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
@@ -239,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/dashboard/deals': typeof AppDashboardDealsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard/': typeof AppDashboardIndexRoute
@@ -265,6 +279,7 @@ export interface FileRoutesByTo {
   '/tools': typeof ToolsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/deals': typeof AppDealsRoute
   '/favorites': typeof AppFavoritesRoute
   '/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
@@ -272,6 +287,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/dashboard/deals': typeof AppDashboardDealsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard': typeof AppDashboardIndexRoute
@@ -301,6 +317,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_app/dashboard': typeof AppDashboardRouteWithChildren
+  '/_app/deals': typeof AppDealsRoute
   '/_app/favorites': typeof AppFavoritesRoute
   '/_app/profile': typeof AppProfileRoute
   '/brokers/$id': typeof BrokersIdRoute
@@ -308,6 +325,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/_app/dashboard/deals': typeof AppDashboardDealsRoute
   '/_app/dashboard/new': typeof AppDashboardNewRoute
   '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
@@ -337,6 +355,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/dashboard'
+    | '/deals'
     | '/favorites'
     | '/profile'
     | '/brokers/$id'
@@ -344,6 +363,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
+    | '/dashboard/deals'
     | '/dashboard/new'
     | '/dashboard/tasks'
     | '/dashboard/'
@@ -370,6 +390,7 @@ export interface FileRouteTypes {
     | '/tools'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/deals'
     | '/favorites'
     | '/profile'
     | '/brokers/$id'
@@ -377,6 +398,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
+    | '/dashboard/deals'
     | '/dashboard/new'
     | '/dashboard/tasks'
     | '/dashboard'
@@ -405,6 +427,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_app/dashboard'
+    | '/_app/deals'
     | '/_app/favorites'
     | '/_app/profile'
     | '/brokers/$id'
@@ -412,6 +435,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_app/dashboard/clients'
+    | '/_app/dashboard/deals'
     | '/_app/dashboard/new'
     | '/_app/dashboard/tasks'
     | '/_app/dashboard/'
@@ -601,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFavoritesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/deals': {
+      id: '/_app/deals'
+      path: '/deals'
+      fullPath: '/deals'
+      preLoaderRoute: typeof AppDealsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -641,6 +672,13 @@ declare module '@tanstack/react-router' {
       path: '/new'
       fullPath: '/dashboard/new'
       preLoaderRoute: typeof AppDashboardNewRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/deals': {
+      id: '/_app/dashboard/deals'
+      path: '/deals'
+      fullPath: '/dashboard/deals'
+      preLoaderRoute: typeof AppDashboardDealsRouteImport
       parentRoute: typeof AppDashboardRoute
     }
     '/_app/dashboard/clients': {
@@ -694,6 +732,7 @@ const AppDashboardClientsRouteWithChildren =
 
 interface AppDashboardRouteChildren {
   AppDashboardClientsRoute: typeof AppDashboardClientsRouteWithChildren
+  AppDashboardDealsRoute: typeof AppDashboardDealsRoute
   AppDashboardNewRoute: typeof AppDashboardNewRoute
   AppDashboardTasksRoute: typeof AppDashboardTasksRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
@@ -702,6 +741,7 @@ interface AppDashboardRouteChildren {
 
 const AppDashboardRouteChildren: AppDashboardRouteChildren = {
   AppDashboardClientsRoute: AppDashboardClientsRouteWithChildren,
+  AppDashboardDealsRoute: AppDashboardDealsRoute,
   AppDashboardNewRoute: AppDashboardNewRoute,
   AppDashboardTasksRoute: AppDashboardTasksRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
@@ -714,12 +754,14 @@ const AppDashboardRouteWithChildren = AppDashboardRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRouteWithChildren
+  AppDealsRoute: typeof AppDealsRoute
   AppFavoritesRoute: typeof AppFavoritesRoute
   AppProfileRoute: typeof AppProfileRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRouteWithChildren,
+  AppDealsRoute: AppDealsRoute,
   AppFavoritesRoute: AppFavoritesRoute,
   AppProfileRoute: AppProfileRoute,
 }

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { LogOut, Building2, ExternalLink, Users, UserPlus, Check, X, Search, Camera, Loader2 } from "lucide-react";
+import { LogOut, Building2, ExternalLink, Users, UserPlus, Check, X, Search, Camera, Loader2, Handshake } from "lucide-react";
 
 export const Route = createFileRoute("/_app/profile")({
   component: ProfilePage,
@@ -84,6 +84,12 @@ function ProfilePage() {
           <ExternalLink className="h-4 w-4 text-muted-foreground" />
         </Link>
       )}
+
+      <Link to="/deals" className="mt-3 flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3 text-sm font-medium text-foreground">
+        <span className="flex items-center gap-2"><Handshake className="h-4 w-4 text-primary" />Моите сделки</span>
+        <ExternalLink className="h-4 w-4 text-muted-foreground" />
+      </Link>
+
 
       {isBroker && user && (
         <PhotoUpload
