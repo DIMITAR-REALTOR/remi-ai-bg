@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Building2, User as UserIcon, LogOut, HelpCircle, UserCircle2 } from "lucide-react";
+import { Building2, User as UserIcon, LogOut, HelpCircle, UserCircle2, Cpu } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -104,6 +104,11 @@ export function AppHeader() {
               <DropdownMenuItem asChild>
                 <Link to={isBroker ? "/dashboard" : "/profile"} className="cursor-pointer gap-2">
                   <UserIcon className="h-4 w-4" />Моят профил
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/architecture" className="cursor-pointer gap-2">
+                  <Cpu className="h-4 w-4" />Архитектура
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
