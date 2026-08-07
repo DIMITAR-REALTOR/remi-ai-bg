@@ -25,7 +25,7 @@ function EditListing() {
   return (
     <div className="mx-auto max-w-xl px-5 pt-6">
       <h1 className="text-2xl font-black text-foreground">Редактирай обявата</h1>
-      <ListingForm initial={data as any} onSaved={() => navigate({ to: "/dashboard" })} />
+      <ListingForm initial={data as any} onSaved={() => navigate({ to: "/dashboard/listings" })} />
     </div>
   );
 }

@@ -9,115 +9,50 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ToolsRouteImport } from './routes/tools'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as RiskRouteImport } from './routes/risk'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as NegotiationRouteImport } from './routes/negotiation'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as MarketRouteImport } from './routes/market'
-import { Route as InvestRouteImport } from './routes/invest'
-import { Route as HistoryRouteImport } from './routes/history'
-import { Route as HelpRouteImport } from './routes/help'
-import { Route as ForBrokersRouteImport } from './routes/for-brokers'
-import { Route as CompareRouteImport } from './routes/compare'
-import { Route as ChecklistRouteImport } from './routes/checklist'
-import { Route as BrokersRouteImport } from './routes/brokers'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AdsRouteImport } from './routes/ads'
-import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ListingIdRouteImport } from './routes/listing.$id'
-import { Route as BrokersIdRouteImport } from './routes/brokers.$id'
-import { Route as AppProfileRouteImport } from './routes/_app.profile'
-import { Route as AppFavoritesRouteImport } from './routes/_app.favorites'
-import { Route as AppDealsRouteImport } from './routes/_app.deals'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AdsRouteImport } from './routes/ads'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BrokersRouteImport } from './routes/brokers'
+import { Route as ChecklistRouteImport } from './routes/checklist'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as ForBrokersRouteImport } from './routes/for-brokers'
+import { Route as HelpRouteImport } from './routes/help'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as InvestRouteImport } from './routes/invest'
+import { Route as MarketRouteImport } from './routes/market'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as NegotiationRouteImport } from './routes/negotiation'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RiskRouteImport } from './routes/risk'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
-import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
-import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
-import { Route as AppDashboardDealsRouteImport } from './routes/_app.dashboard.deals'
-import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppDealsRouteImport } from './routes/_app.deals'
+import { Route as AppFavoritesRouteImport } from './routes/_app.favorites'
+import { Route as AppProfileRouteImport } from './routes/_app.profile'
+import { Route as BrokersIdRouteImport } from './routes/brokers.$id'
+import { Route as ListingIdRouteImport } from './routes/listing.$id'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
-import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
+import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
+import { Route as AppDashboardDealsRouteImport } from './routes/_app.dashboard.deals'
+import { Route as AppDashboardListingsRouteImport } from './routes/_app.dashboard.listings'
+import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
+import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
 import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboard.clients.$id'
+import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
 
-const ToolsRoute = ToolsRouteImport.update({
-  id: '/tools',
-  path: '/tools',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RiskRoute = RiskRouteImport.update({
-  id: '/risk',
-  path: '/risk',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NegotiationRoute = NegotiationRouteImport.update({
-  id: '/negotiation',
-  path: '/negotiation',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MarketRoute = MarketRouteImport.update({
-  id: '/market',
-  path: '/market',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InvestRoute = InvestRouteImport.update({
-  id: '/invest',
-  path: '/invest',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HistoryRoute = HistoryRouteImport.update({
-  id: '/history',
-  path: '/history',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HelpRoute = HelpRouteImport.update({
-  id: '/help',
-  path: '/help',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForBrokersRoute = ForBrokersRouteImport.update({
-  id: '/for-brokers',
-  path: '/for-brokers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CompareRoute = CompareRouteImport.update({
-  id: '/compare',
-  path: '/compare',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChecklistRoute = ChecklistRouteImport.update({
-  id: '/checklist',
-  path: '/checklist',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrokersRoute = BrokersRouteImport.update({
-  id: '/brokers',
-  path: '/brokers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdsRoute = AdsRouteImport.update({
@@ -125,33 +60,96 @@ const AdsRoute = AdsRouteImport.update({
   path: '/ads',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BrokersRoute = BrokersRouteImport.update({
+  id: '/brokers',
+  path: '/brokers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ListingIdRoute = ListingIdRouteImport.update({
-  id: '/listing/$id',
-  path: '/listing/$id',
+const ChecklistRoute = ChecklistRouteImport.update({
+  id: '/checklist',
+  path: '/checklist',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrokersIdRoute = BrokersIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => BrokersRoute,
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppProfileRoute = AppProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AppRoute,
+const ForBrokersRoute = ForBrokersRouteImport.update({
+  id: '/for-brokers',
+  path: '/for-brokers',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppFavoritesRoute = AppFavoritesRouteImport.update({
-  id: '/favorites',
-  path: '/favorites',
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestRoute = InvestRouteImport.update({
+  id: '/invest',
+  path: '/invest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NegotiationRoute = NegotiationRouteImport.update({
+  id: '/negotiation',
+  path: '/negotiation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiskRoute = RiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRoute = ToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDealsRoute = AppDealsRouteImport.update({
@@ -159,47 +157,30 @@ const AppDealsRoute = AppDealsRouteImport.update({
   path: '/deals',
   getParentRoute: () => AppRoute,
 } as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AppFavoritesRoute = AppFavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
   getParentRoute: () => AppRoute,
 } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AppDashboardRoute,
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
 } as any)
-const AppDashboardTasksRoute = AppDashboardTasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
-  getParentRoute: () => AppDashboardRoute,
+const BrokersIdRoute = BrokersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => BrokersRoute,
 } as any)
-const AppDashboardNewRoute = AppDashboardNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AppDashboardRoute,
+const ListingIdRoute = ListingIdRouteImport.update({
+  id: '/listing/$id',
+  path: '/listing/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AppDashboardDealsRoute = AppDashboardDealsRouteImport.update({
-  id: '/deals',
-  path: '/deals',
-  getParentRoute: () => AppDashboardRoute,
-} as any)
-const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
-  id: '/clients',
-  path: '/clients',
-  getParentRoute: () => AppDashboardRoute,
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
@@ -207,20 +188,45 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
-  getParentRoute: () => rootRouteImport,
+const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppDashboardRoute,
 } as any)
-const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
-  id: '/edit/$id',
-  path: '/edit/$id',
+const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
+const AppDashboardDealsRoute = AppDashboardDealsRouteImport.update({
+  id: '/deals',
+  path: '/deals',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
+const AppDashboardListingsRoute = AppDashboardListingsRouteImport.update({
+  id: '/listings',
+  path: '/listings',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
+const AppDashboardNewRoute = AppDashboardNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
+const AppDashboardTasksRoute = AppDashboardTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
   getParentRoute: () => AppDashboardRoute,
 } as any)
 const AppDashboardClientsIdRoute = AppDashboardClientsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AppDashboardClientsRoute,
+} as any)
+const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
+  id: '/edit/$id',
+  path: '/edit/$id',
+  getParentRoute: () => AppDashboardRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/deals': typeof AppDashboardDealsRoute
+  '/dashboard/listings': typeof AppDashboardListingsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard/': typeof AppDashboardIndexRoute
@@ -288,6 +295,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/deals': typeof AppDashboardDealsRoute
+  '/dashboard/listings': typeof AppDashboardListingsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard': typeof AppDashboardIndexRoute
@@ -326,6 +334,7 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/_app/dashboard/deals': typeof AppDashboardDealsRoute
+  '/_app/dashboard/listings': typeof AppDashboardListingsRoute
   '/_app/dashboard/new': typeof AppDashboardNewRoute
   '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
@@ -364,6 +373,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
     | '/dashboard/deals'
+    | '/dashboard/listings'
     | '/dashboard/new'
     | '/dashboard/tasks'
     | '/dashboard/'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
     | '/dashboard/deals'
+    | '/dashboard/listings'
     | '/dashboard/new'
     | '/dashboard/tasks'
     | '/dashboard'
@@ -436,6 +447,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/_app/dashboard/clients'
     | '/_app/dashboard/deals'
+    | '/_app/dashboard/listings'
     | '/_app/dashboard/new'
     | '/_app/dashboard/tasks'
     | '/_app/dashboard/'
@@ -471,116 +483,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/tools': {
-      id: '/tools'
-      path: '/tools'
-      fullPath: '/tools'
-      preLoaderRoute: typeof ToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/risk': {
-      id: '/risk'
-      path: '/risk'
-      fullPath: '/risk'
-      preLoaderRoute: typeof RiskRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/negotiation': {
-      id: '/negotiation'
-      path: '/negotiation'
-      fullPath: '/negotiation'
-      preLoaderRoute: typeof NegotiationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/market': {
-      id: '/market'
-      path: '/market'
-      fullPath: '/market'
-      preLoaderRoute: typeof MarketRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/invest': {
-      id: '/invest'
-      path: '/invest'
-      fullPath: '/invest'
-      preLoaderRoute: typeof InvestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/history': {
-      id: '/history'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof HistoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/help': {
-      id: '/help'
-      path: '/help'
-      fullPath: '/help'
-      preLoaderRoute: typeof HelpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/for-brokers': {
-      id: '/for-brokers'
-      path: '/for-brokers'
-      fullPath: '/for-brokers'
-      preLoaderRoute: typeof ForBrokersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/compare': {
-      id: '/compare'
-      path: '/compare'
-      fullPath: '/compare'
-      preLoaderRoute: typeof CompareRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checklist': {
-      id: '/checklist'
-      path: '/checklist'
-      fullPath: '/checklist'
-      preLoaderRoute: typeof ChecklistRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/brokers': {
-      id: '/brokers'
-      path: '/brokers'
-      fullPath: '/brokers'
-      preLoaderRoute: typeof BrokersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ads': {
-      id: '/ads'
-      path: '/ads'
-      fullPath: '/ads'
-      preLoaderRoute: typeof AdsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
@@ -590,60 +497,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/ads': {
+      id: '/ads'
+      path: '/ads'
+      fullPath: '/ads'
+      preLoaderRoute: typeof AdsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/listing/$id': {
-      id: '/listing/$id'
-      path: '/listing/$id'
-      fullPath: '/listing/$id'
-      preLoaderRoute: typeof ListingIdRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brokers/$id': {
-      id: '/brokers/$id'
-      path: '/$id'
-      fullPath: '/brokers/$id'
-      preLoaderRoute: typeof BrokersIdRouteImport
-      parentRoute: typeof BrokersRoute
+    '/brokers': {
+      id: '/brokers'
+      path: '/brokers'
+      fullPath: '/brokers'
+      preLoaderRoute: typeof BrokersRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/profile': {
-      id: '/_app/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AppProfileRouteImport
-      parentRoute: typeof AppRoute
+    '/checklist': {
+      id: '/checklist'
+      path: '/checklist'
+      fullPath: '/checklist'
+      preLoaderRoute: typeof ChecklistRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/favorites': {
-      id: '/_app/favorites'
-      path: '/favorites'
-      fullPath: '/favorites'
-      preLoaderRoute: typeof AppFavoritesRouteImport
-      parentRoute: typeof AppRoute
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/deals': {
-      id: '/_app/deals'
-      path: '/deals'
-      fullPath: '/deals'
-      preLoaderRoute: typeof AppDealsRouteImport
-      parentRoute: typeof AppRoute
+    '/for-brokers': {
+      id: '/for-brokers'
+      path: '/for-brokers'
+      fullPath: '/for-brokers'
+      preLoaderRoute: typeof ForBrokersRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invest': {
+      id: '/invest'
+      path: '/invest'
+      fullPath: '/invest'
+      preLoaderRoute: typeof InvestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/negotiation': {
+      id: '/negotiation'
+      path: '/negotiation'
+      fullPath: '/negotiation'
+      preLoaderRoute: typeof NegotiationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risk': {
+      id: '/risk'
+      path: '/risk'
+      fullPath: '/risk'
+      preLoaderRoute: typeof RiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/list-tools': {
@@ -653,46 +616,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/dashboard/': {
-      id: '/_app/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof AppDashboardIndexRouteImport
-      parentRoute: typeof AppDashboardRoute
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_app/dashboard/tasks': {
-      id: '/_app/dashboard/tasks'
-      path: '/tasks'
-      fullPath: '/dashboard/tasks'
-      preLoaderRoute: typeof AppDashboardTasksRouteImport
-      parentRoute: typeof AppDashboardRoute
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/_app/dashboard/new': {
-      id: '/_app/dashboard/new'
-      path: '/new'
-      fullPath: '/dashboard/new'
-      preLoaderRoute: typeof AppDashboardNewRouteImport
-      parentRoute: typeof AppDashboardRoute
-    }
-    '/_app/dashboard/deals': {
-      id: '/_app/dashboard/deals'
+    '/_app/deals': {
+      id: '/_app/deals'
       path: '/deals'
-      fullPath: '/dashboard/deals'
-      preLoaderRoute: typeof AppDashboardDealsRouteImport
-      parentRoute: typeof AppDashboardRoute
+      fullPath: '/deals'
+      preLoaderRoute: typeof AppDealsRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/_app/dashboard/clients': {
-      id: '/_app/dashboard/clients'
-      path: '/clients'
-      fullPath: '/dashboard/clients'
-      preLoaderRoute: typeof AppDashboardClientsRouteImport
-      parentRoute: typeof AppDashboardRoute
+    '/_app/favorites': {
+      id: '/_app/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof AppFavoritesRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/brokers/$id': {
+      id: '/brokers/$id'
+      path: '/$id'
+      fullPath: '/brokers/$id'
+      preLoaderRoute: typeof BrokersIdRouteImport
+      parentRoute: typeof BrokersRoute
+    }
+    '/listing/$id': {
+      id: '/listing/$id'
+      path: '/listing/$id'
+      fullPath: '/listing/$id'
+      preLoaderRoute: typeof ListingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.lovable/oauth/consent': {
@@ -702,11 +672,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/dashboard/edit/$id': {
-      id: '/_app/dashboard/edit/$id'
-      path: '/edit/$id'
-      fullPath: '/dashboard/edit/$id'
-      preLoaderRoute: typeof AppDashboardEditIdRouteImport
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/dashboard/': {
+      id: '/_app/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AppDashboardIndexRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/clients': {
+      id: '/_app/dashboard/clients'
+      path: '/clients'
+      fullPath: '/dashboard/clients'
+      preLoaderRoute: typeof AppDashboardClientsRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/deals': {
+      id: '/_app/dashboard/deals'
+      path: '/deals'
+      fullPath: '/dashboard/deals'
+      preLoaderRoute: typeof AppDashboardDealsRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/listings': {
+      id: '/_app/dashboard/listings'
+      path: '/listings'
+      fullPath: '/dashboard/listings'
+      preLoaderRoute: typeof AppDashboardListingsRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/new': {
+      id: '/_app/dashboard/new'
+      path: '/new'
+      fullPath: '/dashboard/new'
+      preLoaderRoute: typeof AppDashboardNewRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/tasks': {
+      id: '/_app/dashboard/tasks'
+      path: '/tasks'
+      fullPath: '/dashboard/tasks'
+      preLoaderRoute: typeof AppDashboardTasksRouteImport
       parentRoute: typeof AppDashboardRoute
     }
     '/_app/dashboard/clients/$id': {
@@ -715,6 +727,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/clients/$id'
       preLoaderRoute: typeof AppDashboardClientsIdRouteImport
       parentRoute: typeof AppDashboardClientsRoute
+    }
+    '/_app/dashboard/edit/$id': {
+      id: '/_app/dashboard/edit/$id'
+      path: '/edit/$id'
+      fullPath: '/dashboard/edit/$id'
+      preLoaderRoute: typeof AppDashboardEditIdRouteImport
+      parentRoute: typeof AppDashboardRoute
     }
   }
 }
@@ -733,6 +752,7 @@ const AppDashboardClientsRouteWithChildren =
 interface AppDashboardRouteChildren {
   AppDashboardClientsRoute: typeof AppDashboardClientsRouteWithChildren
   AppDashboardDealsRoute: typeof AppDashboardDealsRoute
+  AppDashboardListingsRoute: typeof AppDashboardListingsRoute
   AppDashboardNewRoute: typeof AppDashboardNewRoute
   AppDashboardTasksRoute: typeof AppDashboardTasksRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
@@ -742,6 +762,7 @@ interface AppDashboardRouteChildren {
 const AppDashboardRouteChildren: AppDashboardRouteChildren = {
   AppDashboardClientsRoute: AppDashboardClientsRouteWithChildren,
   AppDashboardDealsRoute: AppDashboardDealsRoute,
+  AppDashboardListingsRoute: AppDashboardListingsRoute,
   AppDashboardNewRoute: AppDashboardNewRoute,
   AppDashboardTasksRoute: AppDashboardTasksRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
