@@ -26,6 +26,27 @@ export const crmToneClasses: Record<string, string> = {
   info: "bg-primary/15 text-primary",
 };
 
+export const DEAL_STAGES = [
+  { value: "contact", label: "Контакт", tone: "info" },
+  { value: "viewing", label: "Оглед", tone: "info" },
+  { value: "offer", label: "Оферта", tone: "warning" },
+  { value: "negotiation", label: "Преговори", tone: "warning" },
+  { value: "notary", label: "Нотариален акт", tone: "warning" },
+  { value: "closed", label: "Затворена", tone: "success" },
+] as const;
+
+export const dealStageLabel = (v: string) =>
+  DEAL_STAGES.find((s) => s.value === v)?.label ?? v;
+export const dealStageTone = (v: string) =>
+  DEAL_STAGES.find((s) => s.value === v)?.tone ?? "muted";
+export const dealStageIndex = (v: string) =>
+  DEAL_STAGES.findIndex((s) => s.value === v);
+
+export const fmtMoney = (n: number | null | undefined) => {
+  if (n == null) return "—";
+  return new Intl.NumberFormat("bg-BG", { maximumFractionDigits: 0 }).format(n) + " €";
+};
+
 export const fmtDateTime = (iso: string | null | undefined) => {
   if (!iso) return "—";
   return new Date(iso).toLocaleString("bg-BG", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });

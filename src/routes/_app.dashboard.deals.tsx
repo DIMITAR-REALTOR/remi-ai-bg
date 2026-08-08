@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Search, Handshake, CheckCircle2 } from "lucide-react";
-import { fmtDate } from "@/lib/crm-meta";
+import { Plus, Search, Handshake, ChevronRight, ChevronLeft } from "lucide-react";
+import { fmtDate, fmtMoney, DEAL_STAGES, dealStageLabel, dealStageTone, dealStageIndex, crmToneClasses } from "@/lib/crm-meta";
 import { StarRow } from "@/components/RatingBadge";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/dashboard/deals")({
   component: DealsPage,
@@ -19,13 +20,17 @@ export const Route = createFileRoute("/_app/dashboard/deals")({
 
 type DealRow = {
   id: string;
-  client_id: string;
+  client_id: string | null;
+  crm_client_id: string | null;
   listing_id: string | null;
   status: string;
+  stage: string;
+  commission_percent: number | null;
   closed_at: string | null;
   created_at: string;
   profiles?: { id: string; full_name: string | null; email: string | null } | null;
-  listings?: { id: string; title: string } | null;
+  clients?: { id: string; name: string } | null;
+  listings?: { id: string; title: string; price_eur: number } | null;
 };
 
 function DealsPage() {
@@ -40,7 +45,7 @@ function DealsPage() {
     queryFn: async () => {
       const { data, error } = await (supabase as any)
         .from("deals")
-        .select("id, client_id, listing_id, status, closed_at, created_at, profiles:client_id(id,full_name,email), listings:listing_id(id,title)")
+        .select("id, client_id, crm_client_id, listing_id, status, stage, commission_percent, closed_at, created_at, profiles:client_id(id,full_name,email), clients:crm_client_id(id,name), listings:listing_id(id,title,price_eur)")
         .eq("broker_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -59,15 +64,24 @@ function DealsPage() {
     },
   });
 
-  const complete = async (id: string) => {
+  const moveStage = async (deal: DealRow, direction: 1 | -1) => {
+    const idx = dealStageIndex(deal.stage);
+    const nextIdx = idx + direction;
+    if (nextIdx < 0 || nextIdx >= DEAL_STAGES.length) return;
     setBusy(true);
     const { error } = await (supabase as any)
-      .from("deals").update({ status: "completed", closed_at: new Date().toISOString() }).eq("id", id);
+      .from("deals").update({ stage: DEAL_STAGES[nextIdx].value }).eq("id", deal.id);
     setBusy(false);
     if (error) { toast.error(error.message); return; }
-    toast.success("Сделката е приключена");
+    if (DEAL_STAGES[nextIdx].value === "closed") toast.success("Сделката е затворена 🎉");
     qc.invalidateQueries({ queryKey: ["my-deals", user?.id] });
   };
+
+  const totalCommission = deals.reduce((sum, d) => {
+    if (!d.commission_percent || !d.listings?.price_eur) return sum;
+    return sum + (d.commission_percent / 100) * d.listings.price_eur;
+  }, 0);
+  const activeCount = deals.filter((d) => d.stage !== "closed").length;
 
   return (
     <div className="mx-auto max-w-xl px-4 pt-4 pb-8">
@@ -87,39 +101,73 @@ function DealsPage() {
         </Dialog>
       </div>
 
+      {deals.length > 0 && (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="rounded-xl border border-border bg-card p-3">
+            <p className="text-[11px] text-muted-foreground">Активни сделки</p>
+            <p className="text-lg font-bold text-foreground">{activeCount}</p>
+          </div>
+          <div className="rounded-xl border border-border bg-card p-3">
+            <p className="text-[11px] text-muted-foreground">Очаквана комисиона</p>
+            <p className="text-lg font-bold text-foreground">{fmtMoney(totalCommission)}</p>
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <p className="mt-6 text-sm text-muted-foreground">Зареждане...</p>
       ) : deals.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-dashed border-border p-6 text-center">
           <Handshake className="mx-auto h-8 w-8 text-muted-foreground" />
           <p className="mt-2 text-sm font-semibold text-foreground">Няма сделки</p>
-          <p className="mt-1 text-xs text-muted-foreground">Свържи регистриран клиент със сделка, за да получиш ревю след приключване.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Добави клиент от CRM-а или регистриран профил, за да проследяваш сделката.</p>
         </div>
       ) : (
         <ul className="mt-4 space-y-2">
           {deals.map((d) => {
             const rev = reviews.find((r) => r.deal_id === d.id);
+            const commission = d.commission_percent && d.listings?.price_eur
+              ? (d.commission_percent / 100) * d.listings.price_eur
+              : null;
+            const idx = dealStageIndex(d.stage);
             return (
               <li key={d.id} className="rounded-2xl border border-border bg-card p-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-foreground">{d.profiles?.full_name ?? d.profiles?.email ?? "Клиент"}</p>
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {d.clients?.name ?? d.profiles?.full_name ?? d.profiles?.email ?? "Клиент"}
+                    </p>
                     {d.listings?.title && <p className="truncate text-xs text-muted-foreground">{d.listings.title}</p>}
                     <p className="mt-1 text-[11px] text-muted-foreground">Създадена: {fmtDate(d.created_at)}</p>
                   </div>
-                  <span className={
-                    d.status === "completed"
-                      ? "shrink-0 rounded-full bg-success/15 px-2 py-0.5 text-[11px] font-bold text-success"
-                      : "shrink-0 rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-bold text-primary"
-                  }>
-                    {d.status === "completed" ? "Приключена" : "Активна"}
+                  <span className={cn("shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold", crmToneClasses[dealStageTone(d.stage)])}>
+                    {dealStageLabel(d.stage)}
                   </span>
                 </div>
 
-                {d.status === "active" && (
-                  <Button size="sm" variant="outline" className="mt-3 gap-1.5" disabled={busy} onClick={() => complete(d.id)}>
-                    <CheckCircle2 className="h-4 w-4" />Приключи сделката
-                  </Button>
+                {commission != null && (
+                  <p className="mt-2 text-xs font-medium text-foreground">
+                    Комисиона: {d.commission_percent}% ≈ {fmtMoney(commission)}
+                  </p>
+                )}
+
+                <div className="mt-3 flex items-center gap-1">
+                  {DEAL_STAGES.map((s, i) => (
+                    <div key={s.value} className={cn("h-1.5 flex-1 rounded-full", i <= idx ? "bg-primary" : "bg-muted")} title={s.label} />
+                  ))}
+                </div>
+
+                {d.stage !== "closed" && (
+                  <div className="mt-3 flex items-center gap-2">
+                    {idx > 0 && (
+                      <Button size="sm" variant="outline" className="gap-1" disabled={busy} onClick={() => moveStage(d, -1)}>
+                        <ChevronLeft className="h-3.5 w-3.5" />Назад
+                      </Button>
+                    )}
+                    <Button size="sm" className="gap-1" disabled={busy} onClick={() => moveStage(d, 1)}>
+                      {DEAL_STAGES[idx + 1]?.label ?? "Затвори"}<ChevronRight className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
                 )}
 
                 {rev && (
@@ -138,12 +186,28 @@ function DealsPage() {
 }
 
 type ClientProfile = { id: string; full_name: string | null; email: string | null };
+type CrmClient = { id: string; name: string };
 
 function NewDealForm({ brokerId, onCreated }: { brokerId: string; onCreated: () => void }) {
+  const [mode, setMode] = useState<"crm" | "platform">("crm");
+
+  const { data: crmClients = [] } = useQuery({
+    queryKey: ["my-crm-clients-for-deal", brokerId],
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("clients").select("id,name").eq("broker_id", brokerId).order("name");
+      if (error) throw error;
+      return (data ?? []) as CrmClient[];
+    },
+  });
+  const [crmClientId, setCrmClientId] = useState<string>("");
+
   const [q, setQ] = useState("");
   const [results, setResults] = useState<ClientProfile[]>([]);
-  const [selected, setSelected] = useState<ClientProfile | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<ClientProfile | null>(null);
+
   const [listingId, setListingId] = useState<string>("none");
+  const [commissionPercent, setCommissionPercent] = useState<string>("");
   const [busy, setBusy] = useState(false);
 
   const { data: listings = [] } = useQuery({
@@ -167,14 +231,19 @@ function NewDealForm({ brokerId, onCreated }: { brokerId: string; onCreated: () 
     setResults(((data ?? []) as ClientProfile[]).filter((p) => p.id !== brokerId));
   };
 
+  const canCreate = mode === "crm" ? !!crmClientId : !!selectedProfile;
+
   const create = async () => {
-    if (!selected) return;
+    if (!canCreate) return;
     setBusy(true);
     const { error } = await (supabase as any).from("deals").insert({
       broker_id: brokerId,
-      client_id: selected.id,
+      client_id: mode === "platform" ? selectedProfile!.id : null,
+      crm_client_id: mode === "crm" ? crmClientId : null,
       listing_id: listingId === "none" ? null : listingId,
       status: "active",
+      stage: "contact",
+      commission_percent: commissionPercent ? Number(commissionPercent) : null,
     });
     setBusy(false);
     if (error) { toast.error(error.message); return; }
@@ -184,28 +253,55 @@ function NewDealForm({ brokerId, onCreated }: { brokerId: string; onCreated: () 
 
   return (
     <div className="space-y-3">
-      <div>
-        <Label>Клиент (регистриран профил)</Label>
-        <div className="mt-1 flex gap-2">
-          <Input placeholder="Търси по име или имейл" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && search()} />
-          <Button size="sm" onClick={search} className="gap-1"><Search className="h-4 w-4" />Търси</Button>
-        </div>
-        {selected ? (
-          <p className="mt-2 text-sm text-foreground">
-            Избран: <span className="font-semibold">{selected.full_name ?? selected.email}</span>{" "}
-            <button type="button" className="text-xs text-primary underline" onClick={() => setSelected(null)}>смени</button>
-          </p>
-        ) : results.length > 0 ? (
-          <ul className="mt-2 divide-y divide-border rounded-lg border border-border">
-            {results.map((r) => (
-              <li key={r.id} className="flex items-center justify-between p-2 text-sm">
-                <span className="truncate text-foreground">{r.full_name ?? r.email ?? "Клиент"}</span>
-                <Button size="sm" variant="ghost" onClick={() => { setSelected(r); setResults([]); }}>Избери</Button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
+      <div className="flex gap-2 rounded-lg bg-muted p-1">
+        <button type="button" onClick={() => setMode("crm")}
+          className={cn("flex-1 rounded-md py-1.5 text-xs font-semibold transition", mode === "crm" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}>
+          CRM клиент
+        </button>
+        <button type="button" onClick={() => setMode("platform")}
+          className={cn("flex-1 rounded-md py-1.5 text-xs font-semibold transition", mode === "platform" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground")}>
+          Регистриран профил
+        </button>
       </div>
+
+      {mode === "crm" ? (
+        <div>
+          <Label>Клиент от CRM-а</Label>
+          {crmClients.length === 0 ? (
+            <p className="mt-1 text-xs text-muted-foreground">Нямаш добавени клиенти в CRM-а. Добави от таб „Клиенти".</p>
+          ) : (
+            <Select value={crmClientId} onValueChange={setCrmClientId}>
+              <SelectTrigger className="mt-1"><SelectValue placeholder="Избери клиент" /></SelectTrigger>
+              <SelectContent>
+                {crmClients.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          )}
+        </div>
+      ) : (
+        <div>
+          <Label>Клиент (регистриран профил)</Label>
+          <div className="mt-1 flex gap-2">
+            <Input placeholder="Търси по име или имейл" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && search()} />
+            <Button size="sm" onClick={search} className="gap-1"><Search className="h-4 w-4" />Търси</Button>
+          </div>
+          {selectedProfile ? (
+            <p className="mt-2 text-sm text-foreground">
+              Избран: <span className="font-semibold">{selectedProfile.full_name ?? selectedProfile.email}</span>{" "}
+              <button type="button" className="text-xs text-primary underline" onClick={() => setSelectedProfile(null)}>смени</button>
+            </p>
+          ) : results.length > 0 ? (
+            <ul className="mt-2 divide-y divide-border rounded-lg border border-border">
+              {results.map((r) => (
+                <li key={r.id} className="flex items-center justify-between p-2 text-sm">
+                  <span className="truncate text-foreground">{r.full_name ?? r.email ?? "Клиент"}</span>
+                  <Button size="sm" variant="ghost" onClick={() => { setSelectedProfile(r); setResults([]); }}>Избери</Button>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </div>
+      )}
 
       <div>
         <Label>Обява (по желание)</Label>
@@ -218,7 +314,16 @@ function NewDealForm({ brokerId, onCreated }: { brokerId: string; onCreated: () 
         </Select>
       </div>
 
-      <Button className="w-full" disabled={!selected || busy} onClick={create}>
+      <div>
+        <Label>Комисиона (% от цената на имота)</Label>
+        <Input
+          type="number" step="0.1" min="0" max="100" placeholder="напр. 3"
+          value={commissionPercent} onChange={(e) => setCommissionPercent(e.target.value)}
+          className="mt-1"
+        />
+      </div>
+
+      <Button className="w-full" disabled={!canCreate || busy} onClick={create}>
         {busy ? "Създаване..." : "Създай сделка"}
       </Button>
     </div>
