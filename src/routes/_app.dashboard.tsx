@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
-import { Home, Building2, Users, Calendar, Handshake } from "lucide-react";
+import { Home, Building2, Users, Calendar, Handshake, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/dashboard")({
@@ -11,6 +11,7 @@ export const Route = createFileRoute("/_app/dashboard")({
 
 const tabs = [
   { to: "/dashboard", label: "Начало", icon: Home, exact: true },
+  { to: "/dashboard/database", label: "База", icon: LayoutGrid },
   { to: "/dashboard/listings", label: "Обяви", icon: Building2 },
   { to: "/dashboard/clients", label: "Клиенти", icon: Users },
   { to: "/dashboard/tasks", label: "Огледи", icon: Calendar },
