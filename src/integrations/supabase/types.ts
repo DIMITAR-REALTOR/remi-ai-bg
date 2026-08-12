@@ -189,29 +189,38 @@ export type Database = {
       deals: {
         Row: {
           broker_id: string
-          client_id: string
+          client_id: string | null
           closed_at: string | null
+          commission_percent: number | null
           created_at: string
+          crm_client_id: string | null
           id: string
           listing_id: string | null
+          stage: string
           status: string
         }
         Insert: {
           broker_id: string
-          client_id: string
+          client_id?: string | null
           closed_at?: string | null
+          commission_percent?: number | null
           created_at?: string
+          crm_client_id?: string | null
           id?: string
           listing_id?: string | null
+          stage?: string
           status?: string
         }
         Update: {
           broker_id?: string
-          client_id?: string
+          client_id?: string | null
           closed_at?: string | null
+          commission_percent?: number | null
           created_at?: string
+          crm_client_id?: string | null
           id?: string
           listing_id?: string | null
+          stage?: string
           status?: string
         }
         Relationships: [
@@ -227,6 +236,13 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_crm_client_id_fkey"
+            columns: ["crm_client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
             referencedColumns: ["id"]
           },
           {
