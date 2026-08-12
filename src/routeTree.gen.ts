@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AdsRouteImport } from './routes/ads'
+import { Route as ArchitectureRouteImport } from './routes/architecture'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as ChecklistRouteImport } from './routes/checklist'
@@ -59,6 +60,11 @@ const AppRoute = AppRouteImport.update({
 const AdsRoute = AdsRouteImport.update({
   id: '/ads',
   path: '/ads',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArchitectureRoute = ArchitectureRouteImport.update({
+  id: '/architecture',
+  path: '/architecture',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -238,6 +244,7 @@ const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ads': typeof AdsRoute
+  '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
@@ -276,6 +283,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ads': typeof AdsRoute
+  '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/ads': typeof AdsRoute
+  '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
@@ -355,6 +364,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/ads'
+    | '/architecture'
     | '/auth'
     | '/brokers'
     | '/checklist'
@@ -393,6 +403,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/ads'
+    | '/architecture'
     | '/auth'
     | '/brokers'
     | '/checklist'
@@ -431,6 +442,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/ads'
+    | '/architecture'
     | '/auth'
     | '/brokers'
     | '/checklist'
@@ -471,6 +483,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   AdsRoute: typeof AdsRoute
+  ArchitectureRoute: typeof ArchitectureRoute
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
   ChecklistRoute: typeof ChecklistRoute
@@ -514,6 +527,13 @@ declare module '@tanstack/react-router' {
       path: '/ads'
       fullPath: '/ads'
       preLoaderRoute: typeof AdsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/architecture': {
+      id: '/architecture'
+      path: '/architecture'
+      fullPath: '/architecture'
+      preLoaderRoute: typeof ArchitectureRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -825,6 +845,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   AdsRoute: AdsRoute,
+  ArchitectureRoute: ArchitectureRoute,
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
   ChecklistRoute: ChecklistRoute,
