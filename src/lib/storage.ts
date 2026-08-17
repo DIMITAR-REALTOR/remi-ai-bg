@@ -37,3 +37,23 @@ export async function uploadBrokerPhoto(userId: string, file: File): Promise<str
   if (signErr) throw signErr;
   return data.signedUrl;
 }
+
+/**
+ * Качва снимка на личен документ (лична карта и др.) за страна по договор.
+ * Bucket-ът "contract-documents" е ПРИВАТЕН — само брокерът вижда собствените си файлове.
+ * Phase 1: само съхранение, без OCR разпознаване на данни от снимката.
+ */
+export async function uploadContractIdPhoto(userId: string, file: File): Promise<string> {
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `${userId}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from("contract-documents").upload(path, file, {
+    contentType: file.type,
+    upsert: false,
+  });
+  if (error) throw error;
+  // Кратък срок на валидност — лични документи не трябва да имат дълготрайни публични линкове
+  const { data, error: signErr } = await supabase.storage
+    .from("contract-documents").createSignedUrl(path, 60 * 60 * 24 * 7); // 7 дни
+  if (signErr) throw signErr;
+  return data.signedUrl;
+}

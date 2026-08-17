@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { Building2, Users, Calendar, Handshake, ChevronRight, ShieldAlert, CheckCircle2 } from "lucide-react";
+import { Building2, Users, Calendar, Handshake, ChevronRight, ShieldAlert, CheckCircle2, FileText } from "lucide-react";
 import { fmtDateTime, clientStatusLabel, clientStatusTone, crmToneClasses } from "@/lib/crm-meta";
 import { cn } from "@/lib/utils";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
@@ -195,12 +195,15 @@ function Overview() {
       </div>
 
       {/* Бързи бутони */}
-      <div className="mt-5 grid grid-cols-2 gap-2">
-        <Link to="/dashboard/new" className="flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card py-2.5 text-xs font-medium text-foreground hover:bg-secondary">
+      <div className="mt-5 grid grid-cols-3 gap-2">
+        <Link to="/dashboard/new" className="flex flex-col items-center justify-center gap-1 rounded-xl border border-border bg-card py-2.5 text-xs font-medium text-foreground hover:bg-secondary">
           <Building2 className="h-3.5 w-3.5" />Нова обява
         </Link>
-        <Link to="/dashboard/clients" className="flex items-center justify-center gap-1.5 rounded-xl border border-border bg-card py-2.5 text-xs font-medium text-foreground hover:bg-secondary">
+        <Link to="/dashboard/clients" className="flex flex-col items-center justify-center gap-1 rounded-xl border border-border bg-card py-2.5 text-xs font-medium text-foreground hover:bg-secondary">
           <Users className="h-3.5 w-3.5" />Нов клиент
+        </Link>
+        <Link to="/dashboard/contracts/new" className="flex flex-col items-center justify-center gap-1 rounded-xl border border-border bg-card py-2.5 text-xs font-medium text-foreground hover:bg-secondary">
+          <FileText className="h-3.5 w-3.5" />Нов договор
         </Link>
       </div>
     </div>

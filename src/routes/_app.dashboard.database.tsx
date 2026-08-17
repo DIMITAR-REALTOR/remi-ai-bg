@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
-import { Search, Building2, Users, Calendar, Handshake, LayoutGrid } from "lucide-react";
+import { Search, Building2, Users, Calendar, Handshake, LayoutGrid, FileText } from "lucide-react";
+import { contractTypeShortLabel, contractStatusLabel, contractStatusTone } from "@/lib/contracts-meta";
 import { fmtDate, clientStatusLabel, clientStatusTone, dealStageLabel, dealStageTone, crmToneClasses } from "@/lib/crm-meta";
 import { statusLabel, statusTone } from "@/lib/listings-meta";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/_app/dashboard/database")({
 
 type Row = {
   id: string;
-  type: "listing" | "client" | "task" | "deal";
+  type: "listing" | "client" | "task" | "deal" | "contract";
   title: string;
   statusLabel: string;
   statusTone: string;
@@ -30,6 +31,7 @@ const TYPE_META: Record<Row["type"], { label: string; icon: typeof Building2; co
   client: { label: "Клиент", icon: Users, color: "bg-purple-500/15 text-purple-600 dark:text-purple-400" },
   task: { label: "Задача", icon: Calendar, color: "bg-orange-500/15 text-orange-600 dark:text-orange-400" },
   deal: { label: "Сделка", icon: Handshake, color: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400" },
+  contract: { label: "Договор", icon: FileText, color: "bg-pink-500/15 text-pink-600 dark:text-pink-400" },
 };
 
 const FILTERS: { value: "all" | Row["type"]; label: string }[] = [
@@ -38,6 +40,7 @@ const FILTERS: { value: "all" | Row["type"]; label: string }[] = [
   { value: "client", label: "Клиенти" },
   { value: "task", label: "Задачи" },
   { value: "deal", label: "Сделки" },
+  { value: "contract", label: "Договори" },
 ];
 
 function DatabasePage() {
@@ -91,6 +94,19 @@ function DatabasePage() {
     },
   });
 
+  const { data: contracts = [] } = useQuery({
+    queryKey: ["db-contracts", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from("contracts")
+        .select("id,contract_type,status,created_at,party_a")
+        .eq("broker_id", user!.id);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
   const rows: Row[] = useMemo(() => {
     const r: Row[] = [];
     for (const l of listings) {
@@ -106,8 +122,12 @@ function DatabasePage() {
       const name = d.clients?.name ?? d.profiles?.full_name ?? d.profiles?.email ?? d.listings?.title ?? "Сделка";
       r.push({ id: d.id, type: "deal", title: name, statusLabel: dealStageLabel(d.stage), statusTone: dealStageTone(d.stage), date: d.created_at, to: "/dashboard/deals" });
     }
+    for (const c of contracts) {
+      const name = `${contractTypeShortLabel(c.contract_type)}${c.party_a?.name ? " · " + c.party_a.name : ""}`;
+      r.push({ id: c.id, type: "contract", title: name, statusLabel: contractStatusLabel(c.status), statusTone: contractStatusTone(c.status), date: c.created_at, to: "/dashboard/contracts/$id", params: { id: c.id } });
+    }
     return r.sort((a, b) => new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime());
-  }, [listings, clients, tasks, deals]);
+  }, [listings, clients, tasks, deals, contracts]);
 
   const filtered = rows.filter((r) => {
     if (filter !== "all" && r.type !== filter) return false;

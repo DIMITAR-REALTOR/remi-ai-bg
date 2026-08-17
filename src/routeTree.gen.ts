@@ -40,13 +40,17 @@ import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
 import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
+import { Route as AppDashboardContractsRouteImport } from './routes/_app.dashboard.contracts'
 import { Route as AppDashboardDatabaseRouteImport } from './routes/_app.dashboard.database'
 import { Route as AppDashboardDealsRouteImport } from './routes/_app.dashboard.deals'
 import { Route as AppDashboardListingsRouteImport } from './routes/_app.dashboard.listings'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
 import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
 import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboard.clients.$id'
+import { Route as AppDashboardContractsIdRouteImport } from './routes/_app.dashboard.contracts.$id'
+import { Route as AppDashboardContractsNewRouteImport } from './routes/_app.dashboard.contracts.new'
 import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
+import { Route as AppDashboardContractsNewPreliminarySaleRouteImport } from './routes/_app.dashboard.contracts.new.preliminary-sale'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -205,6 +209,11 @@ const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const AppDashboardContractsRoute = AppDashboardContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
 const AppDashboardDatabaseRoute = AppDashboardDatabaseRouteImport.update({
   id: '/database',
   path: '/database',
@@ -235,11 +244,28 @@ const AppDashboardClientsIdRoute = AppDashboardClientsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppDashboardClientsRoute,
 } as any)
+const AppDashboardContractsIdRoute = AppDashboardContractsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppDashboardContractsRoute,
+} as any)
+const AppDashboardContractsNewRoute =
+  AppDashboardContractsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AppDashboardContractsRoute,
+  } as any)
 const AppDashboardEditIdRoute = AppDashboardEditIdRouteImport.update({
   id: '/edit/$id',
   path: '/edit/$id',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const AppDashboardContractsNewPreliminarySaleRoute =
+  AppDashboardContractsNewPreliminarySaleRouteImport.update({
+    id: '/preliminary-sale',
+    path: '/preliminary-sale',
+    getParentRoute: () => AppDashboardContractsNewRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -271,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/dashboard/contracts': typeof AppDashboardContractsRouteWithChildren
   '/dashboard/database': typeof AppDashboardDatabaseRoute
   '/dashboard/deals': typeof AppDashboardDealsRoute
   '/dashboard/listings': typeof AppDashboardListingsRoute
@@ -278,7 +305,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard/': typeof AppDashboardIndexRoute
   '/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
+  '/dashboard/contracts/$id': typeof AppDashboardContractsIdRoute
+  '/dashboard/contracts/new': typeof AppDashboardContractsNewRouteWithChildren
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
+  '/dashboard/contracts/new/preliminary-sale': typeof AppDashboardContractsNewPreliminarySaleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -309,6 +339,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/dashboard/contracts': typeof AppDashboardContractsRouteWithChildren
   '/dashboard/database': typeof AppDashboardDatabaseRoute
   '/dashboard/deals': typeof AppDashboardDealsRoute
   '/dashboard/listings': typeof AppDashboardListingsRoute
@@ -316,7 +347,10 @@ export interface FileRoutesByTo {
   '/dashboard/tasks': typeof AppDashboardTasksRoute
   '/dashboard': typeof AppDashboardIndexRoute
   '/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
+  '/dashboard/contracts/$id': typeof AppDashboardContractsIdRoute
+  '/dashboard/contracts/new': typeof AppDashboardContractsNewRouteWithChildren
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
+  '/dashboard/contracts/new/preliminary-sale': typeof AppDashboardContractsNewPreliminarySaleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -350,6 +384,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
+  '/_app/dashboard/contracts': typeof AppDashboardContractsRouteWithChildren
   '/_app/dashboard/database': typeof AppDashboardDatabaseRoute
   '/_app/dashboard/deals': typeof AppDashboardDealsRoute
   '/_app/dashboard/listings': typeof AppDashboardListingsRoute
@@ -357,7 +392,10 @@ export interface FileRoutesById {
   '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
   '/_app/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
+  '/_app/dashboard/contracts/$id': typeof AppDashboardContractsIdRoute
+  '/_app/dashboard/contracts/new': typeof AppDashboardContractsNewRouteWithChildren
   '/_app/dashboard/edit/$id': typeof AppDashboardEditIdRoute
+  '/_app/dashboard/contracts/new/preliminary-sale': typeof AppDashboardContractsNewPreliminarySaleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -391,6 +429,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
+    | '/dashboard/contracts'
     | '/dashboard/database'
     | '/dashboard/deals'
     | '/dashboard/listings'
@@ -398,7 +437,10 @@ export interface FileRouteTypes {
     | '/dashboard/tasks'
     | '/dashboard/'
     | '/dashboard/clients/$id'
+    | '/dashboard/contracts/$id'
+    | '/dashboard/contracts/new'
     | '/dashboard/edit/$id'
+    | '/dashboard/contracts/new/preliminary-sale'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -429,6 +471,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/dashboard/clients'
+    | '/dashboard/contracts'
     | '/dashboard/database'
     | '/dashboard/deals'
     | '/dashboard/listings'
@@ -436,7 +479,10 @@ export interface FileRouteTypes {
     | '/dashboard/tasks'
     | '/dashboard'
     | '/dashboard/clients/$id'
+    | '/dashboard/contracts/$id'
+    | '/dashboard/contracts/new'
     | '/dashboard/edit/$id'
+    | '/dashboard/contracts/new/preliminary-sale'
   id:
     | '__root__'
     | '/'
@@ -469,6 +515,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_app/dashboard/clients'
+    | '/_app/dashboard/contracts'
     | '/_app/dashboard/database'
     | '/_app/dashboard/deals'
     | '/_app/dashboard/listings'
@@ -476,7 +523,10 @@ export interface FileRouteTypes {
     | '/_app/dashboard/tasks'
     | '/_app/dashboard/'
     | '/_app/dashboard/clients/$id'
+    | '/_app/dashboard/contracts/$id'
+    | '/_app/dashboard/contracts/new'
     | '/_app/dashboard/edit/$id'
+    | '/_app/dashboard/contracts/new/preliminary-sale'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -725,6 +775,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardClientsRouteImport
       parentRoute: typeof AppDashboardRoute
     }
+    '/_app/dashboard/contracts': {
+      id: '/_app/dashboard/contracts'
+      path: '/contracts'
+      fullPath: '/dashboard/contracts'
+      preLoaderRoute: typeof AppDashboardContractsRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
     '/_app/dashboard/database': {
       id: '/_app/dashboard/database'
       path: '/database'
@@ -767,12 +824,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardClientsIdRouteImport
       parentRoute: typeof AppDashboardClientsRoute
     }
+    '/_app/dashboard/contracts/$id': {
+      id: '/_app/dashboard/contracts/$id'
+      path: '/$id'
+      fullPath: '/dashboard/contracts/$id'
+      preLoaderRoute: typeof AppDashboardContractsIdRouteImport
+      parentRoute: typeof AppDashboardContractsRoute
+    }
+    '/_app/dashboard/contracts/new': {
+      id: '/_app/dashboard/contracts/new'
+      path: '/new'
+      fullPath: '/dashboard/contracts/new'
+      preLoaderRoute: typeof AppDashboardContractsNewRouteImport
+      parentRoute: typeof AppDashboardContractsRoute
+    }
     '/_app/dashboard/edit/$id': {
       id: '/_app/dashboard/edit/$id'
       path: '/edit/$id'
       fullPath: '/dashboard/edit/$id'
       preLoaderRoute: typeof AppDashboardEditIdRouteImport
       parentRoute: typeof AppDashboardRoute
+    }
+    '/_app/dashboard/contracts/new/preliminary-sale': {
+      id: '/_app/dashboard/contracts/new/preliminary-sale'
+      path: '/preliminary-sale'
+      fullPath: '/dashboard/contracts/new/preliminary-sale'
+      preLoaderRoute: typeof AppDashboardContractsNewPreliminarySaleRouteImport
+      parentRoute: typeof AppDashboardContractsNewRoute
     }
   }
 }
@@ -788,8 +866,39 @@ const AppDashboardClientsRouteChildren: AppDashboardClientsRouteChildren = {
 const AppDashboardClientsRouteWithChildren =
   AppDashboardClientsRoute._addFileChildren(AppDashboardClientsRouteChildren)
 
+interface AppDashboardContractsNewRouteChildren {
+  AppDashboardContractsNewPreliminarySaleRoute: typeof AppDashboardContractsNewPreliminarySaleRoute
+}
+
+const AppDashboardContractsNewRouteChildren: AppDashboardContractsNewRouteChildren =
+  {
+    AppDashboardContractsNewPreliminarySaleRoute:
+      AppDashboardContractsNewPreliminarySaleRoute,
+  }
+
+const AppDashboardContractsNewRouteWithChildren =
+  AppDashboardContractsNewRoute._addFileChildren(
+    AppDashboardContractsNewRouteChildren,
+  )
+
+interface AppDashboardContractsRouteChildren {
+  AppDashboardContractsIdRoute: typeof AppDashboardContractsIdRoute
+  AppDashboardContractsNewRoute: typeof AppDashboardContractsNewRouteWithChildren
+}
+
+const AppDashboardContractsRouteChildren: AppDashboardContractsRouteChildren = {
+  AppDashboardContractsIdRoute: AppDashboardContractsIdRoute,
+  AppDashboardContractsNewRoute: AppDashboardContractsNewRouteWithChildren,
+}
+
+const AppDashboardContractsRouteWithChildren =
+  AppDashboardContractsRoute._addFileChildren(
+    AppDashboardContractsRouteChildren,
+  )
+
 interface AppDashboardRouteChildren {
   AppDashboardClientsRoute: typeof AppDashboardClientsRouteWithChildren
+  AppDashboardContractsRoute: typeof AppDashboardContractsRouteWithChildren
   AppDashboardDatabaseRoute: typeof AppDashboardDatabaseRoute
   AppDashboardDealsRoute: typeof AppDashboardDealsRoute
   AppDashboardListingsRoute: typeof AppDashboardListingsRoute
@@ -801,6 +910,7 @@ interface AppDashboardRouteChildren {
 
 const AppDashboardRouteChildren: AppDashboardRouteChildren = {
   AppDashboardClientsRoute: AppDashboardClientsRouteWithChildren,
+  AppDashboardContractsRoute: AppDashboardContractsRouteWithChildren,
   AppDashboardDatabaseRoute: AppDashboardDatabaseRoute,
   AppDashboardDealsRoute: AppDashboardDealsRoute,
   AppDashboardListingsRoute: AppDashboardListingsRoute,

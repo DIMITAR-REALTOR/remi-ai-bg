@@ -144,6 +144,89 @@ export type Database = {
           },
         ]
       }
+      contracts: {
+        Row: {
+          broker_id: string
+          contract_type: string
+          created_at: string
+          crm_client_id: string | null
+          deal_id: string | null
+          generated_content: string | null
+          id: string
+          listing_id: string | null
+          party_a: Json
+          party_a_id_photo_url: string | null
+          party_b: Json
+          party_b_id_photo_url: string | null
+          status: string
+          terms: Json
+          updated_at: string
+        }
+        Insert: {
+          broker_id: string
+          contract_type?: string
+          created_at?: string
+          crm_client_id?: string | null
+          deal_id?: string | null
+          generated_content?: string | null
+          id?: string
+          listing_id?: string | null
+          party_a?: Json
+          party_a_id_photo_url?: string | null
+          party_b?: Json
+          party_b_id_photo_url?: string | null
+          status?: string
+          terms?: Json
+          updated_at?: string
+        }
+        Update: {
+          broker_id?: string
+          contract_type?: string
+          created_at?: string
+          crm_client_id?: string | null
+          deal_id?: string | null
+          generated_content?: string | null
+          id?: string
+          listing_id?: string | null
+          party_a?: Json
+          party_a_id_photo_url?: string | null
+          party_b?: Json
+          party_b_id_photo_url?: string | null
+          status?: string
+          terms?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_broker_id_fkey"
+            columns: ["broker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_crm_client_id_fkey"
+            columns: ["crm_client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           broker_id: string
