@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Building2, Users, Calendar, Handshake, ChevronRight, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { fmtDateTime, clientStatusLabel, clientStatusTone, crmToneClasses } from "@/lib/crm-meta";
 import { cn } from "@/lib/utils";
+import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 
 export const Route = createFileRoute("/_app/dashboard/")({
   component: Overview,
@@ -64,6 +65,20 @@ function Overview() {
     },
   });
 
+  const { data: listingNeighborhoods = [] } = useQuery({
+    queryKey: ["overview-listing-neighborhoods", user?.id],
+    enabled: !!user && isBroker,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("listings")
+        .select("neighborhood")
+        .eq("broker_id", user!.id)
+        .not("neighborhood", "is", null);
+      if (error) throw error;
+      return (data ?? []).map((l: any) => l.neighborhood as string);
+    },
+  });
+
   if (loading || !isBroker) return <div className="p-8 text-center text-sm text-muted-foreground">Зареждане...</div>;
 
   const activeDeals = deals.filter((d: any) => d.status !== "completed");
@@ -74,6 +89,8 @@ function Overview() {
   return (
     <div className="mx-auto max-w-xl px-4 pt-6 pb-6">
       <h1 className="text-2xl font-black text-foreground">Начало</h1>
+
+      <MarketPulseWidget neighborhoods={listingNeighborhoods} />
 
       <Link to="/risk" className="mt-3 flex items-center gap-3 rounded-2xl border border-border bg-card p-3 transition hover:border-primary/40">
         <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><ShieldAlert className="h-4 w-4" /></div>

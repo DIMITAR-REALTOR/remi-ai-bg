@@ -8,6 +8,7 @@ import { Search, Building2, Users, Calendar, Handshake, LayoutGrid } from "lucid
 import { fmtDate, clientStatusLabel, clientStatusTone, dealStageLabel, dealStageTone, crmToneClasses } from "@/lib/crm-meta";
 import { statusLabel, statusTone } from "@/lib/listings-meta";
 import { cn } from "@/lib/utils";
+import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 
 export const Route = createFileRoute("/_app/dashboard/database")({
   component: DatabasePage,
@@ -49,7 +50,7 @@ function DatabasePage() {
     enabled: !!user,
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("listings").select("id,title,status,created_at").eq("broker_id", user!.id);
+        .from("listings").select("id,title,status,created_at,neighborhood").eq("broker_id", user!.id);
       if (error) throw error;
       return data ?? [];
     },
@@ -114,10 +115,17 @@ function DatabasePage() {
     return true;
   });
 
+  const activeNeighborhoods = useMemo(
+    () => listings.map((l: any) => l.neighborhood).filter(Boolean) as string[],
+    [listings]
+  );
+
   return (
     <div className="mx-auto max-w-xl px-4 pt-4 pb-8">
       <h1 className="text-2xl font-black text-foreground">База</h1>
       <p className="mt-0.5 text-xs text-muted-foreground">Всички имоти, клиенти, задачи и сделки на едно място.</p>
+
+      <MarketPulseWidget neighborhoods={activeNeighborhoods} />
 
       <div className="relative mt-3">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
