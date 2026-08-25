@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { Building2, Users, Calendar, Handshake, ChevronRight, ShieldAlert, CheckCircle2, FileText } from "lucide-react";
+import { Building2, Users, Calendar, Handshake, ChevronRight, ShieldAlert, CheckCircle2, FileText, Building } from "lucide-react";
 import { fmtDateTime, clientStatusLabel, clientStatusTone, crmToneClasses } from "@/lib/crm-meta";
 import { cn } from "@/lib/utils";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
@@ -97,6 +97,14 @@ function Overview() {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-foreground">Анализ на сделка</p>
           <p className="text-xs text-muted-foreground">AI оценка на риска при сделка с имот</p>
+        </div>
+      </Link>
+
+      <Link to="/dashboard/agency" className="mt-2 flex items-center gap-3 rounded-2xl border border-border bg-card p-3 transition hover:border-primary/40">
+        <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary"><Building className="h-4 w-4" /></div>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-foreground">Агенция</p>
+          <p className="text-xs text-muted-foreground">Управлявай екип, покани брокери, следи агенцията</p>
         </div>
       </Link>
 

@@ -39,6 +39,7 @@ import { Route as ListingIdRouteImport } from './routes/listing.$id'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AppDashboardIndexRouteImport } from './routes/_app.dashboard.index'
+import { Route as AppDashboardAgencyRouteImport } from './routes/_app.dashboard.agency'
 import { Route as AppDashboardClientsRouteImport } from './routes/_app.dashboard.clients'
 import { Route as AppDashboardContractsRouteImport } from './routes/_app.dashboard.contracts'
 import { Route as AppDashboardDatabaseRouteImport } from './routes/_app.dashboard.database'
@@ -205,6 +206,11 @@ const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const AppDashboardAgencyRoute = AppDashboardAgencyRouteImport.update({
+  id: '/agency',
+  path: '/agency',
+  getParentRoute: () => AppDashboardRoute,
+} as any)
 const AppDashboardClientsRoute = AppDashboardClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/listing/$id': typeof ListingIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/dashboard/agency': typeof AppDashboardAgencyRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/contracts': typeof AppDashboardContractsRouteWithChildren
   '/dashboard/database': typeof AppDashboardDatabaseRoute
@@ -346,6 +353,7 @@ export interface FileRoutesByTo {
   '/listing/$id': typeof ListingIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/dashboard/agency': typeof AppDashboardAgencyRoute
   '/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/dashboard/contracts': typeof AppDashboardContractsRouteWithChildren
   '/dashboard/database': typeof AppDashboardDatabaseRoute
@@ -392,6 +400,7 @@ export interface FileRoutesById {
   '/listing/$id': typeof ListingIdRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_app/dashboard/agency': typeof AppDashboardAgencyRoute
   '/_app/dashboard/clients': typeof AppDashboardClientsRouteWithChildren
   '/_app/dashboard/contracts': typeof AppDashboardContractsRouteWithChildren
   '/_app/dashboard/database': typeof AppDashboardDatabaseRoute
@@ -438,6 +447,7 @@ export interface FileRouteTypes {
     | '/listing/$id'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/dashboard/agency'
     | '/dashboard/clients'
     | '/dashboard/contracts'
     | '/dashboard/database'
@@ -481,6 +491,7 @@ export interface FileRouteTypes {
     | '/listing/$id'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/dashboard/agency'
     | '/dashboard/clients'
     | '/dashboard/contracts'
     | '/dashboard/database'
@@ -526,6 +537,7 @@ export interface FileRouteTypes {
     | '/listing/$id'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/_app/dashboard/agency'
     | '/_app/dashboard/clients'
     | '/_app/dashboard/contracts'
     | '/_app/dashboard/database'
@@ -781,6 +793,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardIndexRouteImport
       parentRoute: typeof AppDashboardRoute
     }
+    '/_app/dashboard/agency': {
+      id: '/_app/dashboard/agency'
+      path: '/agency'
+      fullPath: '/dashboard/agency'
+      preLoaderRoute: typeof AppDashboardAgencyRouteImport
+      parentRoute: typeof AppDashboardRoute
+    }
     '/_app/dashboard/clients': {
       id: '/_app/dashboard/clients'
       path: '/clients'
@@ -919,6 +938,7 @@ const AppDashboardContractsRouteWithChildren =
   )
 
 interface AppDashboardRouteChildren {
+  AppDashboardAgencyRoute: typeof AppDashboardAgencyRoute
   AppDashboardClientsRoute: typeof AppDashboardClientsRouteWithChildren
   AppDashboardContractsRoute: typeof AppDashboardContractsRouteWithChildren
   AppDashboardDatabaseRoute: typeof AppDashboardDatabaseRoute
@@ -931,6 +951,7 @@ interface AppDashboardRouteChildren {
 }
 
 const AppDashboardRouteChildren: AppDashboardRouteChildren = {
+  AppDashboardAgencyRoute: AppDashboardAgencyRoute,
   AppDashboardClientsRoute: AppDashboardClientsRouteWithChildren,
   AppDashboardContractsRoute: AppDashboardContractsRouteWithChildren,
   AppDashboardDatabaseRoute: AppDashboardDatabaseRoute,
