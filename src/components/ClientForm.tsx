@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { CLIENT_TYPES, CLIENT_STATUSES } from "@/lib/crm-meta";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export interface ClientFormData {
@@ -31,8 +32,23 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
   const qc = useQueryClient();
   const [f, setF] = useState<ClientFormData>({ ...empty, ...initial } as ClientFormData);
   const [busy, setBusy] = useState(false);
+  const [addToPool, setAddToPool] = useState(false);
   const isEdit = !!initial?.id;
   const set = <K extends keyof ClientFormData>(k: K, v: ClientFormData[K]) => setF((p) => ({ ...p, [k]: v }));
+
+  // Активна агенция на текущия потребител (собственик или потвърден член) - за пула с лийдове
+  const { data: activeAgencyId } = useQuery({
+    queryKey: ["my-active-agency", user?.id],
+    enabled: !!user && !isEdit,
+    queryFn: async () => {
+      const { data: owned } = await (supabase as any)
+        .from("agencies").select("id").eq("created_by", user!.id).maybeSingle();
+      if (owned?.id) return owned.id as string;
+      const { data: member } = await (supabase as any)
+        .from("agency_members").select("agency_id").eq("profile_id", user!.id).eq("status", "confirmed").maybeSingle();
+      return (member?.agency_id as string) ?? null;
+    },
+  });
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +56,8 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
     if (!f.name) { toast.error("Попълни име"); return; }
     setBusy(true);
     const payload: any = {
-      broker_id: user.id,
+      broker_id: addToPool && activeAgencyId ? null : user.id,
+      agency_id: addToPool && activeAgencyId ? activeAgencyId : null,
       name: f.name,
       phone: f.phone || null,
       client_type: f.client_type,
@@ -55,7 +72,7 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
     const { error } = await q;
     setBusy(false);
     if (error) { toast.error(error.message); return; }
-    toast.success(isEdit ? "Обновено" : "Запазено");
+    toast.success(isEdit ? "Обновено" : addToPool ? "Добавено в пула на агенцията" : "Запазено");
     qc.invalidateQueries({ queryKey: ["my-clients", user.id] });
     qc.invalidateQueries({ queryKey: ["client", initial?.id] });
     onSaved();
@@ -86,6 +103,15 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
       <div><Label htmlFor="lf">Търси</Label><Textarea id="lf" rows={2} placeholder="Двустаен в Чайка до 100 000 €..." value={f.looking_for} onChange={(e) => set("looking_for", e.target.value)} /></div>
       <div><Label htmlFor="nt">Бележки</Label><Textarea id="nt" rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} /></div>
       <div><Label htmlFor="lc">Последен контакт</Label><Input id="lc" type="date" value={f.last_contact_at} onChange={(e) => set("last_contact_at", e.target.value)} /></div>
+
+      {!isEdit && activeAgencyId && (
+        <div className="flex items-start gap-2 rounded-xl border border-dashed border-border p-3">
+          <Checkbox id="pool" checked={addToPool} onCheckedChange={(v) => setAddToPool(!!v)} className="mt-0.5" />
+          <Label htmlFor="pool" className="text-xs font-normal leading-snug text-muted-foreground">
+            Добави в пула на агенцията — REMI автоматично ще го разпредели на най-свободния брокер в екипа, вместо да остане на теб
+          </Label>
+        </div>
+      )}
 
       <Button type="submit" className="w-full" disabled={busy}>{busy ? "Запазване..." : "Запази"}</Button>
     </form>
