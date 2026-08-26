@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { CLIENT_TYPES, CLIENT_STATUSES } from "@/lib/crm-meta";
+import { MARITAL_STATUSES } from "@/lib/legal-meta";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -20,11 +21,12 @@ export interface ClientFormData {
   status: string;
   notes: string;
   last_contact_at: string; // YYYY-MM-DD
+  marital_status: string;
 }
 
 const empty: ClientFormData = {
   name: "", phone: "", client_type: "buyer", looking_for: "",
-  status: "new", notes: "", last_contact_at: "",
+  status: "new", notes: "", last_contact_at: "", marital_status: "",
 };
 
 export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormData>; onSaved: () => void }) {
@@ -65,6 +67,7 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
       status: f.status,
       notes: f.notes || null,
       last_contact_at: f.last_contact_at ? new Date(f.last_contact_at).toISOString() : null,
+      marital_status: f.marital_status || null,
     };
     const q = isEdit
       ? (supabase as any).from("clients").update(payload).eq("id", initial!.id!)
@@ -103,6 +106,15 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
       <div><Label htmlFor="lf">Търси</Label><Textarea id="lf" rows={2} placeholder="Двустаен в Чайка до 100 000 €..." value={f.looking_for} onChange={(e) => set("looking_for", e.target.value)} /></div>
       <div><Label htmlFor="nt">Бележки</Label><Textarea id="nt" rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} /></div>
       <div><Label htmlFor="lc">Последен контакт</Label><Input id="lc" type="date" value={f.last_contact_at} onChange={(e) => set("last_contact_at", e.target.value)} /></div>
+
+      <div>
+        <Label>Семейно положение</Label>
+        <Select value={f.marital_status || undefined} onValueChange={(v) => set("marital_status", v)}>
+          <SelectTrigger><SelectValue placeholder="Не е посочено" /></SelectTrigger>
+          <SelectContent>{MARITAL_STATUSES.map((m) => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}</SelectContent>
+        </Select>
+        <p className="mt-1 text-[11px] text-muted-foreground">Използва се за проверка на СИО при сделки, придобити по време на брак.</p>
+      </div>
 
       {!isEdit && activeAgencyId && (
         <div className="flex items-start gap-2 rounded-xl border border-dashed border-border p-3">

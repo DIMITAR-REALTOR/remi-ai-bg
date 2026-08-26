@@ -8,7 +8,7 @@ import { extractLegalDocument, extractIdentityDocument } from "@/lib/ai.function
 import { uploadLegalDocument, uploadIdentityDocument, validateDocFile } from "@/lib/storage";
 import {
   LEGAL_DOCUMENT_TYPES, legalDocTypeShortLabel, legalDocFields, AVAILABILITY_LABELS,
-  IDENTITY_ROLES, maskEgn, type LegalDocumentType,
+  IDENTITY_ROLES, maskEgn, HEIR_CERTIFICATE_TRIGGER_VALUE, type LegalDocumentType,
 } from "@/lib/legal-meta";
 import { fmtDate } from "@/lib/crm-meta";
 import { Button } from "@/components/ui/button";
@@ -67,6 +67,11 @@ function LegalAnalysisPage() {
     },
   });
 
+  const hasInheritedOwnership = docs.some(
+    (d: any) => d.document_type === "ownership_document" && d.extracted_data?.acquisition_method === HEIR_CERTIFICATE_TRIGGER_VALUE
+  );
+  const visibleDocTypes = LEGAL_DOCUMENT_TYPES.filter((t) => t.value !== "heir_certificate" || hasInheritedOwnership);
+
   const refresh = () => {
     qc.invalidateQueries({ queryKey: ["legal-documents", user?.id] });
     qc.invalidateQueries({ queryKey: ["identity-documents", user?.id] });
@@ -92,7 +97,7 @@ function LegalAnalysisPage() {
 
       {/* Табло — статус по тип документ */}
       <section className="mt-6 grid grid-cols-1 gap-2">
-        {LEGAL_DOCUMENT_TYPES.map((t) => {
+        {visibleDocTypes.map((t) => {
           const matching = docs.filter((d: any) => d.document_type === t.value);
           const status = matching.length === 0 ? "missing" : matching.some((d: any) => d.availability_status === "uploaded") ? "uploaded" : "available";
           return (
@@ -122,6 +127,12 @@ function LegalAnalysisPage() {
           );
         })}
       </section>
+
+      {hasInheritedOwnership && !docs.some((d: any) => d.document_type === "heir_certificate") && (
+        <div className="mt-4 rounded-2xl border border-warning/40 bg-warning/10 p-3 text-xs text-warning-foreground">
+          Открит е документ за собственост, придобита по наследство — препоръчваме да добавиш и Удостоверение за наследници.
+        </div>
+      )}
 
       {/* Списък с вече добавени документи */}
       {!isLoading && docs.length > 0 && (

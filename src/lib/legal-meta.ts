@@ -7,7 +7,8 @@ export type LegalDocumentType =
   | "skitsa"
   | "shema"
   | "encumbrance_cert"
-  | "tax_assessment";
+  | "tax_assessment"
+  | "heir_certificate";
 
 export type LegalField = { key: string; label: string; placeholder?: string };
 
@@ -99,7 +100,24 @@ export const LEGAL_DOCUMENT_TYPES: {
       { key: "issuer", label: "Издател", placeholder: "Общинска данъчна служба" },
     ],
   },
+  {
+    value: "heir_certificate",
+    label: "Удостоверение за наследници",
+    shortLabel: "Удостоверение за наследници",
+    allowMultiplePerListing: false,
+    allowAvailableNotUploaded: true,
+    fields: [
+      { key: "deceased_name", label: "Име на наследодателя" },
+      { key: "heirs", label: "Наследници (имена и дялове)" },
+      { key: "issue_date", label: "Дата на издаване", placeholder: "дд.мм.гггг" },
+      { key: "issuer", label: "Издател", placeholder: "Община" },
+    ],
+  },
 ];
+
+// Условно се показва в дропдауна само ако вече има записан "Документ за
+// собственост" с начин на придобиване = наследство.
+export const HEIR_CERTIFICATE_TRIGGER_VALUE = "наследство";
 
 export const legalDocTypeLabel = (v: string) =>
   LEGAL_DOCUMENT_TYPES.find((t) => t.value === v)?.label ?? v;
@@ -131,3 +149,15 @@ export function maskEgn(egn: string | null | undefined): string {
   if (digits.length <= 4) return digits;
   return `••••••${digits.slice(-4)}`;
 }
+
+// Семейно положение на клиент/собственик — атрибут на човека, не документ.
+// Влияе на правния анализ: женен/омъжена по време на придобиване → вероятна СИО.
+export const MARITAL_STATUSES = [
+  { value: "single", label: "Неженен/Неомъжена" },
+  { value: "married", label: "Женен/Омъжена" },
+  { value: "divorced", label: "Разведен(а)" },
+  { value: "widowed", label: "Вдовец/Вдовица" },
+] as const;
+
+export const maritalStatusLabel = (v: string | null | undefined) =>
+  MARITAL_STATUSES.find((m) => m.value === v)?.label ?? "—";
