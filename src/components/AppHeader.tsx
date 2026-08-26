@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Building2, User as UserIcon, LogOut, HelpCircle, UserCircle2, Cpu } from "lucide-react";
+import { User as UserIcon, LogOut, HelpCircle, UserCircle2, Cpu } from "lucide-react";
+import logoIcon from "@/assets/logo-icon.png";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -64,9 +65,7 @@ export function AppHeader() {
     >
       <div className="mx-auto flex h-14 max-w-xl items-center justify-between gap-2 px-4">
         <Link to="/" className="flex items-center gap-2 min-w-0">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Building2 className="h-4 w-4" />
-          </span>
+          <img src={logoIcon} alt="REMI AI" className="h-8 w-8 shrink-0 rounded-lg" />
           <span className="min-w-0">
             <span className="block text-sm font-black leading-tight text-foreground">REMI AI</span>
             <span className="hidden sm:block text-[10px] leading-tight text-muted-foreground">Real Estate Market Intelligence</span>
