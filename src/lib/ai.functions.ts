@@ -268,6 +268,88 @@ ${CONTACT_BLOCK}
     return { body };
   });
 
+const STAGE_LABELS: Record<string, string> = {
+  contact: "Контакт",
+  viewing: "Оглед",
+  offer: "Оферта",
+  negotiation: "Преговори",
+  notary: "Нотариален акт",
+  closed: "Затворена",
+};
+
+const DealContextInput = z.object({
+  deal_id: z.string().uuid(),
+  stage: z.string().min(1).max(50),
+  days_since_activity: z.number().min(0).max(3650),
+  client_name: z.string().max(200).optional().default(""),
+  listing_title: z.string().max(200).optional().default(""),
+  commission_percent: z.number().optional(),
+});
+
+const DealContextOutput = z.object({
+  reasoning: z.string(),
+  next_action: z.string(),
+});
+export type DealContextResult = z.infer<typeof DealContextOutput>;
+
+/**
+ * REMI Core Engine — Reasoning Layer (Blueprint Гл. 7.6, AI CRM Decision Engine).
+ * [Контекст] (етап + дни без активност) + [Правило] = [Действие].
+ * Автоматичен анализ без ръчен вход на брокера — извиква се при зареждане на
+ * страница "Сделки" за сделки с остарял или липсващ ai_context_summary.
+ * Резултатът се записва в deals.ai_context_summary от извикващия route.
+ */
+export const analyzeDealContext = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => DealContextInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const stageLabel = STAGE_LABELS[data.stage] ?? data.stage;
+    const details = [
+      `Етап на сделката: ${stageLabel}`,
+      `Дни от последна промяна на етапа: ${data.days_since_activity}`,
+      data.client_name && `Клиент: ${data.client_name}`,
+      data.listing_title && `Имот: ${data.listing_title}`,
+      data.commission_percent != null && `Комисиона: ${data.commission_percent}%`,
+    ].filter(Boolean).join("\n");
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "Ти си REMI AI Reasoning Layer – специализиран контекст на Единното AI ядро (One AI Kernel). Анализираш защо сделка зацикля или какво е логичното следващо действие, на база етап и време без промяна. Прилагаш формулата [Контекст] + [Правило] = [Действие]. Връщаш САМО валиден JSON със структура:\n{\n  \"reasoning\": кратко обяснение защо сделката е в това състояние (1-2 изречения на български),\n  \"next_action\": конкретно, приложимо действие за брокера, обърнато лично към него (1 изречение на български, без общи съвети)\n}\nБез емоджи, само на български (кирилица). Не измисляй факти извън предоставените данни.",
+          },
+          { role: "user", content: `Анализирай тази сделка:\n${details}` },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+
+    let parsed: unknown;
+    try {
+      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      throw new Error("Невалиден отговор от AI");
+    }
+    return DealContextOutput.parse(parsed);
+  });
+
 const CompareItem = z.object({
   label: z.string().min(1).max(100),
   property_type: z.string().min(1).max(100),

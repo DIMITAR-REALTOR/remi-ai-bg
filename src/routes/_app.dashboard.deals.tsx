@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -9,10 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Search, Handshake, ChevronRight, ChevronLeft } from "lucide-react";
+import { Plus, Search, Handshake, ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
 import { fmtDate, fmtMoney, DEAL_STAGES, dealStageLabel, dealStageTone, dealStageIndex, crmToneClasses } from "@/lib/crm-meta";
 import { StarRow } from "@/components/RatingBadge";
 import { cn } from "@/lib/utils";
+import { analyzeDealContext } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/_app/dashboard/deals")({
   component: DealsPage,
@@ -28,6 +30,9 @@ type DealRow = {
   commission_percent: number | null;
   closed_at: string | null;
   created_at: string;
+  last_activity_at: string;
+  ai_context_summary: { reasoning: string; next_action: string } | null;
+  ai_context_summary_updated_at: string | null;
   profiles?: { id: string; full_name: string | null; email: string | null } | null;
   clients?: { id: string; name: string } | null;
   listings?: { id: string; title: string; price_eur: number } | null;
@@ -45,7 +50,7 @@ function DealsPage() {
     queryFn: async () => {
       const { data, error } = await (supabase as any)
         .from("deals")
-        .select("id, client_id, crm_client_id, listing_id, status, stage, commission_percent, closed_at, created_at, profiles:client_id(id,full_name,email), clients:crm_client_id(id,name), listings:listing_id(id,title,price_eur)")
+        .select("id, client_id, crm_client_id, listing_id, status, stage, commission_percent, closed_at, created_at, last_activity_at, ai_context_summary, ai_context_summary_updated_at, profiles:client_id(id,full_name,email), clients:crm_client_id(id,name), listings:listing_id(id,title,price_eur)")
         .eq("broker_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -63,6 +68,54 @@ function DealsPage() {
       return (data ?? []) as { deal_id: string; rating: number; comment: string | null }[];
     },
   });
+
+  const analyzeContext = useServerFn(analyzeDealContext);
+  const inFlight = useRef<Set<string>>(new Set());
+
+  // Автоматичен Reasoning Layer (Blueprint 7.6) — без ръчен вход на брокера.
+  // Изчислява ai_context_summary за активни сделки с липсващ или остарял анализ
+  // (по-стар от last_activity_at, или по-стар от 24 часа).
+  useEffect(() => {
+    if (!user || deals.length === 0) return;
+
+    const STALE_MS = 24 * 60 * 60 * 1000;
+    const stale = deals.filter((d) => {
+      if (d.stage === "closed") return false;
+      if (inFlight.current.has(d.id)) return false;
+      if (!d.ai_context_summary_updated_at) return true;
+      const updated = new Date(d.ai_context_summary_updated_at).getTime();
+      const lastActivity = new Date(d.last_activity_at).getTime();
+      return updated < lastActivity || Date.now() - updated > STALE_MS;
+    });
+
+    if (stale.length === 0) return;
+
+    (async () => {
+      for (const d of stale) {
+        inFlight.current.add(d.id);
+        const daysSince = Math.floor((Date.now() - new Date(d.last_activity_at).getTime()) / (24 * 60 * 60 * 1000));
+        try {
+          const r = await analyzeContext({
+            data: {
+              deal_id: d.id,
+              stage: d.stage,
+              days_since_activity: daysSince,
+              client_name: d.clients?.name ?? d.profiles?.full_name ?? "",
+              listing_title: d.listings?.title ?? "",
+              commission_percent: d.commission_percent ?? undefined,
+            },
+          });
+          await (supabase as any)
+            .from("deals")
+            .update({ ai_context_summary: r, ai_context_summary_updated_at: new Date().toISOString() })
+            .eq("id", d.id);
+          qc.invalidateQueries({ queryKey: ["my-deals", user.id] });
+        } catch {
+          // Тих провал — известието/следващата стъпка просто не се обновява този път.
+        }
+      }
+    })();
+  }, [deals, user, analyzeContext, qc]);
 
   const moveStage = async (deal: DealRow, direction: 1 | -1) => {
     const idx = dealStageIndex(deal.stage);
@@ -167,6 +220,16 @@ function DealsPage() {
                     <Button size="sm" className="gap-1" disabled={busy} onClick={() => moveStage(d, 1)}>
                       {DEAL_STAGES[idx + 1]?.label ?? "Затвори"}<ChevronRight className="h-3.5 w-3.5" />
                     </Button>
+                  </div>
+                )}
+
+                {d.stage !== "closed" && d.ai_context_summary?.next_action && (
+                  <div className="mt-3 flex items-start gap-1.5 rounded-xl bg-primary/5 p-2.5">
+                    <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                    <p className="text-xs text-foreground">
+                      <span className="font-semibold">Следваща стъпка: </span>
+                      {d.ai_context_summary.next_action}
+                    </p>
                   </div>
                 )}
 
