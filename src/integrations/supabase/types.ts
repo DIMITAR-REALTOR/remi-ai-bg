@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -144,6 +144,59 @@ export type Database = {
           },
         ]
       }
+      clients: {
+        Row: {
+          agency_id: string | null
+          broker_id: string | null
+          client_type: string
+          created_at: string
+          id: string
+          last_contact_at: string | null
+          looking_for: string | null
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          agency_id?: string | null
+          broker_id?: string | null
+          client_type?: string
+          created_at?: string
+          id?: string
+          last_contact_at?: string | null
+          looking_for?: string | null
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          agency_id?: string | null
+          broker_id?: string | null
+          client_type?: string
+          created_at?: string
+          id?: string
+          last_contact_at?: string | null
+          looking_for?: string | null
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clients_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           broker_id: string
@@ -198,13 +251,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "contracts_broker_id_fkey"
-            columns: ["broker_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "contracts_crm_client_id_fkey"
             columns: ["crm_client_id"]
             isOneToOne: false
@@ -227,50 +273,10 @@ export type Database = {
           },
         ]
       }
-      clients: {
-        Row: {
-          broker_id: string
-          client_type: string
-          created_at: string
-          id: string
-          last_contact_at: string | null
-          looking_for: string | null
-          name: string
-          notes: string | null
-          phone: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          broker_id: string
-          client_type?: string
-          created_at?: string
-          id?: string
-          last_contact_at?: string | null
-          looking_for?: string | null
-          name: string
-          notes?: string | null
-          phone?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          broker_id?: string
-          client_type?: string
-          created_at?: string
-          id?: string
-          last_contact_at?: string | null
-          looking_for?: string | null
-          name?: string
-          notes?: string | null
-          phone?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       deals: {
         Row: {
+          ai_context_summary: Json | null
+          ai_context_summary_updated_at: string | null
           broker_id: string
           client_id: string | null
           closed_at: string | null
@@ -278,11 +284,14 @@ export type Database = {
           created_at: string
           crm_client_id: string | null
           id: string
+          last_activity_at: string
           listing_id: string | null
           stage: string
           status: string
         }
         Insert: {
+          ai_context_summary?: Json | null
+          ai_context_summary_updated_at?: string | null
           broker_id: string
           client_id?: string | null
           closed_at?: string | null
@@ -290,11 +299,14 @@ export type Database = {
           created_at?: string
           crm_client_id?: string | null
           id?: string
+          last_activity_at?: string
           listing_id?: string | null
           stage?: string
           status?: string
         }
         Update: {
+          ai_context_summary?: Json | null
+          ai_context_summary_updated_at?: string | null
           broker_id?: string
           client_id?: string | null
           closed_at?: string | null
@@ -302,6 +314,7 @@ export type Database = {
           created_at?: string
           crm_client_id?: string | null
           id?: string
+          last_activity_at?: string
           listing_id?: string | null
           stage?: string
           status?: string
