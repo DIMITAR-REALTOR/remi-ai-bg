@@ -65,7 +65,7 @@ export function AppHeader() {
     >
       <div className="mx-auto flex h-14 max-w-xl items-center justify-between gap-2 px-4">
         <Link to="/" className="flex items-center gap-2 min-w-0">
-          <img src={logoIcon} alt="REMI AI" className="h-8 w-8 shrink-0 rounded-lg" />
+          <img src={logoIcon} alt="REMI AI" className="h-10 w-10 shrink-0 rounded-lg" />
           <span className="min-w-0">
             <span className="block text-sm font-black leading-tight text-foreground">REMI AI</span>
             <span className="hidden sm:block text-[10px] leading-tight text-muted-foreground">Real Estate Market Intelligence</span>
