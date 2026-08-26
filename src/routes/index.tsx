@@ -45,7 +45,7 @@ export const Route = createFileRoute("/")({
 });
 
 const TOOLS = [
-  { to: "/risk", Icon: ShieldAlert, title: "REMI Правен анализ", desc: "Оцени риска на сделката за секунди" },
+  { to: "/risk", Icon: ShieldAlert, title: "REMI Правен анализ", desc: "Документи, тежести и правни рискове по собствеността" },
   { to: "/checklist", Icon: ListChecks, title: "REMI Интелигентен чеклист", desc: "Стъпките при оглед и покупка" },
   { to: "/negotiation", Icon: Handshake, title: "REMI Преговори и продажби", desc: "Аргументи за по-добра цена" },
   { to: "/invest", Icon: Calculator, title: "REMI Инвеститорски анализ", desc: "Доходност, вноска и възвръщаемост" },

@@ -350,6 +350,130 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
     return DealContextOutput.parse(parsed);
   });
 
+/**
+ * REMI Core Engine — Legal Layer (Blueprint Гл. 7.4).
+ * Gemini vision чете директно снимка/PDF на документ (по подписан URL от
+ * bucket "legal-documents") и връща структуриран JSON по полетата, зададени
+ * от извикващия route (виж src/lib/legal-meta.ts за схемите по тип документ).
+ * Брокерът винаги преглежда/коригира резултата, преди да се запише (broker_confirmed).
+ */
+const LegalExtractInput = z.object({
+  file_url: z.string().url(),
+  document_type: z.string().min(1).max(50),
+  field_keys: z.array(z.string()).min(1).max(20),
+});
+
+export const extractLegalDocument = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => LegalExtractInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const schemaHint = data.field_keys.map((k) => `"${k}": string`).join(",\n  ");
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "Ти си REMI AI Legal Layer – специализиран контекст на Единното AI ядро (One AI Kernel). Четеш снимка или PDF на български имотен документ и извличаш точно посочените полета. Връщаш САМО валиден JSON с точно тези ключове (стойност \"\" ако липсва на документа, без да измисляш):\n{\n  " +
+              schemaHint +
+              "\n}\nВсички стойности на български, без markdown, без допълнителен текст.",
+          },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: `Извлечи данните от този документ (тип: ${data.document_type}).` },
+              { type: "image_url", image_url: { url: data.file_url } },
+            ],
+          },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+
+    let parsed: Record<string, unknown>;
+    try {
+      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      throw new Error("Невалиден отговор от AI");
+    }
+
+    const out: Record<string, string> = {};
+    for (const k of data.field_keys) out[k] = String(parsed[k] ?? "");
+    return { fields: out };
+  });
+
+/** Документ за самоличност — OCR опция (основният път остава ръчно въвеждане). */
+const IdentityExtractInput = z.object({ file_url: z.string().url() });
+
+export const extractIdentityDocument = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => IdentityExtractInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        response_format: { type: "json_object" },
+        messages: [
+          {
+            role: "system",
+            content:
+              "Четеш снимка на българска лична карта. Връщаш САМО валиден JSON:\n{\n  \"full_name\": string,\n  \"egn\": string,\n  \"document_number\": string,\n  \"valid_until\": string\n}\nСтойност \"\" ако полето липсва. Без markdown.",
+          },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: "Извлечи данните от личната карта." },
+              { type: "image_url", image_url: { url: data.file_url } },
+            ],
+          },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+    let parsed: unknown;
+    try {
+      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
+      parsed = JSON.parse(clean);
+    } catch {
+      throw new Error("Невалиден отговор от AI");
+    }
+    const IdentityOut = z.object({
+      full_name: z.string().optional().default(""),
+      egn: z.string().optional().default(""),
+      document_number: z.string().optional().default(""),
+      valid_until: z.string().optional().default(""),
+    });
+    return IdentityOut.parse(parsed);
+  });
+
 const CompareItem = z.object({
   label: z.string().min(1).max(100),
   property_type: z.string().min(1).max(100),
