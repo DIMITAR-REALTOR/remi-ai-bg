@@ -1,12 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Printer, Copy } from "lucide-react";
+import { ChevronLeft, Printer, Copy, PenTool } from "lucide-react";
 import { toast } from "sonner";
 import { contractTypeLabel, contractStatusLabel, contractStatusTone } from "@/lib/contracts-meta";
 import { crmToneClasses, fmtDate } from "@/lib/crm-meta";
 import { cn } from "@/lib/utils";
+import { requestContractSignature } from "@/lib/esignature.functions";
 
 export const Route = createFileRoute("/_app/dashboard/contracts/$id")({
   component: ContractDetail,
@@ -14,6 +18,10 @@ export const Route = createFileRoute("/_app/dashboard/contracts/$id")({
 
 function ContractDetail() {
   const { id } = Route.useParams();
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  const requestSign = useServerFn(requestContractSignature);
+  const [busySign, setBusySign] = useState<"seller" | "buyer" | null>(null);
 
   const { data: contract, isLoading } = useQuery({
     queryKey: ["contract", id],
@@ -23,6 +31,55 @@ function ContractDetail() {
       return data;
     },
   });
+
+  const { data: signatures = [] } = useQuery({
+    queryKey: ["contract-signatures", id],
+    enabled: !!id,
+    queryFn: async () => {
+      const { data, error } = await (supabase as any).from("contract_signatures").select("*").eq("contract_id", id).order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const sendForSignature = async (role: "seller" | "buyer") => {
+    if (!contract || !user) return;
+    const party = role === "seller" ? contract.party_a : contract.party_b;
+    if (!party?.name) { toast.error("Липсват данни за страната"); return; }
+    setBusySign(role);
+    try {
+      const res = await requestSign({
+        data: {
+          contractId: contract.id,
+          partyRole: role,
+          partyName: party.name,
+          partyEmail: "",
+          partyPhone: party.phone || "",
+          documentText: contract.generated_content,
+        },
+      });
+      await (supabase as any).from("contract_signatures").insert({
+        contract_id: contract.id,
+        broker_id: user.id,
+        party_role: role,
+        party_name: party.name,
+        party_phone: party.phone || null,
+        provider: res.provider,
+        provider_request_id: res.providerRequestId,
+        status: res.status === "sent" ? "sent" : "not_configured",
+      });
+      qc.invalidateQueries({ queryKey: ["contract-signatures", id] });
+      if (res.status === "not_configured") {
+        toast.info(res.message);
+      } else {
+        toast.success("Изпратено за подпис");
+      }
+    } catch (e: any) {
+      toast.error(e?.message ?? "Грешка");
+    } finally {
+      setBusySign(null);
+    }
+  };
 
   const copyText = async () => {
     if (!contract?.generated_content) return;
@@ -63,6 +120,38 @@ function ContractDetail() {
             <Printer className="h-3.5 w-3.5" />Печат
           </Button>
         </div>
+
+        {contract.status === "finalized" && (
+          <div className="mt-4 rounded-2xl border border-border bg-card p-4">
+            <h3 className="flex items-center gap-1.5 text-sm font-semibold text-foreground"><PenTool className="h-4 w-4" />Електронен подпис (КЕП)</h3>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Модулът е готов, но чака свързване с лицензиран доставчик — заявките се записват, но не се изпращат реално.
+            </p>
+            <div className="mt-3 flex gap-2">
+              <Button size="sm" variant="outline" className="flex-1" disabled={busySign === "seller"} onClick={() => sendForSignature("seller")}>
+                {busySign === "seller" ? "..." : "Продавач"}
+              </Button>
+              <Button size="sm" variant="outline" className="flex-1" disabled={busySign === "buyer"} onClick={() => sendForSignature("buyer")}>
+                {busySign === "buyer" ? "..." : "Купувач"}
+              </Button>
+            </div>
+            {signatures.length > 0 && (
+              <ul className="mt-3 space-y-1.5">
+                {signatures.map((s: any) => (
+                  <li key={s.id} className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">{s.party_name} ({s.party_role === "seller" ? "продавач" : "купувач"})</span>
+                    <span className={cn(
+                      "rounded-full px-2 py-0.5 text-[10px] font-semibold",
+                      s.status === "signed" ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"
+                    )}>
+                      {s.status === "not_configured" ? "Чака доставчик" : s.status === "sent" ? "Изпратено" : s.status === "signed" ? "Подписано" : s.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="mt-4 rounded-2xl border border-border bg-card p-4 print:rounded-none print:border-0 print:p-0">

@@ -53,6 +53,7 @@ import { Route as AppDashboardContractsNewRouteImport } from './routes/_app.dash
 import { Route as AppDashboardEditIdRouteImport } from './routes/_app.dashboard.edit.$id'
 import { Route as AppDashboardContractsNewDepositRouteImport } from './routes/_app.dashboard.contracts.new.deposit'
 import { Route as AppDashboardContractsNewPreliminarySaleRouteImport } from './routes/_app.dashboard.contracts.new.preliminary-sale'
+import { Route as AppDashboardContractsNewReservationDepositRouteImport } from './routes/_app.dashboard.contracts.new.reservation-deposit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -279,6 +280,12 @@ const AppDashboardContractsNewPreliminarySaleRoute =
     path: '/preliminary-sale',
     getParentRoute: () => AppDashboardContractsNewRoute,
   } as any)
+const AppDashboardContractsNewReservationDepositRoute =
+  AppDashboardContractsNewReservationDepositRouteImport.update({
+    id: '/reservation-deposit',
+    path: '/reservation-deposit',
+    getParentRoute: () => AppDashboardContractsNewRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -324,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
   '/dashboard/contracts/new/deposit': typeof AppDashboardContractsNewDepositRoute
   '/dashboard/contracts/new/preliminary-sale': typeof AppDashboardContractsNewPreliminarySaleRoute
+  '/dashboard/contracts/new/reservation-deposit': typeof AppDashboardContractsNewReservationDepositRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -368,6 +376,7 @@ export interface FileRoutesByTo {
   '/dashboard/edit/$id': typeof AppDashboardEditIdRoute
   '/dashboard/contracts/new/deposit': typeof AppDashboardContractsNewDepositRoute
   '/dashboard/contracts/new/preliminary-sale': typeof AppDashboardContractsNewPreliminarySaleRoute
+  '/dashboard/contracts/new/reservation-deposit': typeof AppDashboardContractsNewReservationDepositRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -415,6 +424,7 @@ export interface FileRoutesById {
   '/_app/dashboard/edit/$id': typeof AppDashboardEditIdRoute
   '/_app/dashboard/contracts/new/deposit': typeof AppDashboardContractsNewDepositRoute
   '/_app/dashboard/contracts/new/preliminary-sale': typeof AppDashboardContractsNewPreliminarySaleRoute
+  '/_app/dashboard/contracts/new/reservation-deposit': typeof AppDashboardContractsNewReservationDepositRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -462,6 +472,7 @@ export interface FileRouteTypes {
     | '/dashboard/edit/$id'
     | '/dashboard/contracts/new/deposit'
     | '/dashboard/contracts/new/preliminary-sale'
+    | '/dashboard/contracts/new/reservation-deposit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -506,6 +517,7 @@ export interface FileRouteTypes {
     | '/dashboard/edit/$id'
     | '/dashboard/contracts/new/deposit'
     | '/dashboard/contracts/new/preliminary-sale'
+    | '/dashboard/contracts/new/reservation-deposit'
   id:
     | '__root__'
     | '/'
@@ -552,6 +564,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard/edit/$id'
     | '/_app/dashboard/contracts/new/deposit'
     | '/_app/dashboard/contracts/new/preliminary-sale'
+    | '/_app/dashboard/contracts/new/reservation-deposit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -891,6 +904,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardContractsNewPreliminarySaleRouteImport
       parentRoute: typeof AppDashboardContractsNewRoute
     }
+    '/_app/dashboard/contracts/new/reservation-deposit': {
+      id: '/_app/dashboard/contracts/new/reservation-deposit'
+      path: '/reservation-deposit'
+      fullPath: '/dashboard/contracts/new/reservation-deposit'
+      preLoaderRoute: typeof AppDashboardContractsNewReservationDepositRouteImport
+      parentRoute: typeof AppDashboardContractsNewRoute
+    }
   }
 }
 
@@ -908,6 +928,7 @@ const AppDashboardClientsRouteWithChildren =
 interface AppDashboardContractsNewRouteChildren {
   AppDashboardContractsNewDepositRoute: typeof AppDashboardContractsNewDepositRoute
   AppDashboardContractsNewPreliminarySaleRoute: typeof AppDashboardContractsNewPreliminarySaleRoute
+  AppDashboardContractsNewReservationDepositRoute: typeof AppDashboardContractsNewReservationDepositRoute
 }
 
 const AppDashboardContractsNewRouteChildren: AppDashboardContractsNewRouteChildren =
@@ -915,6 +936,8 @@ const AppDashboardContractsNewRouteChildren: AppDashboardContractsNewRouteChildr
     AppDashboardContractsNewDepositRoute: AppDashboardContractsNewDepositRoute,
     AppDashboardContractsNewPreliminarySaleRoute:
       AppDashboardContractsNewPreliminarySaleRoute,
+    AppDashboardContractsNewReservationDepositRoute:
+      AppDashboardContractsNewReservationDepositRoute,
   }
 
 const AppDashboardContractsNewRouteWithChildren =

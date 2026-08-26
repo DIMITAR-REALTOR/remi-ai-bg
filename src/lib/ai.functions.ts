@@ -474,6 +474,61 @@ export const extractIdentityDocument = createServerFn({ method: "POST" })
     return IdentityOut.parse(parsed);
   });
 
+const ContractGenInput = z.object({
+  contract_type: z.string().min(1).max(50),
+  seller: z.record(z.string(), z.string()),
+  buyer: z.record(z.string(), z.string()),
+  terms: z.record(z.string(), z.string()),
+  contract_date: z.string().optional().default(""),
+  city_of_signing: z.string().optional().default("гр. Варна"),
+});
+
+/**
+ * REMI AI Legal Layer — генерира пълен текст на договор чрез Gemini, вместо
+ * статичен темплейт. Използва се за "Предварителен договор за покупко-продажба"
+ * (и занапред за останалите типове в модул Договори).
+ * ВАЖНО: генерираният текст е ориентировъчен, не замества преглед от юрист/нотариус.
+ */
+export const generateContractText = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => ContractGenInput.parse(d))
+  .handler(async ({ data }) => {
+    const apiKey = process.env.LOVABLE_API_KEY;
+    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+
+    const sellerBlock = Object.entries(data.seller).map(([k, v]) => `${k}: ${v}`).join("\n");
+    const buyerBlock = Object.entries(data.buyer).map(([k, v]) => `${k}: ${v}`).join("\n");
+    const termsBlock = Object.entries(data.terms).map(([k, v]) => `${k}: ${v}`).join("\n");
+
+    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        messages: [
+          {
+            role: "system",
+            content:
+              "Ти си REMI AI Legal Layer – специализиран контекст на Единното AI ядро (One AI Kernel). Изготвяш пълен, професионално форматиран текст на договор за недвижим имот в България, на български език, съобразен с общата практика по ЗЗД. Структура: заглавие, дата и място на сключване, страни (с всички лични данни), членове с номерация, място за подписи в края. Задължително добави в самия край дословно: „Този документ е генериран автоматично чрез REMI AI и има ориентировъчен характер. Преди подписване се препоръчва преглед от квалифициран юрист или нотариус.“ Не измисляй факти извън предоставените данни — при липсващо поле пиши „__________“. Без markdown форматиране, само чист текст.",
+          },
+          {
+            role: "user",
+            content: `Изготви ${data.contract_type === "preliminary_sale" ? "предварителен договор за покупко-продажба на недвижим имот (чл. 19 ЗЗД)" : data.contract_type}, дата на сключване: ${data.contract_date || "днес"}, място: ${data.city_of_signing}.\n\nПродавач:\n${sellerBlock}\n\nКупувач:\n${buyerBlock}\n\nУсловия по сделката:\n${termsBlock}`,
+          },
+        ],
+      }),
+    });
+
+    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
+    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
+    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
+
+    const json = await res.json();
+    const text: string = json?.choices?.[0]?.message?.content ?? "";
+    if (!text) throw new Error("Празен отговор от AI");
+    return { text: text.trim() };
+  });
+
 const CompareItem = z.object({
   label: z.string().min(1).max(100),
   property_type: z.string().min(1).max(100),

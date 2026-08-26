@@ -1,4 +1,4 @@
-export type ContractType = "preliminary_sale" | "deposit" | "rent" | "commission";
+export type ContractType = "preliminary_sale" | "reservation_deposit" | "deposit" | "rent" | "commission";
 
 export const CONTRACT_TYPES: {
   value: ContractType;
@@ -7,7 +7,8 @@ export const CONTRACT_TYPES: {
   available: boolean;
 }[] = [
   { value: "preliminary_sale", label: "Предварителен договор за покупко-продажба", shortLabel: "Предварителен договор", available: true },
-  { value: "deposit", label: "Договор за капаро / депозит", shortLabel: "Капаро", available: true },
+  { value: "reservation_deposit", label: "Резервационен депозит (условен)", shortLabel: "Резервационен депозит", available: true },
+  { value: "deposit", label: "Договор за капаро / задатък", shortLabel: "Капаро", available: true },
   { value: "rent", label: "Договор за наем", shortLabel: "Наем", available: false },
   { value: "commission", label: "Комисионен договор брокер-клиент", shortLabel: "Комисионен", available: false },
 ];
@@ -39,6 +40,24 @@ export type PartyData = {
 
 export const EMPTY_PARTY: PartyData = {
   name: "", egn: "", address: "", id_number: "", id_issued_by: "", id_issued_on: "", phone: "",
+};
+
+export type ReservationDepositTerms = {
+  property_description: string;
+  property_address: string;
+  reservation_price_eur: string;
+  reservation_fee_eur: string;
+  bank_approval_deadline: string; // срок за одобрение на кредит от банка
+  document_check_deadline: string; // срок за проверка на документи за собственост
+  refundable_conditions: string; // при какви условия депозитът се връща
+  forfeiture_conditions: string; // при какви условия депозитът се задържа
+  extra_clauses: string;
+};
+
+export const EMPTY_RESERVATION_TERMS: ReservationDepositTerms = {
+  property_description: "", property_address: "", reservation_price_eur: "",
+  reservation_fee_eur: "", bank_approval_deadline: "", document_check_deadline: "",
+  refundable_conditions: "", forfeiture_conditions: "", extra_clauses: "",
 };
 
 export type PreliminarySaleTerms = {

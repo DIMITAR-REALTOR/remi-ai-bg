@@ -8,6 +8,7 @@ export const Route = createFileRoute("/_app/dashboard/contracts/new")({
 
 const TYPE_TO_ROUTE: Record<string, string> = {
   preliminary_sale: "/dashboard/contracts/new/preliminary-sale",
+  reservation_deposit: "/dashboard/contracts/new/reservation-deposit",
   deposit: "/dashboard/contracts/new/deposit",
 };
 
