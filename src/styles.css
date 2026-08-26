@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Roboto:wght@300;400;500&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -33,7 +34,8 @@
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-sans: "Roboto", system-ui, -apple-system, "Segoe UI", "Helvetica Neue", sans-serif;
+  --font-heading: "Montserrat", "Roboto", system-ui, -apple-system, sans-serif;
 }
 
 :root {
@@ -91,6 +93,7 @@
 
 @layer base {
   * { border-color: var(--color-border); }
-  html, body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); }
+  html, body { background-color: var(--color-background); color: var(--color-foreground); font-family: var(--font-sans); font-weight: 300; }
   body { -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4, h5, h6, .font-black { font-family: var(--font-heading); }
 }
