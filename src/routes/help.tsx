@@ -34,7 +34,7 @@ const faqs = [
   },
   {
     q: "Как да изтрия моя профил?",
-    a: "Свържи се с нас на 0893 366 051 или remi.ai.bg@gmail.com. Профилът и всички свързани данни ще бъдат премахнати при поискване.",
+    a: "Свържи се с нас на 0889 099 118 или remi.ai.bg@gmail.com. Профилът и всички свързани данни ще бъдат премахнати при поискване.",
   },
 ];
 
@@ -59,7 +59,7 @@ function HelpPage() {
       <div className="mt-8 rounded-2xl border border-border bg-card p-4 text-sm">
         <p className="font-semibold text-foreground">Не намери отговор?</p>
         <p className="mt-1 text-muted-foreground">
-          Свържи се с нас на <a href="tel:0893366051" className="text-primary hover:underline">0893 366 051</a> или пиши на{" "}
+          Свържи се с нас на <a href="tel:0889099118" className="text-primary hover:underline">0889 099 118</a> или пиши на{" "}
           <a href="mailto:remi.ai.bg@gmail.com" className="text-primary hover:underline">remi.ai.bg@gmail.com</a>.
         </p>
       </div>

@@ -198,8 +198,8 @@ const MarketingInput = z.object({
   channel: z.enum(["site", "facebook", "instagram", "flyer"]),
 });
 
-const CONTACT_BLOCK = `0893366051 – Димитър Ценов – Компас Недвижими Имоти
-compassrealestate.bg
+const CONTACT_BLOCK = `0889099118 – Димитър Ценов – REMI AI
+remi.ai.bg@gmail.com
 Когато посоката е вярна...!`;
 
 const CHANNEL_GUIDE: Record<string, string> = {

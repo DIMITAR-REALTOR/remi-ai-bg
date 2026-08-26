@@ -10,8 +10,8 @@ export function AppFooter() {
           <span className="font-semibold">REMI AI</span>
         </div>
         <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs">
-          <a href="tel:0893366051" className="inline-flex items-center gap-1.5 hover:text-foreground">
-            <Phone className="h-3.5 w-3.5" />0893 366 051
+          <a href="tel:0889099118" className="inline-flex items-center gap-1.5 hover:text-foreground">
+            <Phone className="h-3.5 w-3.5" />0889 099 118
           </a>
           <a href="mailto:remi.ai.bg@gmail.com" className="inline-flex items-center gap-1.5 hover:text-foreground">
             <Mail className="h-3.5 w-3.5" />remi.ai.bg@gmail.com

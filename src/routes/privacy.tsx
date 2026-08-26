@@ -59,7 +59,7 @@ function PrivacyPage() {
         <section>
           <h2 className="mb-1 text-base font-semibold text-foreground">Контакт</h2>
           <p>
-            За въпроси относно поверителността: <a href="tel:0893366051" className="text-primary hover:underline">0893 366 051</a>{" "}
+            За въпроси относно поверителността: <a href="tel:0889099118" className="text-primary hover:underline">0889 099 118</a>{" "}
             или <a href="mailto:remi.ai.bg@gmail.com" className="text-primary hover:underline">remi.ai.bg@gmail.com</a>.
           </p>
         </section>
