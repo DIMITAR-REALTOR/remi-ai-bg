@@ -95,7 +95,7 @@ function Landing() {
           height={1080}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0F2847]/35 via-[#0F2847]/60 to-background" />
         <div className="relative mx-auto max-w-xl px-5 pt-16 pb-12 text-white">
           <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-white/15 backdrop-blur">
             <Building2 className="h-6 w-6" />
