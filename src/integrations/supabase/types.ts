@@ -153,6 +153,7 @@ export type Database = {
           id: string
           last_contact_at: string | null
           looking_for: string | null
+          marital_status: string | null
           name: string
           notes: string | null
           phone: string | null
@@ -167,6 +168,7 @@ export type Database = {
           id?: string
           last_contact_at?: string | null
           looking_for?: string | null
+          marital_status?: string | null
           name: string
           notes?: string | null
           phone?: string | null
@@ -181,6 +183,7 @@ export type Database = {
           id?: string
           last_contact_at?: string | null
           looking_for?: string | null
+          marital_status?: string | null
           name?: string
           notes?: string | null
           phone?: string | null
@@ -193,6 +196,65 @@ export type Database = {
             columns: ["agency_id"]
             isOneToOne: false
             referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contract_signatures: {
+        Row: {
+          broker_id: string
+          contract_id: string
+          created_at: string
+          id: string
+          party_email: string | null
+          party_name: string
+          party_phone: string | null
+          party_role: string
+          provider: string
+          provider_request_id: string | null
+          signed_at: string | null
+          signed_document_url: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          broker_id: string
+          contract_id: string
+          created_at?: string
+          id?: string
+          party_email?: string | null
+          party_name: string
+          party_phone?: string | null
+          party_role: string
+          provider?: string
+          provider_request_id?: string | null
+          signed_at?: string | null
+          signed_document_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          broker_id?: string
+          contract_id?: string
+          created_at?: string
+          id?: string
+          party_email?: string | null
+          party_name?: string
+          party_phone?: string | null
+          party_role?: string
+          provider?: string
+          provider_request_id?: string | null
+          signed_at?: string | null
+          signed_document_url?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_signatures_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
             referencedColumns: ["id"]
           },
         ]
@@ -369,6 +431,122 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "favorites_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      identity_documents: {
+        Row: {
+          broker_id: string
+          created_at: string
+          deal_id: string | null
+          document_number: string | null
+          egn: string | null
+          file_path: string | null
+          full_name: string
+          id: string
+          input_method: string
+          role_in_deal: string | null
+          updated_at: string
+          valid_until: string | null
+        }
+        Insert: {
+          broker_id: string
+          created_at?: string
+          deal_id?: string | null
+          document_number?: string | null
+          egn?: string | null
+          file_path?: string | null
+          full_name: string
+          id?: string
+          input_method?: string
+          role_in_deal?: string | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Update: {
+          broker_id?: string
+          created_at?: string
+          deal_id?: string | null
+          document_number?: string | null
+          egn?: string | null
+          file_path?: string | null
+          full_name?: string
+          id?: string
+          input_method?: string
+          role_in_deal?: string | null
+          updated_at?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "identity_documents_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legal_documents: {
+        Row: {
+          availability_status: string
+          broker_confirmed: boolean
+          broker_id: string
+          broker_notes: string | null
+          created_at: string
+          deal_id: string | null
+          document_subtype: string | null
+          document_type: string
+          extracted_data: Json | null
+          file_path: string | null
+          id: string
+          listing_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          availability_status?: string
+          broker_confirmed?: boolean
+          broker_id: string
+          broker_notes?: string | null
+          created_at?: string
+          deal_id?: string | null
+          document_subtype?: string | null
+          document_type: string
+          extracted_data?: Json | null
+          file_path?: string | null
+          id?: string
+          listing_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          availability_status?: string
+          broker_confirmed?: boolean
+          broker_id?: string
+          broker_notes?: string | null
+          created_at?: string
+          deal_id?: string | null
+          document_subtype?: string | null
+          document_type?: string
+          extracted_data?: Json | null
+          file_path?: string | null
+          id?: string
+          listing_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_documents_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "legal_documents_listing_id_fkey"
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "listings"
