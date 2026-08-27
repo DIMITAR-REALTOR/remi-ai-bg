@@ -144,6 +144,71 @@ export type Database = {
           },
         ]
       }
+      client_matching_preferences: {
+        Row: {
+          budget_max: number | null
+          budget_min: number | null
+          client_id: string
+          created_at: string
+          id: string
+          matching_mode: string | null
+          max_area_sqm: number | null
+          max_rooms: number | null
+          min_area_sqm: number | null
+          min_rooms: number | null
+          preferred_areas: string[] | null
+          preferred_features: string[] | null
+          property_types: string[] | null
+          purchase_purpose: string | null
+          required_features: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          budget_max?: number | null
+          budget_min?: number | null
+          client_id: string
+          created_at?: string
+          id?: string
+          matching_mode?: string | null
+          max_area_sqm?: number | null
+          max_rooms?: number | null
+          min_area_sqm?: number | null
+          min_rooms?: number | null
+          preferred_areas?: string[] | null
+          preferred_features?: string[] | null
+          property_types?: string[] | null
+          purchase_purpose?: string | null
+          required_features?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          budget_max?: number | null
+          budget_min?: number | null
+          client_id?: string
+          created_at?: string
+          id?: string
+          matching_mode?: string | null
+          max_area_sqm?: number | null
+          max_rooms?: number | null
+          min_area_sqm?: number | null
+          min_rooms?: number | null
+          preferred_areas?: string[] | null
+          preferred_features?: string[] | null
+          property_types?: string[] | null
+          purchase_purpose?: string | null
+          required_features?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_matching_preferences_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clients: {
         Row: {
           agency_id: string | null
