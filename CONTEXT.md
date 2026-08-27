@@ -17,6 +17,46 @@ REMI AI (Real Estate Market Intelligence) — първата българска 
 - **Legal Layer** — правен анализ, документи, тежести
 - **Market Layer** — пазарна интелигентност, оценки, сравними имоти
 
+## AI PROVIDER PORTABILITY PRINCIPLE — ЗАДЪЛЖИТЕЛНО
+
+REMI AI не трябва да бъде архитектурно зависим от конкретен AI доставчик или от Lovable AI Gateway.
+Текущият Lovable AI Gateway е разрешен и може да се използва за съществуващите AI функции, но се счита за сменяем инфраструктурен слой, а не за част от бизнес логиката на REMI.
+
+Правила:
+1. НЕ променяй съществуващите работещи AI функции само заради това правило.
+2. Всяка НОВА AI функционалност трябва да бъде проектирана така, че AI provider-ът да може бъде сменен без пренаписване на бизнес логиката на функцията.
+3. Не допускай нова бизнес логика да съдържа директна зависимост от:
+   - ai.gateway.lovable.dev
+   - LOVABLE_API_KEY
+   - Lovable-specific AI billing/error semantics
+   - друг конкретен AI vendor, когато това може разумно да бъде избегнато.
+4. Новите AI функции трябва да използват тънък AI Provider / AI abstraction layer, например концептуално:
+
+   REMI Business Logic
+          ↓
+   REMI AI Provider Layer
+          ↓
+   Gemini / OpenAI / Anthropic / Lovable Gateway / друг provider
+
+5. AI Provider Layer трябва да изолира:
+   - authentication/API keys
+   - provider endpoint
+   - model selection
+   - provider-specific request format
+   - provider-specific response format
+   - provider-specific error handling
+   - billing/rate-limit semantics
+6. Бизнес логиката на REMI трябва да работи с provider-neutral входове и резултати, когато това е практически възможно.
+7. Ако за дадена функционалност Lovable Gateway е най-практичният избор, той МОЖЕ да бъде използван. Това не е забранено. Но зависимостта трябва да остане локализирана в AI Provider слоя.
+8. При промяна на съществуващ AI код по друга причина, ако е разумно и без неоправдан риск, постепенно премествай директните Lovable Gateway зависимости към AI Provider Layer.
+9. НЕ извършвай глобална миграция от Lovable Gateway към директен Gemini/OpenAI/Anthropic API без изрично одобрение.
+10. Преди да въведеш нова AI интеграция, провери дали тя увеличава vendor lock-in. Ако да, предложи по-портируем вариант преди implementation.
+11. При архитектурни решения винаги разглеждай: текущата практичност; цена; производителност; надеждност; vendor lock-in; възможност за бъдеща смяна на provider.
+12. Този принцип НЕ означава, че REMI трябва да бъде преждевременно усложняван. Абстракционният слой трябва да бъде минимален и практически оправдан.
+
+Цел: REMI да може в бъдеще да премине от REMI → Lovable AI Gateway → Gemini към REMI → собствен AI Provider Layer → директен Gemini API, или REMI → собствен AI Provider Layer → OpenAI / Anthropic / друг provider, без глобално пренаписване на продуктовата логика.
+
+
 ## AI CRM Decision Engine Specs
 
 - **Логически поток:** Асистентът винаги анализира [Контекст] + [Правило] = [Действие].
