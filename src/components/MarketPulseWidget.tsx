@@ -54,7 +54,12 @@ export function MarketPulseWidget({ neighborhoods }: MarketPulseWidgetProps) {
   return (
     <div className="mt-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-foreground">Пазарен пулс</h2>
+        <h2 className="text-sm font-semibold text-foreground">
+          Пазарен пулс
+          <span className="ml-2 inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+            Примерни данни
+          </span>
+        </h2>
         <Link to="/market" className="flex items-center text-xs font-medium text-primary">
           Пълен анализ <ChevronRight className="h-3.5 w-3.5" />
         </Link>

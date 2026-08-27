@@ -234,12 +234,20 @@ function MarketPage() {
               </ul>
             </div>
           </div>
+          <p className="mt-4 text-xs text-muted-foreground">
+            Оценката комбинира AI анализ с примерни показатели за квартала.
+          </p>
         </section>
       )}
 
       <Collapsible open={trendOpen} onOpenChange={setTrendOpen} className="mt-5 rounded-2xl border border-border bg-card">
         <CollapsibleTrigger className="flex w-full items-center justify-between p-4 text-left">
-          <span className="text-sm font-semibold text-foreground">📈 Ценови тренди — {nb.name}</span>
+          <span className="text-sm font-semibold text-foreground">
+            📈 Ценови тренди — {nb.name}
+            <span className="ml-2 inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+              Примерни данни
+            </span>
+          </span>
           <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", trendOpen && "rotate-180")} />
         </CollapsibleTrigger>
         <CollapsibleContent className="px-2 pb-4">
@@ -322,7 +330,12 @@ function MarketPage() {
       </section>
 
       <section className="mt-5">
-        <h2 className="mb-2 text-sm font-semibold text-foreground">🏘️ Районна аналитика — {nb.name}</h2>
+        <h2 className="mb-2 text-sm font-semibold text-foreground">
+          🏘️ Районна аналитика — {nb.name}
+          <span className="ml-2 inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+            Примерни данни
+          </span>
+        </h2>
         <div className="space-y-3">
           <div className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center justify-between">
