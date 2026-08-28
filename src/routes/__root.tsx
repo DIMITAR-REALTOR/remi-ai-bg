@@ -51,7 +51,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#0F2847" },
+      { name: "theme-color", content: "#0B1120" },
       { title: "REMI - Real Estate Market Intelligence" },
       { name: "description", content: "Първата AI операционна система за недвижими имоти в България." },
       { property: "og:title", content: "REMI - Real Estate Market Intelligence" },
