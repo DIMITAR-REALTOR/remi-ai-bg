@@ -39,56 +39,56 @@
 
 :root {
   --radius: 0.875rem;
-  --background: #0B1120;
+  --background: #0f2a45;
   --foreground: #FFFFFF;
-  --card: #1E293B;
+  --card: #16355c;
   --card-foreground: #FFFFFF;
-  --popover: #1E293B;
+  --popover: #16355c;
   --popover-foreground: #FFFFFF;
-  --primary: #F59E0B;
-  --primary-foreground: #0B1120;
-  --secondary: #16233C;
+  --primary: #f7df53;
+  --primary-foreground: #0f2a45;
+  --secondary: #16355c;
   --secondary-foreground: #FFFFFF;
-  --muted: #16233C;
+  --muted: #16355c;
   --muted-foreground: #94A3B8;
-  --accent: #1E293B;
+  --accent: #16355c;
   --accent-foreground: #FFFFFF;
   --destructive: oklch(0.68 0.2 25);
-  --destructive-foreground: #0B1120;
+  --destructive-foreground: #0f2a45;
   --success: oklch(0.72 0.14 165);
-  --success-foreground: #0B1120;
+  --success-foreground: #0f2a45;
   --warning: oklch(0.8 0.15 75);
-  --warning-foreground: #0B1120;
+  --warning-foreground: #0f2a45;
   --border: rgba(148, 163, 184, 0.22);
   --input: rgba(148, 163, 184, 0.28);
-  --ring: #F59E0B;
+  --ring: #f7df53;
 }
 
 
 .dark {
-  --background: #0B1120;
+  --background: #0f2a45;
   --foreground: #FFFFFF;
-  --card: #1E293B;
+  --card: #16355c;
   --card-foreground: #FFFFFF;
-  --popover: #1E293B;
+  --popover: #16355c;
   --popover-foreground: #FFFFFF;
-  --primary: #F59E0B;
-  --primary-foreground: #0B1120;
-  --secondary: #16233C;
+  --primary: #f7df53;
+  --primary-foreground: #0f2a45;
+  --secondary: #16355c;
   --secondary-foreground: #FFFFFF;
-  --muted: #16233C;
+  --muted: #16355c;
   --muted-foreground: #94A3B8;
-  --accent: #1E293B;
+  --accent: #16355c;
   --accent-foreground: #FFFFFF;
   --destructive: oklch(0.68 0.2 25);
-  --destructive-foreground: #0B1120;
+  --destructive-foreground: #0f2a45;
   --success: oklch(0.72 0.14 165);
-  --success-foreground: #0B1120;
+  --success-foreground: #0f2a45;
   --warning: oklch(0.8 0.15 75);
-  --warning-foreground: #0B1120;
+  --warning-foreground: #0f2a45;
   --border: rgba(148, 163, 184, 0.22);
   --input: rgba(148, 163, 184, 0.28);
-  --ring: #F59E0B;
+  --ring: #f7df53;
 }
 
 
