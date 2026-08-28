@@ -95,17 +95,18 @@ function Landing() {
           height={1080}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F2847]/35 via-[#0F2847]/60 to-background" />
-        <div className="relative mx-auto max-w-xl px-5 pt-16 pb-12 text-white">
-          <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-white/15 backdrop-blur">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120]/70 via-[#0B1120]/80 to-background" />
+        <div className="relative mx-auto max-w-xl px-5 pt-16 pb-12 text-foreground">
+          <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 backdrop-blur">
             <Building2 className="h-6 w-6" />
           </div>
           <h1 className="text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl">
-            Първата в България операционна система за недвижими имоти
+            Първата в България <span className="text-primary">операционна система</span> за недвижими имоти
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-center text-sm text-white/85">
+          <p className="mx-auto mt-3 max-w-md text-center text-sm text-muted-foreground">
             REMI AI мисли с теб на всяка стъпка от сделката — за брокери и купувачи.
           </p>
+
           <div className="mt-6 flex flex-col gap-2.5">
             <Link
               to="/search"
