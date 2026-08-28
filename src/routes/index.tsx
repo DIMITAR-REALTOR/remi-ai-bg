@@ -117,7 +117,7 @@ function Landing() {
             </Link>
             <Link
               to="/auth"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/60 bg-white/10 px-5 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-primary/40 bg-card/60 px-5 py-3.5 text-sm font-semibold text-foreground backdrop-blur transition hover:border-primary hover:bg-card"
             >
               Брокерски портал
               <ArrowRight className="h-4 w-4" />
