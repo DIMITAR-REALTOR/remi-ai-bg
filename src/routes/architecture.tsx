@@ -1,64 +1,55 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2, ShieldCheck, TrendingUp, Scale, Zap, FileText, Database, Share2 } from "lucide-react";
+import { Building2, TrendingUp, Brain, Scale, MessageSquare, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/architecture")({
   head: () => ({
     meta: [
       { title: "Архитектура — REMI AI" },
-      { name: "description", content: "REMI AI Architecture Blueprint 1.0 - One AI Kernel концепция." },
+      { name: "description", content: "REMI Core Engine — един AI, четири функционални слоя." },
     ],
   }),
   component: ArchitecturePage,
 });
 
-const layers = [
+const foundationLayers = [
   {
     title: "CRM Layer",
     icon: Building2,
-    desc: "Клиенти, имоти, сделки и оперативни задачи.",
+    desc: "Управление на бизнеса: клиенти, имоти, сделки.",
     color: "text-blue-500",
   },
   {
     title: "Market Intelligence Layer",
     icon: TrendingUp,
-    desc: "Цени, тенденции, пазарен анализ и сравними имоти.",
+    desc: "Разбиране на пазара: цени, тенденции, сравними имоти.",
     color: "text-green-500",
   },
+];
+
+const coreLayers = [
   {
-    title: "Legal Knowledge Layer",
-    icon: Scale,
-    desc: "Законодателство, проверка на документи и процедури.",
-    color: "text-purple-500",
-  },
-  {
-    title: "Sales Intelligence Layer",
-    icon: Zap,
-    desc: "Стратегии за продажби, възражения и преговори.",
+    title: "Reasoning Layer",
+    icon: Brain,
+    desc: "Анализ на сделки, идентификация на рискове, decision support в реално време.",
     color: "text-yellow-500",
   },
   {
-    title: "Marketing Layer",
-    icon: Share2,
-    desc: "Обяви, социални мрежи и рекламни кампании.",
+    title: "Communication Layer",
+    icon: MessageSquare,
+    desc: "Преговори, продажби и маркетингови текстове — общи данни за клиента и имота.",
     color: "text-pink-500",
   },
   {
-    title: "Automation Layer",
-    icon: ShieldCheck,
-    desc: "Follow-up, известия и бизнес workflows.",
-    color: "text-orange-500",
+    title: "Legal Layer",
+    icon: Scale,
+    desc: "Правен анализ, документи, тежести, нотариални и данъчни аспекти.",
+    color: "text-purple-500",
   },
   {
-    title: "Document Intelligence Layer",
-    icon: FileText,
-    desc: "Анализ, класификация и обработка на документи.",
+    title: "Market Layer",
+    icon: Sparkles,
+    desc: "Връзка с Market Intelligence — цена, риск и инвестиционен анализ.",
     color: "text-cyan-500",
-  },
-  {
-    title: "Knowledge / RAG Layer",
-    icon: Database,
-    desc: "Достъп до проверена вътрешна база от знания.",
-    color: "text-indigo-500",
   },
 ];
 
@@ -67,64 +58,75 @@ function ArchitecturePage() {
     <div className="mx-auto max-w-2xl px-5 py-8">
       <div className="space-y-4">
         <h1 className="text-3xl font-black tracking-tight text-foreground">
-          REMI AI Architecture Blueprint 1.0
+          REMI Core Engine — Архитектура
         </h1>
         <p className="text-lg text-muted-foreground">
-          REMI AI Operating System: Концепция за Единно AI ядро (One AI Kernel).
+          Един AI двигател, обслужващ четири функционални слоя — вместо множество отделни агенти.
         </p>
       </div>
 
       <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="text-xl font-bold text-foreground mb-4">Стратегическа визия</h2>
+        <h2 className="text-xl font-bold text-foreground mb-4">Принцип</h2>
         <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground">
-          „REMI AI е един централен AI Kernel, разширен чрез специализирани функционални слоеве. Слоевете не са отделни AI системи, а различни контексти, които ядрото използва според задачата.“
+          „REMI Core Engine получава пълния контекст на сделката и разпределя задачата към правилния функционален слой — вместо да я предава на изолиран агент.“
         </blockquote>
       </div>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        {layers.map((layer, i) => (
-          <div key={i} className="flex gap-4 rounded-2xl border border-border bg-background p-4 transition-colors hover:border-primary/20">
-            <div className={`mt-1 rounded-lg bg-muted p-2 ${layer.color}`}>
-              <layer.icon className="h-5 w-5" />
+      <div className="mt-10">
+        <h2 className="text-xl font-bold text-foreground mb-4">Основа: два data слоя</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {foundationLayers.map((layer, i) => (
+            <div key={i} className="flex gap-4 rounded-2xl border border-border bg-background p-4">
+              <div className={`mt-1 rounded-lg bg-muted p-2 ${layer.color}`}>
+                <layer.icon className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-foreground">{layer.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{layer.desc}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-foreground">{layer.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                {layer.desc}
-              </p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      <div className="mt-12 space-y-6">
-        <h2 className="text-2xl font-bold text-foreground">Архитектурен принцип</h2>
-        <div className="overflow-hidden rounded-2xl border border-border bg-muted/30">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted text-muted-foreground">
-              <tr>
-                <th className="px-4 py-3 font-semibold">Неправилен подход ❌</th>
-                <th className="px-4 py-3 font-semibold">REMI AI модел ✅</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              <tr>
-                <td className="px-4 py-3 italic text-muted-foreground">Множество отделни AI инструменти</td>
-                <td className="px-4 py-3 font-medium text-foreground">Единно AI ядро (One Kernel)</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 italic text-muted-foreground">Раздробен контекст и данни</td>
-                <td className="px-4 py-3 font-medium text-foreground">Централизирана бизнес логика</td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="mt-10">
+        <h2 className="text-xl font-bold text-foreground mb-4">REMI Core Engine — четири функционални слоя</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {coreLayers.map((layer, i) => (
+            <div key={i} className="flex gap-4 rounded-2xl border border-border bg-background p-4 transition-colors hover:border-primary/20">
+              <div className={`mt-1 rounded-lg bg-muted p-2 ${layer.color}`}>
+                <layer.icon className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-foreground">{layer.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{layer.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
+        <p className="mt-4 text-sm text-muted-foreground">
+          Формулата, приложена еднакво във всеки слой: <span className="font-semibold text-foreground">[Контекст] + [Правило] = [Действие]</span>.
+        </p>
+      </div>
+
+      <div className="mt-10 rounded-2xl border border-border bg-muted/30 p-6">
+        <h2 className="text-lg font-bold text-foreground mb-2">Knowledge / RAG — обща база от знания</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Всички четири функционални слоя ползват обща база от знания (законодателство, пазарни анализи, натрупана практика), а не отделни изолирани модели — инфраструктура, не пети паралелен слой.
+        </p>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-border bg-muted/30 p-6">
+        <h2 className="text-lg font-bold text-foreground mb-2">Automation и Document Intelligence</h2>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Реализирани като способности вътре в слоевете по-горе, не като самостоятелни слоеве: Automation (follow-up, известия) — изход на Reasoning/Communication; Document Intelligence (документи, снимки, PDF-и) — вътре в Legal Layer.
+        </p>
       </div>
 
       <div className="mt-12 rounded-2xl bg-primary/5 p-6 text-center border border-primary/10">
         <p className="text-sm font-medium text-primary uppercase tracking-wider">Status</p>
         <p className="mt-2 text-foreground font-semibold">
-          Тази архитектура позиционира REMI като пълноценна AI операционна система за недвижими имоти.
+          Единен AI Kernel, не разпилени агенти — REMI Core Engine захранва цялата платформа.
         </p>
       </div>
     </div>
