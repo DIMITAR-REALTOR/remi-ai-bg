@@ -1,3 +1,7 @@
+> **⚠️ ARCHIVED / OUTDATED — 2026-08-31.** Този документ е от 23.07.2026, преди голяма част от текущата реализация. Съдържа неточности: грешно предполага SolidJS/SolidStart framework (реално е TanStack Start), твърди "supabase/migrations е празна" (в момента има 17 миграции), твърди "няма AI интеграция" (реално има 10 работещи AI функции в src/lib/ai.functions.ts). Пазен само като исторически snapshot — не го използвай като актуална референция. За текущ статус виж README.md и CONTEXT.md в това repo.
+
+---
+
 # CURRENT STATE ANALYSIS — REMI AI
 
 Дата: 2026-07-23
