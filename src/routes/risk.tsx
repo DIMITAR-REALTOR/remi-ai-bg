@@ -4,7 +4,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { extractLegalDocument, extractIdentityDocument } from "@/lib/ai.functions";
+import { analyzeDealRisk, type DealRiskResult, extractLegalDocument, extractIdentityDocument } from "@/lib/ai.functions";
+import { addHistory } from "@/lib/history-storage";
 import { uploadLegalDocument, uploadIdentityDocument, validateDocFile } from "@/lib/storage";
 import {
   LEGAL_DOCUMENT_TYPES, legalDocTypeShortLabel, legalDocFields, AVAILABILITY_LABELS,
@@ -95,75 +96,88 @@ function LegalAnalysisPage() {
         </div>
       </header>
 
-      {/* Табло — статус по тип документ */}
-      <section className="mt-6 grid grid-cols-1 gap-2">
-        {visibleDocTypes.map((t) => {
-          const matching = docs.filter((d: any) => d.document_type === t.value);
-          const status = matching.length === 0 ? "missing" : matching.some((d: any) => d.availability_status === "uploaded") ? "uploaded" : "available";
-          return (
-            <button
-              key={t.value}
-              onClick={() => setDialogType(t.value)}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 text-left transition hover:border-primary/40"
-            >
-              <div
-                className={cn(
-                  "grid h-9 w-9 shrink-0 place-items-center rounded-xl",
-                  status === "uploaded" && "bg-success/15 text-success",
-                  status === "available" && "bg-warning/20 text-warning-foreground",
-                  status === "missing" && "bg-muted text-muted-foreground"
-                )}
-              >
-                {status === "uploaded" ? <FileCheck2 className="h-4 w-4" /> : status === "available" ? <FileClock className="h-4 w-4" /> : <FileX2 className="h-4 w-4" />}
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-foreground">{t.shortLabel}</p>
-                <p className="text-[11px] text-muted-foreground">
-                  {matching.length === 0 ? "Няма добавени" : `${matching.length} ${matching.length === 1 ? "документ" : "документа"}`}
-                </p>
-              </div>
-              <Plus className="h-4 w-4 shrink-0 text-muted-foreground" />
-            </button>
-          );
-        })}
-      </section>
+      <Tabs defaultValue="risk" className="mt-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="risk">Оценка на риска</TabsTrigger>
+          <TabsTrigger value="documents">Документи</TabsTrigger>
+        </TabsList>
 
-      {hasInheritedOwnership && !docs.some((d: any) => d.document_type === "heir_certificate") && (
-        <div className="mt-4 rounded-2xl border border-warning/40 bg-warning/10 p-3 text-xs text-warning-foreground">
-          Открит е документ за собственост, придобита по наследство — препоръчваме да добавиш и Удостоверение за наследници.
-        </div>
-      )}
+        <TabsContent value="risk" className="mt-4">
+          <RiskScoreSection />
+        </TabsContent>
 
-      {/* Списък с вече добавени документи */}
-      {!isLoading && docs.length > 0 && (
-        <section className="mt-6">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Добавени документи</p>
-          <ul className="mt-2 space-y-2">
-            {docs.map((d: any) => (
-              <DocRow key={d.id} doc={d} onChanged={refresh} />
-            ))}
-          </ul>
-        </section>
-      )}
+        <TabsContent value="documents" className="mt-4 space-y-6">
+          {/* Табло — статус по тип документ */}
+          <section className="grid grid-cols-1 gap-2">
+            {visibleDocTypes.map((t) => {
+              const matching = docs.filter((d: any) => d.document_type === t.value);
+              const status = matching.length === 0 ? "missing" : matching.some((d: any) => d.availability_status === "uploaded") ? "uploaded" : "available";
+              return (
+                <button
+                  key={t.value}
+                  onClick={() => setDialogType(t.value)}
+                  className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 text-left transition hover:border-primary/40"
+                >
+                  <div
+                    className={cn(
+                      "grid h-9 w-9 shrink-0 place-items-center rounded-xl",
+                      status === "uploaded" && "bg-success/15 text-success",
+                      status === "available" && "bg-warning/20 text-warning-foreground",
+                      status === "missing" && "bg-muted text-muted-foreground"
+                    )}
+                  >
+                    {status === "uploaded" ? <FileCheck2 className="h-4 w-4" /> : status === "available" ? <FileClock className="h-4 w-4" /> : <FileX2 className="h-4 w-4" />}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-foreground">{t.shortLabel}</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {matching.length === 0 ? "Няма добавени" : `${matching.length} ${matching.length === 1 ? "документ" : "документа"}`}
+                    </p>
+                  </div>
+                  <Plus className="h-4 w-4 shrink-0 text-muted-foreground" />
+                </button>
+              );
+            })}
+          </section>
 
-      {/* Документи за самоличност */}
-      <section className="mt-8">
-        <div className="flex items-center justify-between">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Документи за самоличност</p>
-          <Button size="sm" variant="outline" className="h-7 gap-1 text-xs" onClick={() => setShowAddMenu(true)}>
-            <Plus className="h-3 w-3" /> Добави
-          </Button>
-        </div>
-        {identities.length === 0 ? (
-          <p className="mt-2 text-xs text-muted-foreground">Няма добавени страни по сделка.</p>
-        ) : (
-          <ul className="mt-2 space-y-2">
-            {identities.map((p: any) => (
-              <IdentityRow key={p.id} person={p} />
-            ))}
-          </ul>
-        )}
-      </section>
+          {hasInheritedOwnership && !docs.some((d: any) => d.document_type === "heir_certificate") && (
+            <div className="rounded-2xl border border-warning/40 bg-warning/10 p-3 text-xs text-warning-foreground">
+              Открит е документ за собственост, придобита по наследство — препоръчваме да добавиш и Удостоверение за наследници.
+            </div>
+          )}
+
+          {/* Списък с вече добавени документи */}
+          {!isLoading && docs.length > 0 && (
+            <section>
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Добавени документи</p>
+              <ul className="mt-2 space-y-2">
+                {docs.map((d: any) => (
+                  <DocRow key={d.id} doc={d} onChanged={refresh} />
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* Документи за самоличност */}
+          <section>
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Документи за самоличност</p>
+              <Button size="sm" variant="outline" className="h-7 gap-1 text-xs" onClick={() => setShowAddMenu(true)}>
+                <Plus className="h-3 w-3" /> Добави
+              </Button>
+            </div>
+            {identities.length === 0 ? (
+              <p className="mt-2 text-xs text-muted-foreground">Няма добавени страни по сделка.</p>
+            ) : (
+              <ul className="mt-2 space-y-2">
+                {identities.map((p: any) => (
+                  <IdentityRow key={p.id} person={p} />
+                ))}
+              </ul>
+            )}
+          </section>
+        </TabsContent>
+      </Tabs>
 
       {dialogType && (
         <AddLegalDocDialog
@@ -183,6 +197,157 @@ function LegalAnalysisPage() {
             refresh();
           }}
         />
+      )}
+    </div>
+  );
+}
+
+function scoreTone(score: number) {
+  if (score <= 3) return { label: "Нисък риск", cls: "bg-success text-success-foreground" };
+  if (score <= 6) return { label: "Среден риск", cls: "bg-warning text-warning-foreground" };
+  return { label: "Висок риск", cls: "bg-destructive text-destructive-foreground" };
+}
+
+function RiskScoreSection() {
+  const [price, setPrice] = useState("");
+  const [location, setLocation] = useState("");
+  const [construction, setConstruction] = useState("");
+  const [docStatus, setDocStatus] = useState("");
+  const [notes, setNotes] = useState("");
+  const [result, setResult] = useState<DealRiskResult | null>(null);
+  const [busy, setBusy] = useState(false);
+  const analyze = useServerFn(analyzeDealRisk);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!price || !location.trim() || !construction.trim() || !docStatus.trim()) {
+      toast.error("Попълни цена, локация, тип строителство и статус на документите");
+      return;
+    }
+    setBusy(true);
+    setResult(null);
+    try {
+      const price_eur = Number(price);
+      const payload = {
+        price_eur,
+        location: location.trim(),
+        construction_type: construction.trim(),
+        document_status: docStatus.trim(),
+        notes: notes.trim(),
+      };
+      const r = await analyze({ data: payload });
+      setResult(r);
+      addHistory({
+        kind: "risk",
+        location: payload.location,
+        price_eur: payload.price_eur,
+        construction_type: payload.construction_type,
+        document_status: payload.document_status,
+        notes: payload.notes,
+        result: r,
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Грешка при анализ");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const tone = result ? scoreTone(result.score) : null;
+
+  return (
+    <div className="space-y-4">
+      <form onSubmit={submit} className="space-y-4 rounded-2xl border border-border bg-card p-4">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label htmlFor="risk-price">Цена (EUR)</Label>
+            <Input
+              id="risk-price"
+              inputMode="numeric"
+              value={price}
+              onChange={(e) => setPrice(e.target.value.replace(/\D/g, ""))}
+              placeholder="120000"
+            />
+          </div>
+          <div>
+            <Label htmlFor="risk-location">Локация</Label>
+            <Input
+              id="risk-location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="Варна, Чайка"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label htmlFor="risk-construction">Тип строителство</Label>
+            <Input
+              id="risk-construction"
+              value={construction}
+              onChange={(e) => setConstruction(e.target.value)}
+              placeholder="Тухла / Панел / ЕПК"
+            />
+          </div>
+          <div>
+            <Label htmlFor="risk-doc-status">Статус на документите</Label>
+            <Input
+              id="risk-doc-status"
+              value={docStatus}
+              onChange={(e) => setDocStatus(e.target.value)}
+              placeholder="Пълна документация"
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="risk-notes">Допълнителни бележки</Label>
+          <Textarea
+            id="risk-notes"
+            rows={2}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="напр. наследство, ипотека, незавършен строеж..."
+          />
+        </div>
+
+        <Button type="submit" disabled={busy} className="w-full">
+          {busy ? "Анализирам..." : <><Sparkles className="h-4 w-4" /> Оцени риска</>}
+        </Button>
+      </form>
+
+      {result && tone && (
+        <section className="rounded-2xl border border-border bg-card p-4">
+          <div className="flex items-center gap-4">
+            <div className={cn("grid h-16 w-16 shrink-0 place-items-center rounded-2xl text-2xl font-black", tone.cls)}>
+              {result.score}
+            </div>
+            <div className="flex-1">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Оценка на риска</p>
+              <p className="mt-1 text-sm font-medium text-foreground">
+                Рискът е <span className="font-bold">{result.score}/10</span>
+              </p>
+              <span className={cn("mt-2 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-bold", tone.cls)}>
+                {tone.label}
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-4 space-y-2">
+            {result.risks.map((r, i) => (
+              <div key={i} className="rounded-xl border border-border bg-card p-3">
+                <p className="text-sm font-semibold text-foreground">{i + 1}. {r.title}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{r.explanation}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 rounded-xl border border-primary/30 bg-primary/5 p-3">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-primary">Препоръка</p>
+            <p className="mt-1 text-sm text-foreground">{result.recommendation}</p>
+          </div>
+        </section>
       )}
     </div>
   );
