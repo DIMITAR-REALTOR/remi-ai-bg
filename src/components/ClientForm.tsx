@@ -120,7 +120,7 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
         <div className="flex items-start gap-2 rounded-xl border border-dashed border-border p-3">
           <Checkbox id="pool" checked={addToPool} onCheckedChange={(v) => setAddToPool(!!v)} className="mt-0.5" />
           <Label htmlFor="pool" className="text-xs font-normal leading-snug text-muted-foreground">
-            Добави в пула на агенцията — REMI автоматично ще го разпредели на най-свободния брокер в екипа, вместо да остане на теб
+            Добави в пула на агенцията — ще се появи като свободен лийд за всички колеги в екипа, докато някой не го поеме
           </Label>
         </div>
       )}

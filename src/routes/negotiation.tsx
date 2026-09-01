@@ -9,7 +9,7 @@ export const Route = createFileRoute("/negotiation")({
   head: () => ({
     meta: [
       { title: "REMI Преговори и продажби" },
-      { name: "description", content: "AI подкрепа при преговори и затваряне на сделки." },
+      { name: "description", content: "Готови тактики по ситуация за преговори и затваряне на сделки." },
     ],
   }),
   component: NegotiationPage,
@@ -32,7 +32,7 @@ function NegotiationPage() {
         <div>
           <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Преговори и продажби</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            AI подкрепа при преговори и затваряне на сделки.
+            Готови тактики по ситуация за преговори и затваряне на сделки.
           </p>
         </div>
       </header>
