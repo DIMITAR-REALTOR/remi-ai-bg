@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/checklist")({
   head: () => ({
     meta: [
-      { title: "REMI Интелигентен чеклист" },
-      { name: "description", content: "Автоматично генериран чеклист по сделка." },
+      { title: "REMI Чеклист за сделка" },
+      { name: "description", content: "Проверени стъпки при оглед и покупка на имот." },
     ],
   }),
   component: ChecklistPage,
@@ -58,9 +58,9 @@ function ChecklistPage() {
           <CheckCircle2 className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Интелигентен чеклист</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">REMI Чеклист за сделка</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Автоматично генериран чеклист по сделка. Прогресът се запазва локално.
+            Проверени стъпки при оглед и покупка. Прогресът се запазва локално.
           </p>
         </div>
       </header>

@@ -13,8 +13,8 @@ export const Route = createFileRoute("/tools")({
 
 const TOOLS = [
   { to: "/risk", icon: ShieldAlert, title: "REMI Правен анализ", desc: "Идентификуване на рискове, анализ на собственост и правни проблеми" },
-  { to: "/checklist", icon: CheckCircle2, title: "REMI Интелигентен чеклист", desc: "Автоматично генериран чеклист по сделка" },
-  { to: "/negotiation", icon: MessageSquare, title: "REMI Преговори и продажби", desc: "AI подкрепа при преговори и затваряне на сделки" },
+  { to: "/checklist", icon: CheckCircle2, title: "REMI Чеклист за сделка", desc: "Проверени стъпки при оглед и покупка" },
+  { to: "/negotiation", icon: MessageSquare, title: "REMI Преговори и продажби", desc: "Готови тактики по ситуация за преговори и затваряне на сделки" },
   { to: "/ads", icon: Megaphone, title: "REMI Маркетинг асистент", desc: "Генериране на атрактивни обяви и маркетингови текстове" },
   { to: "/invest", icon: Calculator, title: "REMI Инвеститорски анализ", desc: "Анализ на инвестиционен потенциал и ROI" },
   { to: "/market", icon: TrendingUp, title: "REMI Пазарна интелигентност", desc: "Анализ на пазара, цени и локация" },
