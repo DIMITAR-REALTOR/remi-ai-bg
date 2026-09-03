@@ -107,6 +107,8 @@ const HOME_THEME: React.CSSProperties = {
   ["--border" as any]: "rgba(15,25,23,0.14)",
   ["--input" as any]: "rgba(15,25,23,0.18)",
   ["--ring" as any]: "#0E8A82",
+  background:
+    "radial-gradient(1100px 640px at 12% -6%, #FFFFFF 0%, #CBEBE2 38%, transparent 78%), linear-gradient(180deg, #FFFFFF 0%, #D6EFE7 18%, #E9F4F0 46%, #F2F5F4 78%, #F2F5F4 100%)",
 };
 
 function Landing() {
