@@ -45,11 +45,36 @@ export const Route = createFileRoute("/")({
 });
 
 const TOOLS = [
-  { to: "/risk", Icon: ShieldAlert, title: "REMI Правен анализ", desc: "Документи, тежести и правни рискове по собствеността" },
-  { to: "/checklist", Icon: ListChecks, title: "REMI Чеклист за сделка", desc: "Проверени стъпки при оглед и покупка" },
-  { to: "/negotiation", Icon: Handshake, title: "REMI Преговори и продажби", desc: "Готови тактики по ситуация за по-добра цена" },
-  { to: "/invest", Icon: Calculator, title: "REMI Инвеститорски анализ", desc: "Доходност, вноска и възвръщаемост" },
-  { to: "/market", Icon: TrendingUp, title: "REMI Пазарна интелигентност", desc: "Пазарен скор и ценови тенденции" },
+  {
+    to: "/risk",
+    Icon: ShieldAlert,
+    title: "REMI Правен анализ",
+    desc: "Анализ на документи по снимка или описание — тежести и правни рискове, преди да платиш капаро",
+  },
+  {
+    to: "/checklist",
+    Icon: ListChecks,
+    title: "REMI Чеклист за сделка",
+    desc: "Проверени стъпки при оглед и покупка",
+  },
+  {
+    to: "/negotiation",
+    Icon: Handshake,
+    title: "REMI Преговори и продажби",
+    desc: "Готови тактики по ситуация — за по-добра цена на масата",
+  },
+  {
+    to: "/invest",
+    Icon: Calculator,
+    title: "REMI Инвеститорски анализ",
+    desc: "Доходност, вноска и възвръщаемост на имота, изчислени наведнъж",
+  },
+  {
+    to: "/market",
+    Icon: TrendingUp,
+    title: "REMI Пазарна интелигентност",
+    desc: "Пазарен скор и ценови тенденции по квартали, в реално време",
+  },
   { to: "/compare", Icon: Scale, title: "Сравнение на имоти", desc: "AI сравнение на 2–3 оферти" },
 ] as const;
 
@@ -59,6 +84,30 @@ const STEPS = [
   { n: "03", text: "Получаваш оценка и препоръки" },
   { n: "04", text: "Действаш с увереност" },
 ];
+
+// Homepage-only light + teal theme, scoped via CSS custom-property
+// overrides on this wrapper. Does NOT touch global tokens in styles.css,
+// so the dashboard and every other authenticated route keep the existing
+// navy/yellow theme untouched.
+const HOME_THEME: React.CSSProperties = {
+  ["--background" as any]: "#F2F5F4",
+  ["--foreground" as any]: "#12181A",
+  ["--card" as any]: "#FFFFFF",
+  ["--card-foreground" as any]: "#12181A",
+  ["--popover" as any]: "#FFFFFF",
+  ["--popover-foreground" as any]: "#12181A",
+  ["--primary" as any]: "#0E8A82",
+  ["--primary-foreground" as any]: "#FFFFFF",
+  ["--secondary" as any]: "#E7EDEB",
+  ["--secondary-foreground" as any]: "#12181A",
+  ["--muted" as any]: "#E7EDEB",
+  ["--muted-foreground" as any]: "#54625E",
+  ["--accent" as any]: "#DFF0EC",
+  ["--accent-foreground" as any]: "#0B6B66",
+  ["--border" as any]: "rgba(15,25,23,0.14)",
+  ["--input" as any]: "rgba(15,25,23,0.18)",
+  ["--ring" as any]: "#0E8A82",
+};
 
 function Landing() {
   const homeStatsFn = useServerFn(getHomeStats);
@@ -86,7 +135,7 @@ function Landing() {
   const remaining = Math.max(0, 50 - (brokerCount?.count ?? 0));
 
   return (
-    <div>
+    <div style={HOME_THEME}>
       <section className="relative isolate overflow-hidden">
         <img
           src={heroCoast}
@@ -95,15 +144,15 @@ function Landing() {
           height={1080}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120]/70 via-[#0B1120]/80 to-background" />
-        <div className="relative mx-auto max-w-xl px-5 pt-16 pb-12 text-foreground">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120]/70 via-[#0B1120]/80 to-[#F2F5F4]" />
+        <div className="relative mx-auto max-w-xl px-5 pt-16 pb-12 text-white">
           <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 backdrop-blur">
             <Building2 className="h-6 w-6" />
           </div>
           <h1 className="text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl">
             Първата в България <span className="text-primary">операционна система</span> за недвижими имоти
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-center text-sm text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-md text-center text-sm text-white/80">
             REMI AI мисли с теб на всяка стъпка от сделката — за брокери и купувачи.
           </p>
 
@@ -117,7 +166,7 @@ function Landing() {
             </Link>
             <Link
               to="/auth"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-primary/40 bg-card/60 px-5 py-3.5 text-sm font-semibold text-foreground backdrop-blur transition hover:border-primary hover:bg-card"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-primary/40 bg-white/10 px-5 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-primary hover:bg-white/15"
             >
               Брокерски портал
               <ArrowRight className="h-4 w-4" />
@@ -152,7 +201,7 @@ function Landing() {
           <Link to="/auth" className="rounded-2xl border border-border bg-card p-4 text-card-foreground transition hover:border-primary/40">
             <Heart className="mb-2 h-5 w-5 text-primary" />
             <p className="text-sm font-semibold">Аз съм клиент</p>
-            <p className="text-xs text-muted-foreground">Намери своя дом</p>
+            <p className="text-xs text-muted-foreground">Купувай или продавай</p>
           </Link>
         </div>
 
