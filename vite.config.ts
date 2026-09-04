@@ -14,4 +14,12 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    // REMI Voice Input v1 — src/lib/voice/whisper-worker.ts is loaded as a
+    // client-only ES module Worker (Whisper WASM inference). Never runs
+    // server-side / in SSR — this only affects how the browser bundle for
+    // that worker chunk is built.
+    worker: { format: "es" },
+    optimizeDeps: { exclude: ["@huggingface/transformers"] },
+  },
 });
