@@ -24,6 +24,54 @@ function useNextPath() {
   return Route.useSearch().next;
 }
 
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+      <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.44a5.5 5.5 0 0 1-2.39 3.62v3h3.86c2.26-2.08 3.58-5.15 3.58-8.86z" />
+      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.07 7.93-2.91l-3.86-3c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.29v3.1A12 12 0 0 0 12 24z" />
+      <path fill="#FBBC05" d="M5.27 14.28A7.2 7.2 0 0 1 4.89 12c0-.79.14-1.56.38-2.28v-3.1H1.29A12 12 0 0 0 0 12c0 1.94.46 3.77 1.29 5.38z" />
+      <path fill="#EA4335" d="M12 4.75c1.76 0 3.34.61 4.58 1.79l3.43-3.43C17.94 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.29 6.62l3.98 3.1C6.22 6.86 8.87 4.75 12 4.75z" />
+    </svg>
+  );
+}
+
+function GoogleButton() {
+  const next = useNextPath();
+  const [busy, setBusy] = useState(false);
+
+  const signInWithGoogle = async () => {
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}${next ?? "/profile"}`,
+      },
+    });
+    if (error) {
+      setBusy(false);
+      toast.error("Неуспешен вход с Google");
+    }
+    // при успешно пренасочване към Google busy остава true до навигацията
+  };
+
+  return (
+    <Button type="button" variant="outline" className="w-full gap-2" disabled={busy} onClick={signInWithGoogle}>
+      <GoogleIcon />
+      {busy ? "Пренасочване..." : "Продължи с Google"}
+    </Button>
+  );
+}
+
+function OrDivider() {
+  return (
+    <div className="my-4 flex items-center gap-3">
+      <div className="h-px flex-1 bg-border" />
+      <span className="text-xs text-muted-foreground">или</span>
+      <div className="h-px flex-1 bg-border" />
+    </div>
+  );
+}
+
 function AuthPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -45,7 +93,12 @@ function AuthPage() {
         <p className="mt-1 text-sm text-muted-foreground">Влез или създай профил</p>
       </div>
 
-      <Tabs defaultValue="login" className="mt-6">
+      <div className="mt-6">
+        <GoogleButton />
+        <OrDivider />
+      </div>
+
+      <Tabs defaultValue="login">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Вход</TabsTrigger>
           <TabsTrigger value="signup">Регистрация</TabsTrigger>
