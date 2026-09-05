@@ -72,6 +72,13 @@ export function AppHeader() {
           </span>
         </Link>
 
+        <Link
+          to="/tools"
+          className="hidden sm:block text-xs font-semibold text-muted-foreground hover:text-foreground"
+        >
+          Инструменти
+        </Link>
+
         {!user ? (
           <div className="flex items-center gap-1.5">
             <Link

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, Wrench, TrendingUp, Megaphone, ArrowUpDown, FileText } from "lucide-react";
+import { ShieldAlert, CheckCircle2, MessageSquare, Calculator, Wrench, TrendingUp, Megaphone, ArrowUpDown, FileText, Camera } from "lucide-react";
 
 export const Route = createFileRoute("/tools")({
   head: () => ({
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/tools")({
 });
 
 const TOOLS = [
+  { to: "/dashboard/listings", icon: Camera, title: "REMI Обяви", desc: "Качваш снимки на имота — REMI ги анализира и написва продаваща обява" },
   { to: "/risk", icon: ShieldAlert, title: "REMI Правен анализ", desc: "Идентификуване на рискове, анализ на собственост и правни проблеми" },
   { to: "/checklist", icon: CheckCircle2, title: "REMI Чеклист за сделка", desc: "Проверени стъпки при оглед и покупка" },
   { to: "/negotiation", icon: MessageSquare, title: "REMI Преговори и продажби", desc: "Готови тактики по ситуация за преговори и затваряне на сделки" },
