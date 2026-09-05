@@ -16,6 +16,8 @@ import {
   Scale,
   Sparkles,
   Gift,
+  Camera,
+  FileText,
 } from "lucide-react";
 import heroCoast from "@/assets/hero-coast.jpg";
 import { supabase } from "@/integrations/supabase/client";
@@ -46,16 +48,28 @@ export const Route = createFileRoute("/")({
 
 const TOOLS = [
   {
+    to: "/dashboard/listings",
+    Icon: Camera,
+    title: "REMI Обяви",
+    desc: "Качваш снимки на имота — REMI ги анализира и написва продаваща обява",
+  },
+  {
+    to: "/market",
+    Icon: TrendingUp,
+    title: "REMI Пазарна интелигентност",
+    desc: "Пазарен скор и ценови тенденции по квартали, в реално време",
+  },
+  {
     to: "/risk",
     Icon: ShieldAlert,
     title: "REMI Правен анализ",
     desc: "Анализ на документи по снимка или описание — тежести и правни рискове, преди да платиш капаро",
   },
   {
-    to: "/checklist",
-    Icon: ListChecks,
-    title: "REMI Чеклист за сделка",
-    desc: "Проверени стъпки при оглед и покупка",
+    to: "/dashboard/contracts",
+    Icon: FileText,
+    title: "REMI Договори",
+    desc: "Анализира и изготвя договори по типа сделка — автоматично",
   },
   {
     to: "/negotiation",
@@ -69,13 +83,6 @@ const TOOLS = [
     title: "REMI Инвеститорски анализ",
     desc: "Доходност, вноска и възвръщаемост на имота, изчислени наведнъж",
   },
-  {
-    to: "/market",
-    Icon: TrendingUp,
-    title: "REMI Пазарна интелигентност",
-    desc: "Пазарен скор и ценови тенденции по квартали, в реално време",
-  },
-  { to: "/compare", Icon: Scale, title: "Сравнение на имоти", desc: "AI сравнение на 2–3 оферти" },
 ] as const;
 
 const STEPS = [
@@ -89,27 +96,6 @@ const STEPS = [
 // overrides on this wrapper. Does NOT touch global tokens in styles.css,
 // so the dashboard and every other authenticated route keep the existing
 // navy/yellow theme untouched.
-const HOME_THEME: React.CSSProperties = {
-  ["--background" as any]: "#F2F5F4",
-  ["--foreground" as any]: "#12181A",
-  ["--card" as any]: "#FFFFFF",
-  ["--card-foreground" as any]: "#12181A",
-  ["--popover" as any]: "#FFFFFF",
-  ["--popover-foreground" as any]: "#12181A",
-  ["--primary" as any]: "#0E8A82",
-  ["--primary-foreground" as any]: "#FFFFFF",
-  ["--secondary" as any]: "#E7EDEB",
-  ["--secondary-foreground" as any]: "#12181A",
-  ["--muted" as any]: "#E7EDEB",
-  ["--muted-foreground" as any]: "#54625E",
-  ["--accent" as any]: "#DFF0EC",
-  ["--accent-foreground" as any]: "#0B6B66",
-  ["--border" as any]: "rgba(15,25,23,0.14)",
-  ["--input" as any]: "rgba(15,25,23,0.18)",
-  ["--ring" as any]: "#0E8A82",
-  background:
-    "radial-gradient(1100px 640px at 12% -6%, #FFFFFF 0%, #CBEBE2 38%, transparent 78%), linear-gradient(180deg, #FFFFFF 0%, #D6EFE7 18%, #E9F4F0 46%, #F2F5F4 78%, #F2F5F4 100%)",
-};
 
 function Landing() {
   const homeStatsFn = useServerFn(getHomeStats);
@@ -137,7 +123,7 @@ function Landing() {
   const remaining = Math.max(0, 50 - (brokerCount?.count ?? 0));
 
   return (
-    <div style={HOME_THEME}>
+    <div className="home-theme">
       <section className="relative isolate overflow-hidden">
         <img
           src={heroCoast}

@@ -91,6 +91,30 @@
   --ring: #f7df53;
 }
 
+.home-theme {
+  --background: #F2F5F4;
+  --foreground: #12181A;
+  --card: #FFFFFF;
+  --card-foreground: #12181A;
+  --popover: #FFFFFF;
+  --popover-foreground: #12181A;
+  --primary: #0E8A82;
+  --primary-foreground: #FFFFFF;
+  --secondary: #E7EDEB;
+  --secondary-foreground: #12181A;
+  --muted: #E7EDEB;
+  --muted-foreground: #54625E;
+  --accent: #DFF0EC;
+  --accent-foreground: #0B6B66;
+  --border: rgba(15,25,23,0.14);
+  --input: rgba(15,25,23,0.18);
+  --ring: #0E8A82;
+  background: radial-gradient(1100px 640px at 12% -6%, #FFFFFF 0%, #CBEBE2 38%, transparent 78%),
+    linear-gradient(180deg, #FFFFFF 0%, #D6EFE7 18%, #E9F4F0 46%, #F2F5F4 78%, #F2F5F4 100%);
+}
+
+
+
 
 @layer base {
   * { border-color: var(--color-border); }
