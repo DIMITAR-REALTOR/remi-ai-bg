@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Search,
-  Building2,
   Heart,
   LayoutDashboard,
   Users,
@@ -19,7 +18,7 @@ import {
   Camera,
   FileText,
 } from "lucide-react";
-import heroCoast from "@/assets/hero-coast.jpg";
+
 import { supabase } from "@/integrations/supabase/client";
 import { RatingBadge, useBrokerRatings } from "@/components/RatingBadge";
 import { getHomeStats } from "@/lib/home-stats.functions";
@@ -124,41 +123,165 @@ function Landing() {
 
   return (
     <div className="home-theme">
-      <section className="relative isolate overflow-hidden">
-        <img
-          src={heroCoast}
-          alt="Морската градина във Варна"
-          width={1920}
-          height={1080}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1120]/70 via-[#0B1120]/80 to-[#F2F5F4]" />
-        <div className="relative mx-auto max-w-xl px-5 pt-16 pb-12 text-white">
-          <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-primary/15 text-primary ring-1 ring-primary/30 backdrop-blur">
-            <Building2 className="h-6 w-6" />
-          </div>
-          <h1 className="text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl">
-            Първата в България <span className="text-primary">операционна система</span> за недвижими имоти
+      <section className="relative isolate overflow-hidden pt-8 pb-6">
+        <div className="mx-auto max-w-xl px-5">
+          <p className="text-center text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+            REMI AI · Варна и региона
+          </p>
+          <h1 className="mt-3 text-center text-[28px] font-black leading-[1.1] tracking-tight text-foreground sm:text-4xl">
+            Първата в България{" "}
+            <span className="text-primary">операционна система</span> за недвижими имоти
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-center text-sm text-white/80">
-            REMI AI мисли с теб на всяка стъпка от сделката — за брокери и купувачи.
+          <p className="mx-auto mt-3 max-w-md text-center text-sm leading-relaxed text-muted-foreground">
+            REMI мисли с теб на всяка стъпка от сделката — от първия оглед до нотариалния акт. За
+            брокери, които искат данни и правна яснота вместо усещане.
           </p>
 
-          <div className="mt-6 flex flex-col gap-2.5">
-            <Link
-              to="/search"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/30 transition hover:bg-primary/90"
-            >
-              <Search className="h-4 w-4" />
-              Разгледай имоти
-            </Link>
+          <div className="mt-6 flex items-center justify-center gap-3">
             <Link
               to="/auth"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-primary/40 bg-white/10 px-5 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:border-primary hover:bg-white/15"
+              className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background shadow-md transition hover:bg-foreground/90"
             >
-              Брокерски портал
-              <ArrowRight className="h-4 w-4" />
+              Аз съм брокер
             </Link>
+            <Link
+              to="/market"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card px-5 py-3 text-sm font-semibold text-foreground transition hover:border-primary/40"
+            >
+              Виж имотния радар
+              <ArrowRight className="h-4 w-4 rotate-90" />
+            </Link>
+          </div>
+
+          <div className="mt-8 overflow-hidden rounded-[2rem] border border-border bg-card shadow-xl shadow-primary/5">
+            <div className="p-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                    <p className="text-base font-bold text-foreground">Здравей, Димитър</p>
+                  </div>
+                  <p className="mt-0.5 text-xs text-muted-foreground">Ето какво се случва днес</p>
+                </div>
+                <span className="rounded-full border border-border bg-muted px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  визия
+                </span>
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-2xl bg-muted p-3">
+                  <p className="text-2xl font-black text-foreground">5</p>
+                  <p className="text-[11px] text-muted-foreground">сделки в процес</p>
+                </div>
+                <div className="rounded-2xl bg-muted p-3">
+                  <p className="text-2xl font-black text-foreground">24</p>
+                  <p className="text-[11px] text-muted-foreground">активни клиенти</p>
+                </div>
+                <div className="rounded-2xl bg-muted p-3">
+                  <p className="text-2xl font-black text-foreground">9</p>
+                  <p className="text-[11px] text-muted-foreground">активни обяви</p>
+                </div>
+                <div className="rounded-2xl bg-muted p-3">
+                  <p className="text-2xl font-black text-foreground">3</p>
+                  <p className="text-[11px] text-muted-foreground">задачи днес</p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-2xl bg-muted p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold text-foreground">Пазарен анализ · кв. Чайка</p>
+                  <p className="text-sm font-black text-primary">8.2/10</p>
+                </div>
+                <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-background">
+                  <div className="h-full w-[82%] rounded-full bg-primary" />
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Благоприятен момент за продажба — търсенето расте с 16%.
+                </p>
+              </div>
+
+              <div className="mt-4 rounded-2xl bg-muted p-3">
+                <div className="flex justify-between">
+                  {[
+                    ["Пон", "31", false, false],
+                    ["Вт", "1", false, false],
+                    ["Ср", "2", true, true],
+                    ["Чт", "3", false, true],
+                    ["Пт", "4", false, false],
+                    ["Сб", "5", false, false],
+                    ["Нед", "6", false, false],
+                  ].map(([d, n, isToday, hasDot], i) => (
+                    <div
+                      key={i}
+                      className={`flex flex-col items-center rounded-xl px-2 py-1.5 ${
+                        isToday ? "bg-foreground text-background" : "text-foreground"
+                      }`}
+                    >
+                      <span className="text-[9px] font-semibold uppercase">{d}</span>
+                      <span className="mt-0.5 text-sm font-black">{n}</span>
+                      {hasDot && <span className="mt-0.5 h-1 w-1 rounded-full bg-primary" />}
+                    </div>
+                  ))}
+                </div>
+                <ul className="mt-4 space-y-2.5">
+                  <li className="flex items-center gap-3 text-xs">
+                    <span className="w-9 text-muted-foreground">10:00</span>
+                    <span className="h-2 w-2 rounded-full bg-primary" />
+                    <span className="font-medium text-foreground">Оглед — кв. Бриз</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-xs">
+                    <span className="w-9 text-muted-foreground">13:30</span>
+                    <span className="h-2 w-2 rounded-full bg-amber-400" />
+                    <span className="font-medium text-foreground">Обаждане — Ивайло К.</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-xs">
+                    <span className="w-9 text-muted-foreground">15:30</span>
+                    <span className="h-2 w-2 rounded-full bg-primary" />
+                    <span className="font-medium text-foreground">Среща — нотариус</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-xs">
+                    <span className="w-9 text-muted-foreground">17:00</span>
+                    <span className="h-2 w-2 rounded-full bg-muted-foreground" />
+                    <span className="font-medium text-foreground">Подготовка документи</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
+                <div className="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-accent text-xs font-black text-accent-foreground">
+                  92 м²
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold uppercase tracking-wide text-primary">
+                    REMI препоръчва — изгодна цена
+                  </p>
+                  <p className="truncate text-sm font-bold text-foreground">Тристаен, кв. Чайка</p>
+                  <p className="text-xs text-muted-foreground">
+                    92,000 € · 8% под средното за квартала
+                  </p>
+                </div>
+                <Link
+                  to="/search"
+                  className="shrink-0 rounded-full bg-foreground px-3 py-1.5 text-xs font-semibold text-background"
+                >
+                  Виж имота →
+                </Link>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 border-t border-border bg-muted px-4 py-3">
+              <input
+                type="text"
+                placeholder="Добави задача или бележка..."
+                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+              <button
+                type="button"
+                className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
       </section>
