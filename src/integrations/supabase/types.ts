@@ -212,7 +212,7 @@ export type Database = {
       clients: {
         Row: {
           agency_id: string | null
-          broker_id: string | null
+          broker_id: string
           client_type: string
           created_at: string
           id: string
@@ -227,7 +227,7 @@ export type Database = {
         }
         Insert: {
           agency_id?: string | null
-          broker_id?: string | null
+          broker_id: string
           client_type?: string
           created_at?: string
           id?: string
@@ -242,7 +242,7 @@ export type Database = {
         }
         Update: {
           agency_id?: string | null
-          broker_id?: string | null
+          broker_id?: string
           client_type?: string
           created_at?: string
           id?: string
@@ -400,6 +400,45 @@ export type Database = {
           },
         ]
       }
+      deal_participants: {
+        Row: {
+          client_id: string
+          created_at: string
+          deal_id: string
+          id: string
+          role: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          deal_id: string
+          id?: string
+          role: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          deal_id?: string
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_participants_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_participants_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deals: {
         Row: {
           ai_context_summary: Json | null
@@ -415,6 +454,7 @@ export type Database = {
           listing_id: string | null
           stage: string
           status: string
+          transaction_type: string
         }
         Insert: {
           ai_context_summary?: Json | null
@@ -430,6 +470,7 @@ export type Database = {
           listing_id?: string | null
           stage?: string
           status?: string
+          transaction_type?: string
         }
         Update: {
           ai_context_summary?: Json | null
@@ -445,6 +486,7 @@ export type Database = {
           listing_id?: string | null
           stage?: string
           status?: string
+          transaction_type?: string
         }
         Relationships: [
           {
