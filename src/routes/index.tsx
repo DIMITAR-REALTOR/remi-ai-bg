@@ -303,7 +303,8 @@ function Landing() {
           </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-2 gap-3" id="roles">
+
           <Link to="/auth" className="rounded-2xl border border-border bg-card p-4 text-card-foreground transition hover:border-primary/40">
             <LayoutDashboard className="mb-2 h-5 w-5 text-primary" />
             <p className="text-sm font-semibold">Аз съм брокер</p>
@@ -339,7 +340,8 @@ function Landing() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section className="mt-10">
+        <section className="mt-10" id="how-it-works">
+
           <h2 className="text-center text-xl font-black tracking-tight text-foreground">Как работи</h2>
           <ol className="mt-4 space-y-2">
             {STEPS.map((s) => (
