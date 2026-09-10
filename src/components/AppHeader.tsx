@@ -72,12 +72,21 @@ export function AppHeader() {
           </span>
         </Link>
 
-        <Link
-          to="/tools"
-          className="hidden sm:block text-xs font-semibold text-muted-foreground hover:text-foreground"
-        >
-          Инструменти
-        </Link>
+        <nav className="hidden items-center gap-4 sm:flex">
+          <Link to="/market" className="text-xs font-semibold text-muted-foreground hover:text-foreground">
+            Пазарен анализ
+          </Link>
+          <Link to="/" hash="how-it-works" className="text-xs font-semibold text-muted-foreground hover:text-foreground">
+            Как работи
+          </Link>
+          <Link to="/" hash="roles" className="text-xs font-semibold text-muted-foreground hover:text-foreground">
+            За кого е
+          </Link>
+          <Link to="/tools" className="text-xs font-semibold text-muted-foreground hover:text-foreground">
+            Инструменти
+          </Link>
+        </nav>
+
 
         {!user ? (
           <div className="flex items-center gap-1.5">
