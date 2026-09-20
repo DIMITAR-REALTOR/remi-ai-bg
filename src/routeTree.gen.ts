@@ -47,6 +47,7 @@ import { Route as AppDashboardDealsRouteImport } from './routes/_app.dashboard.d
 import { Route as AppDashboardListingsRouteImport } from './routes/_app.dashboard.listings'
 import { Route as AppDashboardNewRouteImport } from './routes/_app.dashboard.new'
 import { Route as AppDashboardTasksRouteImport } from './routes/_app.dashboard.tasks'
+import { Route as ApiV1ClientsRouteImport } from './routes/api.v1.clients'
 import { Route as AppDashboardClientsIdRouteImport } from './routes/_app.dashboard.clients.$id'
 import { Route as AppDashboardContractsIdRouteImport } from './routes/_app.dashboard.contracts.$id'
 import { Route as AppDashboardContractsNewRouteImport } from './routes/_app.dashboard.contracts.new'
@@ -247,6 +248,11 @@ const AppDashboardTasksRoute = AppDashboardTasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => AppDashboardRoute,
 } as any)
+const ApiV1ClientsRoute = ApiV1ClientsRouteImport.update({
+  id: '/api/v1/clients',
+  path: '/api/v1/clients',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppDashboardClientsIdRoute = AppDashboardClientsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -324,6 +330,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/listings': typeof AppDashboardListingsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
+  '/api/v1/clients': typeof ApiV1ClientsRoute
   '/dashboard/': typeof AppDashboardIndexRoute
   '/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
   '/dashboard/contracts/$id': typeof AppDashboardContractsIdRoute
@@ -369,6 +376,7 @@ export interface FileRoutesByTo {
   '/dashboard/listings': typeof AppDashboardListingsRoute
   '/dashboard/new': typeof AppDashboardNewRoute
   '/dashboard/tasks': typeof AppDashboardTasksRoute
+  '/api/v1/clients': typeof ApiV1ClientsRoute
   '/dashboard': typeof AppDashboardIndexRoute
   '/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
   '/dashboard/contracts/$id': typeof AppDashboardContractsIdRoute
@@ -417,6 +425,7 @@ export interface FileRoutesById {
   '/_app/dashboard/listings': typeof AppDashboardListingsRoute
   '/_app/dashboard/new': typeof AppDashboardNewRoute
   '/_app/dashboard/tasks': typeof AppDashboardTasksRoute
+  '/api/v1/clients': typeof ApiV1ClientsRoute
   '/_app/dashboard/': typeof AppDashboardIndexRoute
   '/_app/dashboard/clients/$id': typeof AppDashboardClientsIdRoute
   '/_app/dashboard/contracts/$id': typeof AppDashboardContractsIdRoute
@@ -465,6 +474,7 @@ export interface FileRouteTypes {
     | '/dashboard/listings'
     | '/dashboard/new'
     | '/dashboard/tasks'
+    | '/api/v1/clients'
     | '/dashboard/'
     | '/dashboard/clients/$id'
     | '/dashboard/contracts/$id'
@@ -510,6 +520,7 @@ export interface FileRouteTypes {
     | '/dashboard/listings'
     | '/dashboard/new'
     | '/dashboard/tasks'
+    | '/api/v1/clients'
     | '/dashboard'
     | '/dashboard/clients/$id'
     | '/dashboard/contracts/$id'
@@ -557,6 +568,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard/listings'
     | '/_app/dashboard/new'
     | '/_app/dashboard/tasks'
+    | '/api/v1/clients'
     | '/_app/dashboard/'
     | '/_app/dashboard/clients/$id'
     | '/_app/dashboard/contracts/$id'
@@ -592,6 +604,7 @@ export interface RootRouteChildren {
   ListingIdRoute: typeof ListingIdRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
+  ApiV1ClientsRoute: typeof ApiV1ClientsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -862,6 +875,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardTasksRouteImport
       parentRoute: typeof AppDashboardRoute
     }
+    '/api/v1/clients': {
+      id: '/api/v1/clients'
+      path: '/api/v1/clients'
+      fullPath: '/api/v1/clients'
+      preLoaderRoute: typeof ApiV1ClientsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/dashboard/clients/$id': {
       id: '/_app/dashboard/clients/$id'
       path: '/$id'
@@ -1043,6 +1063,7 @@ const rootRouteChildren: RootRouteChildren = {
   ListingIdRoute: ListingIdRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
+  ApiV1ClientsRoute: ApiV1ClientsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
