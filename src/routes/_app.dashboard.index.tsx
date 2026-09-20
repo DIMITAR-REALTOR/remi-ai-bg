@@ -7,6 +7,7 @@ import { Building2, Users, Calendar, Handshake, ChevronRight, ShieldAlert, Check
 import { fmtDateTime, clientStatusLabel, clientStatusTone, crmToneClasses } from "@/lib/crm-meta";
 import { cn } from "@/lib/utils";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
+import { ActionCenterWidget } from "@/components/ActionCenterWidget";
 
 export const Route = createFileRoute("/_app/dashboard/")({
   component: Overview,
@@ -89,6 +90,8 @@ function Overview() {
   return (
     <div className="mx-auto max-w-xl px-4 pt-6 pb-6">
       <h1 className="text-2xl font-black text-foreground">Начало</h1>
+
+      <ActionCenterWidget />
 
       <MarketPulseWidget neighborhoods={listingNeighborhoods} />
 
