@@ -22,6 +22,11 @@ export default defineConfig({
     // server-side / in SSR — this only affects how the browser bundle for
     // that worker chunk is built.
     worker: { format: "es" },
+          build: {
+        rollupOptions: {
+          external: ["cloudflare:workers"],
+        },
+          },
     optimizeDeps: { exclude: ["@huggingface/transformers"] },
   },
 });
