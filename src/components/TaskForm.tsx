@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import { VoiceInputButton } from "@/components/VoiceInputButton";
 
 export interface TaskFormData {
   id?: string;
@@ -95,7 +96,15 @@ export function TaskForm({ initial, onSaved }: { initial?: Partial<TaskFormData>
         </Select>
       </div>
 
-      <div><Label htmlFor="n">Бележки</Label><Textarea id="n" rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} /></div>
+      <div>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="n">Бележки</Label>
+          <VoiceInputButton
+            onTranscript={(text) => set("notes", f.notes ? `${f.notes}\n${text}` : text)}
+          />
+        </div>
+        <Textarea id="n" rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} />
+      </div>
 
       <Button type="submit" className="w-full" disabled={busy}>{busy ? "Запазване..." : "Запази"}</Button>
     </form>

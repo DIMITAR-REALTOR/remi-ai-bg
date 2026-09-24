@@ -11,6 +11,7 @@ import { CLIENT_TYPES, CLIENT_STATUSES } from "@/lib/crm-meta";
 import { MARITAL_STATUSES } from "@/lib/legal-meta";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { VoiceInputButton } from "@/components/VoiceInputButton";
 
 export interface ClientFormData {
   id?: string;
@@ -104,7 +105,15 @@ export function ClientForm({ initial, onSaved }: { initial?: Partial<ClientFormD
       </div>
 
       <div><Label htmlFor="lf">Търси</Label><Textarea id="lf" rows={2} placeholder="Двустаен в Чайка до 100 000 €..." value={f.looking_for} onChange={(e) => set("looking_for", e.target.value)} /></div>
-      <div><Label htmlFor="nt">Бележки</Label><Textarea id="nt" rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} /></div>
+      <div>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="nt">Бележки</Label>
+          <VoiceInputButton
+            onTranscript={(text) => set("notes", f.notes ? `${f.notes}\n${text}` : text)}
+          />
+        </div>
+        <Textarea id="nt" rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} />
+      </div>
       <div><Label htmlFor="lc">Последен контакт</Label><Input id="lc" type="date" value={f.last_contact_at} onChange={(e) => set("last_contact_at", e.target.value)} /></div>
 
       <div>

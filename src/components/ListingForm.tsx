@@ -13,6 +13,7 @@ import { uploadListingPhoto } from "@/lib/storage";
 import { Upload, X, Sparkles } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { generateListingDescription } from "@/lib/ai.functions";
+import { VoiceInputButton } from "@/components/VoiceInputButton";
 
 export interface ListingFormData {
   id?: string;
@@ -126,10 +127,15 @@ export function ListingForm({ initial, onSaved }: { initial?: Partial<ListingFor
       <div>
         <div className="flex items-center justify-between">
           <Label htmlFor="d">Описание</Label>
-          <Button type="button" variant="ghost" size="sm" onClick={aiGenerate} disabled={aiBusy || !f.title} className="h-7 gap-1.5 px-2 text-xs text-primary hover:text-primary">
-            <Sparkles className="h-3.5 w-3.5" />
-            {aiBusy ? "Генериране..." : "Генерирай с AI"}
-          </Button>
+          <div className="flex items-center gap-1">
+            <VoiceInputButton
+              onTranscript={(text) => set("description", f.description ? `${f.description}\n${text}` : text)}
+            />
+            <Button type="button" variant="ghost" size="sm" onClick={aiGenerate} disabled={aiBusy || !f.title} className="h-7 gap-1.5 px-2 text-xs text-primary hover:text-primary">
+              <Sparkles className="h-3.5 w-3.5" />
+              {aiBusy ? "Генериране..." : "Генерирай с AI"}
+            </Button>
+          </div>
         </div>
         <Textarea id="d" rows={5} value={f.description} onChange={(e) => set("description", e.target.value)} />
       </div>
