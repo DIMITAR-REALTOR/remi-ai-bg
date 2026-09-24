@@ -41,10 +41,13 @@ function GoogleButton() {
 
   const signInWithGoogle = async () => {
     setBusy(true);
+    const onboardingPath = next
+      ? `/onboarding/role?next=${encodeURIComponent(next)}`
+      : "/onboarding/role";
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}${next ?? "/profile"}`,
+        redirectTo: `${window.location.origin}${onboardingPath}`,
       },
     });
     if (error) {

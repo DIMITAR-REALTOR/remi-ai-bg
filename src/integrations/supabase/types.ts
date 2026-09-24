@@ -816,18 +816,21 @@ export type Database = {
           created_at: string
           id: string
           role: Database["public"]["Enums"]["app_role"]
+          role_selection_pending: boolean
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
           role: Database["public"]["Enums"]["app_role"]
+          role_selection_pending?: boolean
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          role_selection_pending?: boolean
           user_id?: string
         }
         Relationships: []
@@ -851,6 +854,10 @@ export type Database = {
       is_confirmed_agency_member: {
         Args: { _agency: string; _user: string }
         Returns: boolean
+      }
+      set_my_role: {
+        Args: { p_role: Database["public"]["Enums"]["app_role"] }
+        Returns: Database["public"]["Enums"]["app_role"]
       }
     }
     Enums: {

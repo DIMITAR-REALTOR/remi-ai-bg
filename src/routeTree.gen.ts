@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AdsRouteImport } from './routes/ads'
 import { Route as ArchitectureRouteImport } from './routes/architecture'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as OnboardingRoleRouteImport } from './routes/onboarding.role'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as ChecklistRouteImport } from './routes/checklist'
 import { Route as CompareRouteImport } from './routes/compare'
@@ -78,6 +79,11 @@ const ArchitectureRoute = ArchitectureRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoleRoute = OnboardingRoleRouteImport.update({
+  id: '/onboarding/role',
+  path: '/onboarding/role',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrokersRoute = BrokersRouteImport.update({
@@ -298,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/ads': typeof AdsRoute
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
   '/compare': typeof CompareRoute
@@ -345,6 +352,7 @@ export interface FileRoutesByTo {
   '/ads': typeof AdsRoute
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
   '/compare': typeof CompareRoute
@@ -393,6 +401,7 @@ export interface FileRoutesById {
   '/ads': typeof AdsRoute
   '/architecture': typeof ArchitectureRoute
   '/auth': typeof AuthRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
   '/compare': typeof CompareRoute
@@ -442,6 +451,7 @@ export interface FileRouteTypes {
     | '/ads'
     | '/architecture'
     | '/auth'
+    | '/onboarding/role'
     | '/brokers'
     | '/checklist'
     | '/compare'
@@ -489,6 +499,7 @@ export interface FileRouteTypes {
     | '/ads'
     | '/architecture'
     | '/auth'
+    | '/onboarding/role'
     | '/brokers'
     | '/checklist'
     | '/compare'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '/ads'
     | '/architecture'
     | '/auth'
+    | '/onboarding/role'
     | '/brokers'
     | '/checklist'
     | '/compare'
@@ -585,6 +597,7 @@ export interface RootRouteChildren {
   AdsRoute: typeof AdsRoute
   ArchitectureRoute: typeof ArchitectureRoute
   AuthRoute: typeof AuthRoute
+  OnboardingRoleRoute: typeof OnboardingRoleRoute
   BrokersRoute: typeof BrokersRouteWithChildren
   ChecklistRoute: typeof ChecklistRoute
   CompareRoute: typeof CompareRoute
@@ -642,6 +655,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/role': {
+      id: '/onboarding/role'
+      path: '/onboarding/role'
+      fullPath: '/onboarding/role'
+      preLoaderRoute: typeof OnboardingRoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brokers': {
@@ -1043,6 +1063,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdsRoute: AdsRoute,
   ArchitectureRoute: ArchitectureRoute,
   AuthRoute: AuthRoute,
+  OnboardingRoleRoute: OnboardingRoleRoute,
   BrokersRoute: BrokersRouteWithChildren,
   ChecklistRoute: ChecklistRoute,
   CompareRoute: CompareRoute,
