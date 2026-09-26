@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import { geminiChatCompletion } from "@/lib/ai/gemini.adapter.server";
 
 const Input = z.object({
   title: z.string().max(200).optional().default(""),
@@ -18,8 +19,6 @@ export const generateListingDescription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => Input.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const details = [
       data.title && `Заглавие: ${data.title}`,
@@ -33,13 +32,7 @@ export const generateListingDescription = createServerFn({ method: "POST" })
       data.notes && `Бележки: ${data.notes}`,
     ].filter(Boolean).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Lovable-API-Key": apiKey,
-      },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         messages: [
           {
@@ -49,11 +42,9 @@ export const generateListingDescription = createServerFn({ method: "POST" })
           },
           { role: "user", content: `Напиши описание за този имот:\n${details}` },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -81,8 +72,6 @@ export type DealRiskResult = z.infer<typeof RiskOutput>;
 export const analyzeDealRisk = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => RiskInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const details = [
       `Цена: €${data.price_eur}`,
@@ -92,10 +81,7 @@ export const analyzeDealRisk = createServerFn({ method: "POST" })
       data.notes && `Допълнителни бележки: ${data.notes}`,
     ].filter(Boolean).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
@@ -106,11 +92,9 @@ export const analyzeDealRisk = createServerFn({ method: "POST" })
           },
           { role: "user", content: `Оцени риска на тази сделка:\n${details}` },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -145,8 +129,6 @@ export type MarketScoreResult = z.infer<typeof MarketOutput>;
 export const analyzeMarketScore = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => MarketInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const pricePerSqm = Math.round(data.price_eur / data.area_sqm);
     const details = [
@@ -157,10 +139,7 @@ export const analyzeMarketScore = createServerFn({ method: "POST" })
       `Цена на кв.м: €${pricePerSqm}`,
     ].join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
@@ -171,11 +150,9 @@ export const analyzeMarketScore = createServerFn({ method: "POST" })
           },
           { role: "user", content: `Оцени пазарната позиция:\n${details}` },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -212,8 +189,6 @@ const CHANNEL_GUIDE: Record<string, string> = {
 export const generateMarketingCopy = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => MarketingInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const details = [
       `Тип имот: ${data.property_type}`,
@@ -230,21 +205,16 @@ ${CONTACT_BLOCK}
 
 Върни САМО валиден JSON без markdown със структура: { "body": "целият генериран текст, включително контактния блок в края" }`;
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: system },
           { role: "user", content: `Напиши маркетингов текст за този имот:\n${details}` },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -303,8 +273,6 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => DealContextInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const stageLabel = STAGE_LABELS[data.stage] ?? data.stage;
     const details = [
@@ -315,10 +283,7 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
       data.commission_percent != null && `Комисиона: ${data.commission_percent}%`,
     ].filter(Boolean).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
@@ -329,11 +294,9 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
           },
           { role: "user", content: `Анализирай тази сделка:\n${details}` },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -367,15 +330,10 @@ export const extractLegalDocument = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => LegalExtractInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const schemaHint = data.field_keys.map((k) => `"${k}": string`).join(",\n  ");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
@@ -394,11 +352,9 @@ export const extractLegalDocument = createServerFn({ method: "POST" })
             ],
           },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -425,13 +381,8 @@ export const extractIdentityDocument = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => IdentityExtractInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
@@ -448,11 +399,9 @@ export const extractIdentityDocument = createServerFn({ method: "POST" })
             ],
           },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -493,17 +442,12 @@ export const generateContractText = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => ContractGenInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const sellerBlock = Object.entries(data.seller).map(([k, v]) => `${k}: ${v}`).join("\n");
     const buyerBlock = Object.entries(data.buyer).map(([k, v]) => `${k}: ${v}`).join("\n");
     const termsBlock = Object.entries(data.terms).map(([k, v]) => `${k}: ${v}`).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         messages: [
           {
@@ -516,11 +460,9 @@ export const generateContractText = createServerFn({ method: "POST" })
             content: `Изготви ${data.contract_type === "preliminary_sale" ? "предварителен договор за покупко-продажба на недвижим имот (чл. 19 ЗЗД)" : data.contract_type}, дата на сключване: ${data.contract_date || "днес"}, място: ${data.city_of_signing}.\n\nПродавач:\n${sellerBlock}\n\nКупувач:\n${buyerBlock}\n\nУсловия по сделката:\n${termsBlock}`,
           },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
@@ -558,8 +500,6 @@ export type CompareResult = z.infer<typeof CompareOutput>;
 export const compareProperties = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => CompareInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
 
     const details = data.items
       .map((it, i) => {
@@ -580,10 +520,7 @@ export const compareProperties = createServerFn({ method: "POST" })
 
     const labels = data.items.map((i) => i.label).join(", ");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-      body: JSON.stringify({
+    const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
@@ -594,11 +531,9 @@ export const compareProperties = createServerFn({ method: "POST" })
           },
           { role: "user", content: `Сравни следните имоти:\n\n${details}` },
         ],
-      }),
     });
 
     if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (res.status === 402) throw new Error("Изчерпан AI кредит. Добави кредити в работното пространство.");
     if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
 
     const json = await res.json();
