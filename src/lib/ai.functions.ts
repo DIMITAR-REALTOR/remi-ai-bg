@@ -18,8 +18,8 @@ export const generateListingDescription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => Input.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const details = [
       data.title && `Заглавие: ${data.title}`,
@@ -33,14 +33,14 @@ export const generateListingDescription = createServerFn({ method: "POST" })
       data.notes && `Бележки: ${data.notes}`,
     ].filter(Boolean).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Lovable-API-Key": apiKey,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         messages: [
           {
             role: "system",
@@ -81,8 +81,8 @@ export type DealRiskResult = z.infer<typeof RiskOutput>;
 export const analyzeDealRisk = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => RiskInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const details = [
       `Цена: €${data.price_eur}`,
@@ -92,11 +92,11 @@ export const analyzeDealRisk = createServerFn({ method: "POST" })
       data.notes && `Допълнителни бележки: ${data.notes}`,
     ].filter(Boolean).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           {
@@ -145,8 +145,8 @@ export type MarketScoreResult = z.infer<typeof MarketOutput>;
 export const analyzeMarketScore = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => MarketInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const pricePerSqm = Math.round(data.price_eur / data.area_sqm);
     const details = [
@@ -157,11 +157,11 @@ export const analyzeMarketScore = createServerFn({ method: "POST" })
       `Цена на кв.м: €${pricePerSqm}`,
     ].join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           {
@@ -212,8 +212,8 @@ const CHANNEL_GUIDE: Record<string, string> = {
 export const generateMarketingCopy = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => MarketingInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const details = [
       `Тип имот: ${data.property_type}`,
@@ -230,11 +230,11 @@ ${CONTACT_BLOCK}
 
 Върни САМО валиден JSON без markdown със структура: { "body": "целият генериран текст, включително контактния блок в края" }`;
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: system },
@@ -303,8 +303,8 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => DealContextInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const stageLabel = STAGE_LABELS[data.stage] ?? data.stage;
     const details = [
@@ -315,11 +315,11 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
       data.commission_percent != null && `Комисиона: ${data.commission_percent}%`,
     ].filter(Boolean).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           {
@@ -367,16 +367,16 @@ export const extractLegalDocument = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => LegalExtractInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const schemaHint = data.field_keys.map((k) => `"${k}": string`).join(",\n  ");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           {
@@ -425,14 +425,14 @@ export const extractIdentityDocument = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => IdentityExtractInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           {
@@ -493,18 +493,18 @@ export const generateContractText = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => ContractGenInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const sellerBlock = Object.entries(data.seller).map(([k, v]) => `${k}: ${v}`).join("\n");
     const buyerBlock = Object.entries(data.buyer).map(([k, v]) => `${k}: ${v}`).join("\n");
     const termsBlock = Object.entries(data.terms).map(([k, v]) => `${k}: ${v}`).join("\n");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         messages: [
           {
             role: "system",
@@ -558,8 +558,8 @@ export type CompareResult = z.infer<typeof CompareOutput>;
 export const compareProperties = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) => CompareInput.parse(d))
   .handler(async ({ data }) => {
-    const apiKey = process.env.LOVABLE_API_KEY;
-    if (!apiKey) throw new Error("LOVABLE_API_KEY липсва");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("GEMINI_API_KEY липсва");
 
     const details = data.items
       .map((it, i) => {
@@ -580,11 +580,11 @@ export const compareProperties = createServerFn({ method: "POST" })
 
     const labels = data.items.map((i) => i.label).join(", ");
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const res = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "gemini-3-flash-preview",
         response_format: { type: "json_object" },
         messages: [
           {
