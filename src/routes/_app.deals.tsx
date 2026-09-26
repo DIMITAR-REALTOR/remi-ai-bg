@@ -44,13 +44,19 @@ function MyDealsPage() {
     queryKey: ["client-deals", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
-        .from("deals")
-        .select("id, broker_id, status, closed_at, created_at, profiles:broker_id(id,full_name), listings:listing_id(id,title)")
-        .eq("client_id", user!.id)
-        .order("created_at", { ascending: false });
+      // Клиентът не чете директно `deals` (там са комисиона и AI анализ на брокера),
+      // а само безопасните колони през get_my_client_deals().
+      const { data, error } = await (supabase as any).rpc("get_my_client_deals");
       if (error) throw error;
-      return (data ?? []) as DealRow[];
+      return ((data ?? []) as any[]).map((d) => ({
+        id: d.id,
+        broker_id: d.broker_id,
+        status: d.status,
+        closed_at: d.closed_at,
+        created_at: d.created_at,
+        profiles: { id: d.broker_id, full_name: d.broker_name },
+        listings: d.listing_id ? { id: d.listing_id, title: d.listing_title } : null,
+      })) as DealRow[];
     },
   });
 
