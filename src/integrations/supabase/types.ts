@@ -852,6 +852,10 @@ export type Database = {
         Args: { _agency: string; _user: string }
         Returns: boolean
       }
+      set_initial_role: {
+        Args: { p_role: Database["public"]["Enums"]["app_role"] }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "broker" | "client"

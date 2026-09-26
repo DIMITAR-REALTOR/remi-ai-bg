@@ -16,6 +16,7 @@ import { Route as ArchitectureRouteImport } from './routes/architecture'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BrokersRouteImport } from './routes/brokers'
 import { Route as ChecklistRouteImport } from './routes/checklist'
+import { Route as ChooseRoleRouteImport } from './routes/choose-role'
 import { Route as CompareRouteImport } from './routes/compare'
 import { Route as ForBrokersRouteImport } from './routes/for-brokers'
 import { Route as HelpRouteImport } from './routes/help'
@@ -88,6 +89,11 @@ const BrokersRoute = BrokersRouteImport.update({
 const ChecklistRoute = ChecklistRouteImport.update({
   id: '/checklist',
   path: '/checklist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChooseRoleRoute = ChooseRoleRouteImport.update({
+  id: '/choose-role',
+  path: '/choose-role',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareRoute = CompareRouteImport.update({
@@ -300,6 +306,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
+  '/choose-role': typeof ChooseRoleRoute
   '/compare': typeof CompareRoute
   '/for-brokers': typeof ForBrokersRoute
   '/help': typeof HelpRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
+  '/choose-role': typeof ChooseRoleRoute
   '/compare': typeof CompareRoute
   '/for-brokers': typeof ForBrokersRoute
   '/help': typeof HelpRoute
@@ -395,6 +403,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/brokers': typeof BrokersRouteWithChildren
   '/checklist': typeof ChecklistRoute
+  '/choose-role': typeof ChooseRoleRoute
   '/compare': typeof CompareRoute
   '/for-brokers': typeof ForBrokersRoute
   '/help': typeof HelpRoute
@@ -444,6 +453,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/brokers'
     | '/checklist'
+    | '/choose-role'
     | '/compare'
     | '/for-brokers'
     | '/help'
@@ -491,6 +501,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/brokers'
     | '/checklist'
+    | '/choose-role'
     | '/compare'
     | '/for-brokers'
     | '/help'
@@ -538,6 +549,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/brokers'
     | '/checklist'
+    | '/choose-role'
     | '/compare'
     | '/for-brokers'
     | '/help'
@@ -587,6 +599,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BrokersRoute: typeof BrokersRouteWithChildren
   ChecklistRoute: typeof ChecklistRoute
+  ChooseRoleRoute: typeof ChooseRoleRoute
   CompareRoute: typeof CompareRoute
   ForBrokersRoute: typeof ForBrokersRoute
   HelpRoute: typeof HelpRoute
@@ -656,6 +669,13 @@ declare module '@tanstack/react-router' {
       path: '/checklist'
       fullPath: '/checklist'
       preLoaderRoute: typeof ChecklistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/choose-role': {
+      id: '/choose-role'
+      path: '/choose-role'
+      fullPath: '/choose-role'
+      preLoaderRoute: typeof ChooseRoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare': {
@@ -1045,6 +1065,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BrokersRoute: BrokersRouteWithChildren,
   ChecklistRoute: ChecklistRoute,
+  ChooseRoleRoute: ChooseRoleRoute,
   CompareRoute: CompareRoute,
   ForBrokersRoute: ForBrokersRoute,
   HelpRoute: HelpRoute,

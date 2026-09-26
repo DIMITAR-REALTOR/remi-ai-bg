@@ -8,25 +8,32 @@ interface AuthCtx {
   user: User | null;
   session: Session | null;
   role: AppRole | null;
+  rolePending: boolean;
   loading: boolean;
   isBroker: boolean;
   refreshRole: () => Promise<void>;
 }
 
 const Ctx = createContext<AuthCtx>({
-  user: null, session: null, role: null, loading: true, isBroker: false,
+  user: null, session: null, role: null, rolePending: false, loading: true, isBroker: false,
   refreshRole: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
+  const [rolePending, setRolePending] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadRole = async (uid: string | undefined) => {
-    if (!uid) { setRole(null); return; }
-    const { data } = await supabase.from("user_roles").select("role").eq("user_id", uid).maybeSingle();
+    if (!uid) { setRole(null); setRolePending(false); return; }
+    const { data } = await supabase
+      .from("user_roles")
+      .select("role, role_selection_pending")
+      .eq("user_id", uid)
+      .maybeSingle();
     setRole((data?.role as AppRole) ?? "client");
+    setRolePending(data?.role_selection_pending ?? false);
   };
 
   useEffect(() => {
@@ -46,6 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user: session?.user ?? null,
       session,
       role,
+      rolePending,
       loading,
       isBroker: role === "broker",
       refreshRole: () => loadRole(session?.user.id),

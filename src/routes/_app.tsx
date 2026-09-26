@@ -7,14 +7,16 @@ export const Route = createFileRoute("/_app")({
 });
 
 function AppGate() {
-  const { user, loading } = useAuth();
+  const { user, loading, rolePending } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", replace: true });
-  }, [loading, user, navigate]);
+    if (loading) return;
+    if (!user) { navigate({ to: "/auth", replace: true }); return; }
+    if (rolePending) navigate({ to: "/choose-role", replace: true });
+  }, [loading, user, rolePending, navigate]);
 
-  if (loading || !user) {
+  if (loading || !user || rolePending) {
     return <div className="grid min-h-screen place-items-center text-sm text-muted-foreground">Зареждане...</div>;
   }
   return <Outlet />;
