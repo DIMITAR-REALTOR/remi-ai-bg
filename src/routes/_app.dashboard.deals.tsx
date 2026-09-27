@@ -31,7 +31,12 @@ type DealRow = {
   closed_at: string | null;
   created_at: string;
   last_activity_at: string;
-  ai_context_summary: { reasoning: string; next_action: string } | null;
+  ai_context_summary: {
+    reasoning: string;
+    next_action: string;
+    actionable?: boolean;
+    action_status?: string;
+  } | null;
   ai_context_summary_updated_at: string | null;
   profiles?: { id: string; full_name: string | null; email: string | null } | null;
   clients?: { id: string; name: string } | null;
@@ -105,9 +110,26 @@ function DealsPage() {
               commission_percent: d.commission_percent ?? undefined,
             },
           });
+          const prev = d.ai_context_summary ?? {};
+          const norm = (s?: string) => (s ?? "").trim().toLowerCase().replace(/\s+/g, " ");
+          const activityAfterDecision =
+            prev.action_status != null &&
+            d.ai_context_summary_updated_at != null &&
+            new Date(d.last_activity_at).getTime() > new Date(d.ai_context_summary_updated_at).getTime();
+          const keepStatus =
+            !activityAfterDecision &&
+            (prev.action_status === "confirmed" || prev.action_status === "dismissed") &&
+            norm(prev.next_action) === norm(r.next_action);
+
           await (supabase as any)
             .from("deals")
-            .update({ ai_context_summary: r, ai_context_summary_updated_at: new Date().toISOString() })
+            .update({
+              ai_context_summary: {
+                ...r,
+                ...(keepStatus ? { action_status: prev.action_status } : {}),
+              },
+              ai_context_summary_updated_at: new Date().toISOString(),
+            })
             .eq("id", d.id);
           qc.invalidateQueries({ queryKey: ["my-deals", user.id] });
         } catch {
