@@ -222,6 +222,7 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
+          source_post_id: string | null
           status: string
           updated_at: string
         }
@@ -237,6 +238,7 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
+          source_post_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -252,6 +254,7 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
+          source_post_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -261,6 +264,393 @@ export type Database = {
             columns: ["agency_id"]
             isOneToOne: false
             referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clients_source_post_id_fkey"
+            columns: ["source_post_id"]
+            isOneToOne: false
+            referencedRelation: "content_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_channels: {
+        Row: {
+          agency_id: string | null
+          broker_id: string
+          code: string
+          contact_block: string | null
+          created_at: string
+          hashtags_max: number | null
+          hashtags_min: number | null
+          id: string
+          is_active: boolean
+          name: string
+          platform: string
+          role: string | null
+          show_broker: boolean
+          sort_order: number
+          tone: string | null
+          updated_at: string
+          weekly_target: number
+        }
+        Insert: {
+          agency_id?: string | null
+          broker_id: string
+          code: string
+          contact_block?: string | null
+          created_at?: string
+          hashtags_max?: number | null
+          hashtags_min?: number | null
+          id?: string
+          is_active?: boolean
+          name: string
+          platform: string
+          role?: string | null
+          show_broker?: boolean
+          sort_order?: number
+          tone?: string | null
+          updated_at?: string
+          weekly_target?: number
+        }
+        Update: {
+          agency_id?: string | null
+          broker_id?: string
+          code?: string
+          contact_block?: string | null
+          created_at?: string
+          hashtags_max?: number | null
+          hashtags_min?: number | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          platform?: string
+          role?: string | null
+          show_broker?: boolean
+          sort_order?: number
+          tone?: string | null
+          updated_at?: string
+          weekly_target?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_channels_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_knowledge: {
+        Row: {
+          broker_id: string
+          chunk_index: number
+          content: string
+          created_at: string
+          district: string | null
+          embedding: string | null
+          id: string
+          post_id: string
+          topic_type: string | null
+        }
+        Insert: {
+          broker_id: string
+          chunk_index?: number
+          content: string
+          created_at?: string
+          district?: string | null
+          embedding?: string | null
+          id?: string
+          post_id: string
+          topic_type?: string | null
+        }
+        Update: {
+          broker_id?: string
+          chunk_index?: number
+          content?: string
+          created_at?: string
+          district?: string | null
+          embedding?: string | null
+          id?: string
+          post_id?: string
+          topic_type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_knowledge_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "content_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_posts: {
+        Row: {
+          agency_id: string | null
+          ai_generated: boolean
+          ai_model: string | null
+          archived_at: string | null
+          body: string | null
+          broker_id: string
+          channel_id: string
+          code: string
+          created_at: string
+          format: string
+          id: string
+          links_to_post_id: string | null
+          media: Json
+          published_at: string | null
+          published_url: string | null
+          scheduled_at: string | null
+          slug: string | null
+          status: string
+          summary: string | null
+          title: string | null
+          topic_id: string
+          updated_at: string
+          visual_brief: string | null
+        }
+        Insert: {
+          agency_id?: string | null
+          ai_generated?: boolean
+          ai_model?: string | null
+          archived_at?: string | null
+          body?: string | null
+          broker_id: string
+          channel_id: string
+          code: string
+          created_at?: string
+          format?: string
+          id?: string
+          links_to_post_id?: string | null
+          media?: Json
+          published_at?: string | null
+          published_url?: string | null
+          scheduled_at?: string | null
+          slug?: string | null
+          status?: string
+          summary?: string | null
+          title?: string | null
+          topic_id: string
+          updated_at?: string
+          visual_brief?: string | null
+        }
+        Update: {
+          agency_id?: string | null
+          ai_generated?: boolean
+          ai_model?: string | null
+          archived_at?: string | null
+          body?: string | null
+          broker_id?: string
+          channel_id?: string
+          code?: string
+          created_at?: string
+          format?: string
+          id?: string
+          links_to_post_id?: string | null
+          media?: Json
+          published_at?: string | null
+          published_url?: string | null
+          scheduled_at?: string | null
+          slug?: string | null
+          status?: string
+          summary?: string | null
+          title?: string | null
+          topic_id?: string
+          updated_at?: string
+          visual_brief?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_posts_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_posts_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "content_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_posts_links_to_post_id_fkey"
+            columns: ["links_to_post_id"]
+            isOneToOne: false
+            referencedRelation: "content_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_posts_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "content_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_results: {
+        Row: {
+          broker_id: string
+          comments: number | null
+          created_at: string
+          id: string
+          leads: number | null
+          measured_at: string
+          messages: number | null
+          notes: string | null
+          post_id: string
+          reach: number | null
+          reactions: number | null
+          shares: number | null
+          views: number | null
+        }
+        Insert: {
+          broker_id: string
+          comments?: number | null
+          created_at?: string
+          id?: string
+          leads?: number | null
+          measured_at?: string
+          messages?: number | null
+          notes?: string | null
+          post_id: string
+          reach?: number | null
+          reactions?: number | null
+          shares?: number | null
+          views?: number | null
+        }
+        Update: {
+          broker_id?: string
+          comments?: number | null
+          created_at?: string
+          id?: string
+          leads?: number | null
+          measured_at?: string
+          messages?: number | null
+          notes?: string | null
+          post_id?: string
+          reach?: number | null
+          reactions?: number | null
+          shares?: number | null
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_results_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "content_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_topic_listings: {
+        Row: {
+          created_at: string
+          listing_id: string
+          topic_id: string
+        }
+        Insert: {
+          created_at?: string
+          listing_id: string
+          topic_id: string
+        }
+        Update: {
+          created_at?: string
+          listing_id?: string
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_topic_listings_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_topic_listings_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "content_topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_topics: {
+        Row: {
+          agency_id: string | null
+          audience: string | null
+          broker_id: string
+          created_at: string
+          deal_id: string | null
+          district: string | null
+          id: string
+          key_insight: string | null
+          number: number
+          raw_notes: string | null
+          ref_number: string | null
+          source: string | null
+          status: string
+          title: string
+          topic_type: string
+          updated_at: string
+        }
+        Insert: {
+          agency_id?: string | null
+          audience?: string | null
+          broker_id: string
+          created_at?: string
+          deal_id?: string | null
+          district?: string | null
+          id?: string
+          key_insight?: string | null
+          number: number
+          raw_notes?: string | null
+          ref_number?: string | null
+          source?: string | null
+          status?: string
+          title: string
+          topic_type?: string
+          updated_at?: string
+        }
+        Update: {
+          agency_id?: string | null
+          audience?: string | null
+          broker_id?: string
+          created_at?: string
+          deal_id?: string | null
+          district?: string | null
+          id?: string
+          key_insight?: string | null
+          number?: number
+          raw_notes?: string | null
+          ref_number?: string | null
+          source?: string | null
+          status?: string
+          title?: string
+          topic_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_topics_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "agencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_topics_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
             referencedColumns: ["id"]
           },
         ]
@@ -439,6 +829,44 @@ export type Database = {
           },
         ]
       }
+      deal_stage_history: {
+        Row: {
+          broker_id: string
+          changed_at: string
+          changed_by: string | null
+          deal_id: string
+          from_stage: string | null
+          id: string
+          to_stage: string
+        }
+        Insert: {
+          broker_id: string
+          changed_at?: string
+          changed_by?: string | null
+          deal_id: string
+          from_stage?: string | null
+          id?: string
+          to_stage: string
+        }
+        Update: {
+          broker_id?: string
+          changed_at?: string
+          changed_by?: string | null
+          deal_id?: string
+          from_stage?: string | null
+          id?: string
+          to_stage?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_stage_history_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deals: {
         Row: {
           ai_context_summary: Json | null
@@ -598,6 +1026,48 @@ export type Database = {
           },
         ]
       }
+      knowledge_chunks: {
+        Row: {
+          content: string
+          created_at: string
+          document_type: string
+          effective_date: string | null
+          embedding: string | null
+          id: string
+          section: string | null
+          source: string
+          status: string
+          updated_at: string
+          version: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          document_type: string
+          effective_date?: string | null
+          embedding?: string | null
+          id?: string
+          section?: string | null
+          source: string
+          status?: string
+          updated_at?: string
+          version?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          document_type?: string
+          effective_date?: string | null
+          embedding?: string | null
+          id?: string
+          section?: string | null
+          source?: string
+          status?: string
+          updated_at?: string
+          version?: string | null
+        }
+        Relationships: []
+      }
       legal_documents: {
         Row: {
           availability_status: string
@@ -674,6 +1144,7 @@ export type Database = {
           photos: string[]
           price_eur: number
           property_type: string
+          ref_number: string | null
           rooms: number | null
           status: string
           title: string
@@ -691,6 +1162,7 @@ export type Database = {
           photos?: string[]
           price_eur: number
           property_type: string
+          ref_number?: string | null
           rooms?: number | null
           status?: string
           title: string
@@ -708,10 +1180,195 @@ export type Database = {
           photos?: string[]
           price_eur?: number
           property_type?: string
+          ref_number?: string | null
           rooms?: number | null
           status?: string
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      market_listing_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          id: string
+          is_read: boolean
+          listing_id: string
+          message: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          listing_id: string
+          message?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          listing_id?: string
+          message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_listing_alerts_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "market_listings_raw"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      market_listing_price_history: {
+        Row: {
+          id: string
+          listing_id: string
+          price_eur: number
+          recorded_at: string
+        }
+        Insert: {
+          id?: string
+          listing_id: string
+          price_eur: number
+          recorded_at?: string
+        }
+        Update: {
+          id?: string
+          listing_id?: string
+          price_eur?: number
+          recorded_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "market_listing_price_history_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "market_listings_raw"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      market_listings_raw: {
+        Row: {
+          area_sqm: number | null
+          category: string | null
+          city: string
+          created_at: string
+          date_label: string | null
+          description: string | null
+          first_seen_at: string
+          id: string
+          is_from_investor: boolean
+          is_new_construction: boolean
+          last_seen_at: string
+          listing_date: string | null
+          neighborhood: string | null
+          photo_url: string | null
+          price_eur: number
+          price_per_sqm: number | null
+          property_type: string | null
+          source: string
+          source_listing_id: string | null
+          status: string
+          title: string | null
+          transaction_type: string | null
+          updated_at: string
+          urgency: string | null
+          url: string
+        }
+        Insert: {
+          area_sqm?: number | null
+          category?: string | null
+          city?: string
+          created_at?: string
+          date_label?: string | null
+          description?: string | null
+          first_seen_at?: string
+          id?: string
+          is_from_investor?: boolean
+          is_new_construction?: boolean
+          last_seen_at?: string
+          listing_date?: string | null
+          neighborhood?: string | null
+          photo_url?: string | null
+          price_eur: number
+          price_per_sqm?: number | null
+          property_type?: string | null
+          source: string
+          source_listing_id?: string | null
+          status?: string
+          title?: string | null
+          transaction_type?: string | null
+          updated_at?: string
+          urgency?: string | null
+          url: string
+        }
+        Update: {
+          area_sqm?: number | null
+          category?: string | null
+          city?: string
+          created_at?: string
+          date_label?: string | null
+          description?: string | null
+          first_seen_at?: string
+          id?: string
+          is_from_investor?: boolean
+          is_new_construction?: boolean
+          last_seen_at?: string
+          listing_date?: string | null
+          neighborhood?: string | null
+          photo_url?: string | null
+          price_eur?: number
+          price_per_sqm?: number | null
+          property_type?: string | null
+          source?: string
+          source_listing_id?: string | null
+          status?: string
+          title?: string | null
+          transaction_type?: string | null
+          updated_at?: string
+          urgency?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
+      market_neighborhood_stats: {
+        Row: {
+          active_listings_count: number | null
+          avg_price_change_pct: number | null
+          avg_price_per_sqm: number | null
+          computed_at: string
+          id: string
+          median_price_per_sqm: number | null
+          neighborhood: string
+          period_month: string
+          transaction_type: string | null
+        }
+        Insert: {
+          active_listings_count?: number | null
+          avg_price_change_pct?: number | null
+          avg_price_per_sqm?: number | null
+          computed_at?: string
+          id?: string
+          median_price_per_sqm?: number | null
+          neighborhood: string
+          period_month: string
+          transaction_type?: string | null
+        }
+        Update: {
+          active_listings_count?: number | null
+          avg_price_change_pct?: number | null
+          avg_price_per_sqm?: number | null
+          computed_at?: string
+          id?: string
+          median_price_per_sqm?: number | null
+          neighborhood?: string
+          period_month?: string
+          transaction_type?: string | null
         }
         Relationships: []
       }
@@ -816,18 +1473,21 @@ export type Database = {
           created_at: string
           id: string
           role: Database["public"]["Enums"]["app_role"]
+          role_selection_pending: boolean
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
           role: Database["public"]["Enums"]["app_role"]
+          role_selection_pending?: boolean
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          role_selection_pending?: boolean
           user_id?: string
         }
         Relationships: []
@@ -837,6 +1497,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      client_can_review_deal: {
+        Args: { _broker: string; _deal: string }
+        Returns: boolean
+      }
+      decode_embedding_i16: {
+        Args: { b64: string; scale?: number }
+        Returns: string
+      }
+      get_my_client_deals: {
+        Args: never
+        Returns: {
+          broker_id: string
+          broker_name: string
+          closed_at: string
+          created_at: string
+          id: string
+          listing_id: string
+          listing_title: string
+          status: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -844,6 +1525,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      ingest_chunks_via_gemini: {
+        Args: { chunks: Json; max_retries?: number; request_delay_ms?: number }
+        Returns: number
+      }
+      insert_knowledge_chunks: { Args: { rows: Json }; Returns: number }
       is_agency_creator: {
         Args: { _agency: string; _user: string }
         Returns: boolean
@@ -852,9 +1538,21 @@ export type Database = {
         Args: { _agency: string; _user: string }
         Returns: boolean
       }
+      next_broker_seq: {
+        Args: { _broker: string; _table: string }
+        Returns: number
+      }
       set_initial_role: {
         Args: { p_role: Database["public"]["Enums"]["app_role"] }
         Returns: undefined
+      }
+      set_my_role: {
+        Args: { p_role: Database["public"]["Enums"]["app_role"] }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      update_knowledge_chunk_embeddings: {
+        Args: { rows: Json }
+        Returns: number
       }
     }
     Enums: {
