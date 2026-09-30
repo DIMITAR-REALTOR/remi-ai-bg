@@ -21,6 +21,13 @@ type ActionDeal = {
     next_action: string;
     actionable?: boolean;
     action_status?: string;
+    action_history?: Array<{
+      reasoning: string;
+      next_action: string;
+      status?: string;
+      created_at: string;
+      updated_at?: string;
+    }>;
   } | null;
   clients?: { id: string; name: string } | null;
   listings?: { id: string; title: string } | null;
@@ -54,9 +61,27 @@ export function ActionCenterWidget() {
 
   const updateStatus = async (deal: ActionDeal, action_status: "confirmed" | "dismissed") => {
     if (!deal.ai_context_summary) return;
+    const now = new Date().toISOString();
+    const summary = deal.ai_context_summary;
+    const history = summary.action_history ?? [];
+    const lastEntry = history.length > 0 ? history[history.length - 1] : null;
+
+    let updatedHistory = history;
+    if (lastEntry && lastEntry.status === undefined) {
+      updatedHistory = history.map((entry, idx) =>
+        idx === history.length - 1 ? { ...entry, status: action_status, updated_at: new Date().toISOString() } : entry
+      );
+    }
+
+    const updatedSummary = {
+      ...summary,
+      action_status,
+      action_history: updatedHistory,
+    };
+
     const { error } = await (supabase as any)
       .from("deals")
-      .update({ ai_context_summary: { ...deal.ai_context_summary, action_status } })
+      .update({ ai_context_summary: updatedSummary })
       .eq("id", deal.id);
     if (error) { toast.error(error.message); return; }
     qc.invalidateQueries({ queryKey: ["action-center-deals", user?.id] });

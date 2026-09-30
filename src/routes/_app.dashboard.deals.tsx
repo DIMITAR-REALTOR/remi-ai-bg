@@ -31,7 +31,18 @@ type DealRow = {
   closed_at: string | null;
   created_at: string;
   last_activity_at: string;
-  ai_context_summary: { reasoning: string; next_action: string } | null;
+  ai_context_summary: {
+    reasoning: string;
+    next_action: string;
+    action_status?: string;
+    action_history?: Array<{
+      reasoning: string;
+      next_action: string;
+      status?: string;
+      created_at: string;
+      updated_at?: string;
+    }>;
+  } | null;
   ai_context_summary_updated_at: string | null;
   profiles?: { id: string; full_name: string | null; email: string | null } | null;
   clients?: { id: string; name: string } | null;
@@ -105,9 +116,29 @@ function DealsPage() {
               commission_percent: d.commission_percent ?? undefined,
             },
           });
+
+          const existingSummary = d.ai_context_summary;
+          const now = new Date().toISOString();
+          const newHistoryEntry = {
+            reasoning: r.reasoning,
+            next_action: r.next_action,
+            status: undefined,
+            created_at: now,
+          };
+
+          const history = existingSummary?.action_history ?? [];
+          const updatedHistory = [...history, newHistoryEntry].slice(-20);
+
+          const updatedSummary = {
+            reasoning: r.reasoning,
+            next_action: r.next_action,
+            action_status: existingSummary?.action_status ?? undefined,
+            action_history: updatedHistory,
+          };
+
           await (supabase as any)
             .from("deals")
-            .update({ ai_context_summary: r, ai_context_summary_updated_at: new Date().toISOString() })
+            .update({ ai_context_summary: updatedSummary, ai_context_summary_updated_at: new Date().toISOString() })
             .eq("id", d.id);
           qc.invalidateQueries({ queryKey: ["my-deals", user.id] });
         } catch {

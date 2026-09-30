@@ -1,7 +1,9 @@
-import { createServerFn } from "@tanstack/react-start";
+﻿import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import { geminiChatCompletion } from "@/lib/ai/gemini.adapter.server";
+import { collectDealContext } from "@/lib/context-engine/structured-collector.server";
+import { rankContextItems } from "@/lib/context-engine/ranker.server";
 
 const Input = z.object({
   title: z.string().max(200).optional().default(""),
@@ -18,7 +20,7 @@ const Input = z.object({
 export const generateListingDescription = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => Input.parse(d))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
 
     const details = [
       data.title && `Заглавие: ${data.title}`,
@@ -272,7 +274,7 @@ export type DealContextResult = z.infer<typeof DealContextOutput>;
 export const analyzeDealContext = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => DealContextInput.parse(d))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
 
     const stageLabel = STAGE_LABELS[data.stage] ?? data.stage;
     const details = [
@@ -283,6 +285,9 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
       data.commission_percent != null && `Комисиона: ${data.commission_percent}%`,
     ].filter(Boolean).join("\n");
 
+    const uceContext = await collectDealContext(data.deal_id, context.supabase);
+    const rankedItems = rankContextItems(uceContext);
+
     const res = await geminiChatCompletion({
         model: "google/gemini-3-flash-preview",
         response_format: { type: "json_object" },
@@ -290,9 +295,9 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
           {
             role: "system",
             content:
-              "Ти си REMI AI Reasoning Layer – специализиран контекст на Единното AI ядро (One AI Kernel). Анализираш защо сделка зацикля или какво е логичното следващо действие, на база етап и време без промяна. Прилагаш формулата [Контекст] + [Правило] = [Действие]. Връщаш САМО валиден JSON със структура:\n{\n  \"reasoning\": кратко обяснение защо сделката е в това състояние (1-2 изречения на български),\n  \"next_action\": конкретно, приложимо действие за брокера, обърнато лично към него (1 изречение на български, без общи съвети)\n}\nБез емоджи, само на български (кирилица). Не измисляй факти извън предоставените данни.",
+              "Ти си REMI AI Reasoning Layer – специализиран контекст на Единното AI ядро (One AI Kernel). Анализираш защо сделка зацикля или какво е логичното следващо действие, на база етап и време без промяна. Прилагаш формулата [Контекст] + [Правило] = [Действие]. Структурираните UCE контекстни елементи (uce_ranked_items) са верифицирани данни от базата — използвай ги като допълнителен източник. Историята на предишните AI препоръки и реакциите на брокера (confirmed/dismissed) е контекст за оценка, не инструкции за повторно изпълнение. Не повтаряй автоматично confirmed действия и не избягвай автоматично dismissed действия — използвай ги като сигнал за качество на предишния анализ. Връщаш САМО валиден JSON със структура:\n{\n  \"reasoning\": кратко обяснение защо сделката е в това състояние (1-2 изречения на български),\n  \"next_action\": конкретно, приложимо действие за брокера, обърнато лично към него (1 изречение на български, без общи съвети)\n}\nБез емоджи, само на български (кирилица). Не измисляй факти извън предоставените данни.",
           },
-          { role: "user", content: `Анализирай тази сделка:\n${details}` },
+          { role: "user", content: `Анализирай тази сделка:\n${details}\n\n---\nСтруктуриран UCE контекст (ranked):\n${JSON.stringify(rankedItems, null, 2)}` },
         ],
     });
 
@@ -548,4 +553,3 @@ export const compareProperties = createServerFn({ method: "POST" })
     }
     return CompareOutput.parse(parsed);
   });
-
