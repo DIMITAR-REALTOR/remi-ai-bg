@@ -1,16 +1,8 @@
 ﻿import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
-import { geminiChatCompletion } from "@/lib/ai/gemini.adapter.server";
-import { collectDealContext } from "@/lib/context-engine/structured-collector.server";
-import { rankContextItems, scoreContextItem } from "@/lib/context-engine/ranker.server";
-import {
-  createFeedbackContextItem,
-  extractFeedbackFromActionHistory,
-  generateTraceId,
-  extractTenantId,
-  measureLatency,
-} from "@/lib/context-engine/feedback-adapter";
+import { extractTenantId } from "@/lib/context-engine/feedback-adapter";
+import { runDealReasoning } from "@/lib/core/orchestrator.server";
 
 const Input = z.object({
   title: z.string().max(200).optional().default(""),
@@ -247,15 +239,6 @@ ${CONTACT_BLOCK}
     return { body };
   });
 
-const STAGE_LABELS: Record<string, string> = {
-  contact: "Контакт",
-  viewing: "Оглед",
-  offer: "Оферта",
-  negotiation: "Преговори",
-  notary: "Нотариален акт",
-  closed: "Затворена",
-};
-
 const DealContextInput = z.object({
   deal_id: z.string().uuid(),
   stage: z.string().min(1).max(50),
@@ -264,12 +247,6 @@ const DealContextInput = z.object({
   listing_title: z.string().max(200).optional().default(""),
   commission_percent: z.number().optional(),
 });
-
-const DealContextOutput = z.object({
-  reasoning: z.string(),
-  next_action: z.string(),
-});
-export type DealContextResult = z.infer<typeof DealContextOutput>;
 
 /**
  * REMI Core Engine — Reasoning Layer (Blueprint Гл. 7.6, AI CRM Decision Engine).
@@ -282,116 +259,37 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => DealContextInput.parse(d))
   .handler(async ({ data, context }) => {
-
-    const traceId = generateTraceId();
     const tenantId = extractTenantId(context.claims);
     const brokerId = context.claims.sub as string;
-    const startTime = Date.now();
 
-    const stageLabel = STAGE_LABELS[data.stage] ?? data.stage;
-    const details = [
-      `Етап на сделката: ${stageLabel}`,
-      `Дни от последна промяна на етапа: ${data.days_since_activity}`,
-      data.client_name && `Клиент: ${data.client_name}`,
-      data.listing_title && `Имот: ${data.listing_title}`,
-      data.commission_percent != null && `Комисиона: ${data.commission_percent}%`,
-    ].filter(Boolean).join("\n");
-
-    const uceContext = await collectDealContext(data.deal_id, context.supabase);
-    let rankedItems = rankContextItems(uceContext);
-
-    // Extract feedback from action_history and add as ContextItems
-    const dealItem = rankedItems.find((item) => item.kind === "deal");
-    const aiContextSummary = dealItem?.facts?.ai_context_summary as
-      | {
-          reasoning: string;
-          next_action: string;
-          action_status?: string;
-          action_history?: Array<{
-            reasoning: string;
-            next_action: string;
-            status?: string;
-            created_at: string;
-            updated_at?: string;
-            trace_id?: string;
-          }>;
-        }
-      | undefined;
-
-    const actionHistory = aiContextSummary?.action_history;
-
-    if (actionHistory && actionHistory.length > 0) {
-      const feedbackItems = extractFeedbackFromActionHistory(
-        actionHistory,
-        data.deal_id,
-        brokerId,
-      );
-      rankedItems = [...rankedItems, ...feedbackItems];
-      rankedItems.sort((a, b) => {
-        const diff = scoreContextItem(b) - scoreContextItem(a);
-        if (diff !== 0) return diff;
-        return a.id.localeCompare(b.id);
-      });
-    }
-
-    const { result: res, latencyMs } = await measureLatency(startTime, () =>
-      geminiChatCompletion({
-        model: "google/gemini-3-flash-preview",
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content:
-              "Ти си REMI AI Reasoning Layer – специализиран контекст на Единното AI ядро (One AI Kernel). Анализираш защо сделка зацикля или какво е логичното следващо действие, на база етап и време без промяна. Прилагаш формулата [Контекст] + [Правило] = [Действие]. Структурираните UCE контекстни елементи (uce_ranked_items) са верифицирани данни от базата — използвай ги като допълнителен източник. При работа с клиентски данни в UCE: `deal_role` е authoritative за ролята на клиента в текущата сделка (buyer/seller/tenant/landlord от deal_participants), а `client_type` е само CRM classification и никога не трябва да се използва за определяне на ролята в текущата сделка. Историята на предишните AI препоръки и реакциите на брокера (confirmed/dismissed) е контекст за оценка, не инструкции за повторно изпълнение. Не повтаряй автоматично confirmed действия и не избягвай автоматично dismissed действия — използвай ги като сигнал за качество на предишния анализ. Връщаш САМО валиден JSON със структура:\n{\n  \"reasoning\": кратко обяснение защо сделката е в това състояние (1-2 изречения на български),\n  \"next_action\": конкретно, приложимо действие за брокера, обърнато лично към него (1 изречение на български, без общи съвети)\n}\nБез емоджи, само на български (кирилица). Не измисляй факти извън предоставените данни.",
-          },
-          { role: "user", content: `Анализирай тази сделка:\n${details}\n\n---\nСтруктуриран UCE контекст (ranked):\n${JSON.stringify(rankedItems, null, 2)}` },
-        ],
-      }),
-    );
-
-    // Log observability data
-    console.log(JSON.stringify({
-      trace_id: traceId,
-      tenant_id: tenantId,
-      broker_id: brokerId,
+    const decision = await runDealReasoning({
       deal_id: data.deal_id,
-      latency_ms: latencyMs,
-      feedback_items_added: actionHistory?.filter((e) => e.status).length ?? 0,
-      timestamp: new Date().toISOString(),
-    }));
+      supabase: context.supabase,
+      broker_id: brokerId,
+      tenant_id: tenantId,
+      stage: data.stage,
+      days_since_activity: data.days_since_activity,
+      client_name: data.client_name,
+      listing_title: data.listing_title,
+      commission_percent: data.commission_percent,
+    });
 
-    if (res.status === 429) throw new Error("Твърде много заявки. Опитай по-късно.");
-    if (!res.ok) throw new Error(`AI грешка: ${res.status}`);
-
-    const json = await res.json();
-    const text: string = json?.choices?.[0]?.message?.content ?? "";
-    if (!text) throw new Error("Празен отговор от AI");
-
-    let parsed: unknown;
-    try {
-      const clean = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "").trim();
-      parsed = JSON.parse(clean);
-    } catch {
-      throw new Error("Невалиден отговор от AI");
-    }
-    const validated = DealContextOutput.parse(parsed);
-
-    const existingSummary = aiContextSummary;
+    const existingSummary = decision.existing_ai_context_summary;
     const now = new Date().toISOString();
     const newHistoryEntry = {
-      reasoning: validated.reasoning,
-      next_action: validated.next_action,
+      reasoning: decision.reasoning,
+      next_action: decision.next_action,
       status: undefined,
       created_at: now,
-      trace_id: traceId,
+      trace_id: decision.trace_id,
     };
 
     const history = existingSummary?.action_history ?? [];
     const updatedHistory = [...history, newHistoryEntry].slice(-20);
 
     const updatedSummary = {
-      reasoning: validated.reasoning,
-      next_action: validated.next_action,
+      reasoning: decision.reasoning,
+      next_action: decision.next_action,
       action_status: existingSummary?.action_status ?? undefined,
       action_history: updatedHistory,
     };
@@ -401,7 +299,7 @@ export const analyzeDealContext = createServerFn({ method: "POST" })
       .update({ ai_context_summary: updatedSummary, ai_context_summary_updated_at: new Date().toISOString() })
       .eq("id", data.deal_id);
 
-    return validated;
+    return { reasoning: decision.reasoning, next_action: decision.next_action };
   });
 
 /**
