@@ -27,6 +27,7 @@ type ActionDeal = {
       status?: string;
       created_at: string;
       updated_at?: string;
+      trace_id?: string;
     }>;
   } | null;
   clients?: { id: string; name: string } | null;
@@ -61,7 +62,6 @@ export function ActionCenterWidget() {
 
   const updateStatus = async (deal: ActionDeal, action_status: "confirmed" | "dismissed") => {
     if (!deal.ai_context_summary) return;
-    const now = new Date().toISOString();
     const summary = deal.ai_context_summary;
     const history = summary.action_history ?? [];
     const lastEntry = history.length > 0 ? history[history.length - 1] : null;
@@ -69,7 +69,9 @@ export function ActionCenterWidget() {
     let updatedHistory = history;
     if (lastEntry && lastEntry.status === undefined) {
       updatedHistory = history.map((entry, idx) =>
-        idx === history.length - 1 ? { ...entry, status: action_status, updated_at: new Date().toISOString() } : entry
+        idx === history.length - 1
+          ? { ...entry, status: action_status, updated_at: new Date().toISOString() }
+          : entry
       );
     }
 

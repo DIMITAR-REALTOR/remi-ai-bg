@@ -9,7 +9,7 @@ export default defineTool({
   inputSchema: {
     name: z.string().describe("Client full name."),
     phone: z.string().optional().describe("Phone number."),
-    client_type: z.string().optional().describe("buyer or seller. Defaults to buyer."),
+    client_type: z.string().optional().describe("buyer, seller, renter, or landlord. Defaults to buyer."),
     looking_for: z.string().optional().describe("What the client is looking for, free text in Bulgarian."),
     notes: z.string().optional().describe("Free-text notes."),
   },

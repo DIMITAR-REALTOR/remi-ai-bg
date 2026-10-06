@@ -2,6 +2,7 @@ export const CLIENT_TYPES = [
   { value: "buyer", label: "Купувач" },
   { value: "seller", label: "Продавач" },
   { value: "renter", label: "Наемател" },
+  { value: "landlord", label: "Наемодател" },
 ] as const;
 
 export const CLIENT_STATUSES = [

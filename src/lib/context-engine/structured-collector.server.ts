@@ -80,6 +80,13 @@ export async function collectDealContext(
     ),
   );
 
+  const { data: participantsRaw } = await supabase
+    .from("deal_participants")
+    .select("*")
+    .eq("deal_id", dealId);
+
+  const participantsList = (participantsRaw ?? []) as DealParticipantRow[];
+
   if (deal.crm_client_id) {
     const { data: client } = await supabase
       .from("clients")
@@ -88,6 +95,9 @@ export async function collectDealContext(
       .single();
 
     if (client) {
+      const matchingParticipant = participantsList.find(
+        (p) => p.client_id === deal.crm_client_id,
+      );
       const clientOccuredAt =
         (client as ClientRow).last_contact_at ?? (client as ClientRow).created_at ?? null;
       items.push(
@@ -95,11 +105,12 @@ export async function collectDealContext(
           `client:${client.id}`,
           "client",
           `Client ${client.name}`,
-          `Client "${client.name}" — type "${client.client_type}", status "${client.status}"${client.phone ? `, phone "${client.phone}"` : ""}.`,
+          `Client "${client.name}" — type "${client.client_type}", status "${client.status}"${client.phone ? `, phone "${client.phone}"` : ""}${matchingParticipant ? `, deal role "${matchingParticipant.role}"` : ""}.`,
           {
             id: client.id,
             name: client.name,
             client_type: client.client_type,
+            ...(matchingParticipant ? { deal_role: matchingParticipant.role } : {}),
             status: client.status,
             phone: client.phone,
             notes: client.notes,
@@ -190,13 +201,8 @@ export async function collectDealContext(
     }
   }
 
-  const { data: participants } = await supabase
-    .from("deal_participants")
-    .select("*")
-    .eq("deal_id", dealId);
-
-  if (participants) {
-    for (const participant of participants as DealParticipantRow[]) {
+  if (participantsList.length > 0) {
+    for (const participant of participantsList) {
       items.push(
         toContextItem(
           `participant:${participant.id}`,

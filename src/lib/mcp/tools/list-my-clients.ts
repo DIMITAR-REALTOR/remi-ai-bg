@@ -8,7 +8,7 @@ export default defineTool({
   description: "List the CRM clients of the signed-in broker, optionally filtered by status or client type.",
   inputSchema: {
     status: z.string().optional().describe("Client status as stored, e.g. new, active, closed."),
-    client_type: z.string().optional().describe("Client type as stored, e.g. buyer, seller."),
+    client_type: z.string().optional().describe("Client type as stored, e.g. buyer, seller, renter, landlord."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ status, client_type }, ctx) => {

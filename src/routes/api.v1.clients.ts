@@ -5,7 +5,7 @@ import { apiError, apiResponse, getApiSupabase } from "@/lib/api/external-auth.s
 const ClientInput = z.object({
   name: z.string().trim().min(1).max(200),
   phone: z.string().trim().max(50).optional().nullable(),
-  client_type: z.enum(["buyer", "seller", "renter"]).default("buyer"),
+  client_type: z.enum(["buyer", "seller", "renter", "landlord"]).default("buyer"),
   looking_for: z.string().trim().max(2000).optional().nullable(),
   status: z.enum(["new", "contacted", "viewing_scheduled", "negotiating", "closed"]).default("new"),
   notes: z.string().trim().max(2000).optional().nullable(),
